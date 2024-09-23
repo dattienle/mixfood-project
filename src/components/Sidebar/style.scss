@@ -1,0 +1,40 @@
+//
+.sidebar{
+  ul{
+    padding:  0 20px;
+    background-color: #fff;
+    span{
+      color: black;
+  
+    }
+    li{
+      &:hover{
+        background-color: #F8B602 !important;     
+        > span, > svg {
+          color: #fff; 
+        }
+      }
+      &.ant-menu-submenu:hover {
+        background-color: transparent !important;
+      }
+      .ant-menu-sub {
+        background-color: #fff; 
+        li {
+          &:hover {
+            background-color: #F8B602 !important; 
+            > span, > svg {
+              color: #fff; 
+            }
+          }
+        }
+      }
+    }
+    svg{
+      color: black;
+    }
+  }
+  .ant-menu-item-selected {
+    background-color: #F8B602 !important; 
+    color: #fff !important; 
+  }
+}

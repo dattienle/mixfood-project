@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Layout } from 'antd'
+import { Header } from 'antd/es/layout/layout'
+import Sider from 'antd/es/layout/Sider'
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+import Sidebar from '~/components/Sidebar'
+import './App.scss'
+import logo from './assets/image.png'
+import Navbar from '~/components/Navbar'
+export default function App() {
+  const siderStyle: React.CSSProperties = {
+    overflow: 'auto',
+    height: '100vh',
+    position: 'fixed',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    scrollbarWidth: 'thin',
+    scrollbarColor: 'unset',
+    backgroundColor: '#fff',
+  }
 
-function App() {
-  const [count, setCount] = useState(0)
+  const headerStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    zIndex: 1,
+    width: 'calc(100% - 250px)', 
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    padding: '0 20px',
+    backgroundColor: '#fff'
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Layout>
+      <Sider width={250} style={siderStyle}>
+        <div className='logo'>
+          <img src={logo} alt='Logo' />
+        </div>
+        <Sidebar />
+      </Sider>
+
+      <Layout style={{ marginLeft: 250 }}>
+
+        <Header style={headerStyle}> 
+          <Navbar/>
+        </Header>
+        <Layout style={{ padding: '24px', marginTop: 64 }}>
+          <Outlet />
+        </Layout>
+      </Layout>
+    </Layout>
   )
 }
-
-export default App
