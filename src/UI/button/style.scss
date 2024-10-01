@@ -1,0 +1,14 @@
+.common-button{
+
+  &.ant-btn {
+    background-color: #F8B602;
+    border-color: #F8B602;
+    color: #fff;
+    &:hover{
+      background-color: #F8B602 !important;
+      border-color: #F8B602 !important;
+      color: #fff;
+    }
+   
+  }
+}

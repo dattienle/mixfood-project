@@ -15,8 +15,12 @@ export const router = createBrowserRouter([
         element: <CategoryPage />
       },
       {
-        path: 'ingredient',
+        path: 'nguyen-lieu',
         element: <IngredientPage />
+      },
+      {
+        path: 'danh-muc',
+        element: <CategoryPage />
       }
     ]
   }
