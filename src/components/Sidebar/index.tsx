@@ -23,13 +23,18 @@ const Sidebar: React.FC = () => {
       case '1':
         navigate('/danh-muc')
         break
-      case '2':
-        navigate('/nguyen-lieu')
+      case '2.1':
+        navigate('/nguyen-lieu-da-duyet')
+        break
+      case '2.2':
+        navigate('/nguyen-lieu-chua-duyet')
         break
       case '3':
-        navigate('/option-3')
+        navigate('/dinh-duong')
         break
- 
+      case '4':
+        navigate('/thuc-don') 
+        break
       default:
         break
     }
@@ -37,18 +42,20 @@ const Sidebar: React.FC = () => {
 
   const items: MenuItem[] = [
     { key: '1', icon: <PieChartOutlined />, label: 'Danh Mục', onClick: () => handleMenuClick('1') },
-    { key: '2', icon: <DesktopOutlined />, label: 'Nguyên Liệu', onClick: () => handleMenuClick('2') },
-    { key: '3', icon: <ContainerOutlined />, label: 'Option 3', onClick: () => handleMenuClick('3') },
-    {
-      key: 'sub1',
-      label: 'Navigation One',
-      icon: <MailOutlined />,
-      children: [
-        { key: '5', label: 'Option 5' },
-        { key: '6', label: 'Option 6' },
-        { key: '7', label: 'Option 7' },
-        { key: '8', label: 'Option 8' },
+    { key: '2', icon: <DesktopOutlined />, label: 'Nguyên Liệu'
+      
+      ,
+      children:[
+        { key: '2.1', label: 'Đã phê duyệt ' , onClick: () => handleMenuClick('2.1')},
+        { key: '2.2', label: 'Chưa phê duyệt', onClick:() => handleMenuClick('2.2') },
       ],
+       },
+    { key: '3', icon: <ContainerOutlined />, label: 'Dinh Dưỡng', onClick: () => handleMenuClick('3') },
+    {
+      key: '4',
+      label: 'Thực Đơn',
+      icon: <MailOutlined />,
+      onClick: () => handleMenuClick('4')
     },
     {
       key: 'sub2',

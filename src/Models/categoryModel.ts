@@ -1,7 +1,7 @@
 interface Category {
     id: number;
     name: string;
-    status: string;
+    isDeleted: boolean;
 }
 
 export default Category;
