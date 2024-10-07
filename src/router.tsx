@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import App from '~/App'
 import ErrorPage from '~/components/ErrorPage'
 import CategoryPage from '~/pages/CategoryTable'
+import Dashboard from '~/pages/Dashboard'
 import IngredientApprovePage from '~/pages/IngredientTable/approve'
 import IngredientNotApprovePage from '~/pages/IngredientTable/notApprove'
 import NutritionPage from '~/pages/NutritionTable'
@@ -16,6 +17,9 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <CategoryPage />
+      },
+      {
+        
       },
       {
         path: 'nguyen-lieu-da-duyet',
@@ -36,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: 'thuc-don',
         element: <ProductPage />
+      },
+      {
+        path: 'doanh-thu',
+        element: <Dashboard />
       }
     ]
   }

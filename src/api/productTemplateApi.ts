@@ -5,8 +5,8 @@ const api = axios.create({
   baseURL: API_ENDPOINT
 })
 
-export const getProducts = async () => {
-  const response = await api.get('/Product')
+export const getProductTemplate = async () => {
+  const response = await api.get('/ProductTemplate')
   return response.data
 }
 

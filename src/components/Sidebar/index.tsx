@@ -1,7 +1,7 @@
 // components/Sidebar.tsx
-import React from 'react'
+import React, { useState } from 'react'
 import { Menu } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   AppstoreOutlined,
   PieChartOutlined,
@@ -17,27 +17,33 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const pathToKeyMap: Record<string, string> = {
+    '/danh-muc': '1',
+    '/nguyen-lieu-da-duyet': '2.1',
+    '/nguyen-lieu-chua-duyet': '2.2',
+    '/dinh-duong': '3',
+    '/thuc-don': '4',
+    '/doanh-thu': '5',
+  };
+
+  const [selectedKey, setSelectedKey] = React.useState<string>('1');
+
+  React.useEffect(() => {
+    setSelectedKey(pathToKeyMap[location.pathname] || '1');
+  }, [location.pathname]);
 
   const handleMenuClick = (key: string) => {
-    switch (key) {
-      case '1':
-        navigate('/danh-muc')
-        break
-      case '2.1':
-        navigate('/nguyen-lieu-da-duyet')
-        break
-      case '2.2':
-        navigate('/nguyen-lieu-chua-duyet')
-        break
-      case '3':
-        navigate('/dinh-duong')
-        break
-      case '4':
-        navigate('/thuc-don') 
-        break
-      default:
-        break
-    }
+    const keyToPathMap: Record<string, string> = {
+      '1': '/danh-muc',
+      '2.1': '/nguyen-lieu-da-duyet',
+      '2.2': '/nguyen-lieu-chua-duyet',
+      '3': '/dinh-duong',
+      '4': '/thuc-don',
+      '5': '/doanh-thu',
+    };
+    navigate(keyToPathMap[key]);
   }
 
   const items: MenuItem[] = [
@@ -58,13 +64,10 @@ const Sidebar: React.FC = () => {
       onClick: () => handleMenuClick('4')
     },
     {
-      key: 'sub2',
-      label: 'Navigation Two',
+      key: '5',
+      label: 'Doanh thu',
       icon: <AppstoreOutlined />,
-      children: [
-        { key: '9', label: 'Option 9' },
-        { key: '10', label: 'Option 10' },
-      ],
+      onClick: () => handleMenuClick('5')
     },
   ];
 
@@ -73,9 +76,9 @@ const Sidebar: React.FC = () => {
       <Menu
         theme='light'
         mode='inline'
-        defaultSelectedKeys={['1']}
+        selectedKeys={[selectedKey]}
         items={items}
-        defaultOpenKeys={['sub1']}
+        defaultOpenKeys={['1']}
       />
     </div>
   )

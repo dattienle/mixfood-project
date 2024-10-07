@@ -24,9 +24,9 @@ export const createCategory = async (data: Category) => {
   const response = await api.post('/Category', data)
   return response.data
 }
-export const updateStatusCategory = async (id: number) => {
+export const updateStatusCategory = async ({id, isDeleted}: {id: number, isDeleted: boolean}) => {
   try {
-    const response = await api.put(`/Category/Status/${id}`);
+    const response = await api.put(`/Category/Status/${id}?isDeleted=${isDeleted}`);
     return response.data;
   } catch (error) {
     throw error;

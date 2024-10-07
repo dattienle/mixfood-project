@@ -7,6 +7,7 @@ import Sidebar from '~/components/Sidebar'
 import './App.scss'
 import logo from './assets/image.png'
 import Navbar from '~/components/Navbar'
+import { ToastContainer } from 'react-toastify'
 export default function App() {
   const siderStyle: React.CSSProperties = {
     overflow: 'auto',
@@ -34,6 +35,7 @@ export default function App() {
   }
 
   return (
+    
     <Layout>
       <Sider width={250} style={siderStyle}>
         <div className='logo'>

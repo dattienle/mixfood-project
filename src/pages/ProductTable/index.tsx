@@ -6,27 +6,34 @@ import Table, { ColumnType } from 'antd/es/table'
 
 import Ingredient from '~/Models/ingredientModel'
 import { EditOutlined } from '@ant-design/icons'
-import { getIngredients } from '~/api/ingredientApi'
 import { useQuery } from 'react-query'
 import "./style.scss"
-import { getProducts } from '~/api/productApi'
-import Product from '~/Models/productModel'
+import {  getProductTemplate } from '~/api/productTemplateApi'
+import Product from '~/Models/productTemplateModel'
+import Category from '~/Models/categoryModel'
 export default function ProductPage() {
 
   const [searchText, setSearchText] = useState('')
-  const {data: productResponse, isLoading, isError} = useQuery('product',getProducts)
+  const {data: productResponse, isLoading, isError} = useQuery('productTemplate',getProductTemplate)
   const products = productResponse?.data
   const columns: ColumnType<Product>[] = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: 'Hình ảnh',
+      dataIndex: 'imageUrl',
+      key: 'image',
       align: 'center',
+      render: (imageUrl: string) => <img src={imageUrl} alt="Hình ảnh sản phẩm" style={{ width: 100, height: 100 }} />,
     },
     {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
+      align: 'center',
+    },
+    {
+      title: 'Kích thước',
+      dataIndex: 'size',
+      key: 'size',
       align: 'center',
     },
     {
@@ -39,20 +46,21 @@ export default function ProductPage() {
       sortDirections: ['ascend', 'descend'],
     },
    {
-    title: 'Số lượng',  
-    dataIndex: 'quantity',
-    key: 'quantity',
+    title: 'Mô tả',
+    dataIndex: 'description',
+    key: 'description',
     align: 'center',
-    sorter: (a, b) => a.quantity - b.quantity,
-    sortDirections: ['ascend', 'descend'],
+    width: '20%',
    },
  
+   
+    
     {
-      title: 'Thành phần',
-      dataIndex: 'ingredients',
-      key: 'ingredients',
+      title: 'Danh mục',
+      dataIndex: 'category',
+      key: 'category',
       align: 'center',
-      render: (ingredients: string[]) => ingredients.join(', '),
+      render: (category: Category) => category.name,
     },
     {
       title: 'Chỉnh sửa',
@@ -66,6 +74,7 @@ export default function ProductPage() {
         </Button>
       ),
     },
+
     {
       title: 'Trạng thái',
       key: 'status',
@@ -87,7 +96,7 @@ export default function ProductPage() {
   ) || [];
 
   return <div style={{ background: 'white', padding: '20px' }}>
-    <h1>Quản Lý Nguyên Liệu Chưa Duyệt</h1>
+    <h1>Quản Lý Thực Đơn</h1>
     <Space style={{ marginBottom: 16 }}>
         <Input
           placeholder="Tìm kiếm theo tên"
