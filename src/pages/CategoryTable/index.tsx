@@ -34,6 +34,8 @@ export default function CategoryPage() {
   const updateStatus = useMutation(updateStatusCategory, {
     onSuccess: () => {
       queryClient.invalidateQueries('categories')
+      toast.success('Cập nhật trạng thái thành công!');
+
       refetchCategories()
     },
     onError: (error) => {
