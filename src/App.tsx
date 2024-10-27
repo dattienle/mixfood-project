@@ -8,7 +8,7 @@ import './App.scss'
 import logo from './assets/image.png'
 import Navbar from '~/components/Navbar'
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function App() {
   const siderStyle: React.CSSProperties = {
@@ -38,7 +38,7 @@ export default function App() {
 
   return (
     <Layout>
-      <ToastContainer/>
+      <ToastContainer style={{ zIndex: 9999 }} />
       <Sider width={250} style={siderStyle}>
         <div className='logo'>
           <img src={logo} alt='Logo' />
@@ -52,7 +52,7 @@ export default function App() {
         </Header>
         <Layout style={{ padding: '24px', marginTop: 64 }}>
           <div className='content'>
-          <Outlet />
+            <Outlet />
           </div>
         </Layout>
       </Layout>

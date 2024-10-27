@@ -12,7 +12,7 @@ export default function IngredientNotApprovePage() {
 
   const [searchText, setSearchText] = useState('')
   const {data: ingredientResponse, isLoading, isError} = useQuery('ingredient',getIngredients)
-  const ingredients = ingredientResponse?.data
+  const ingredients = ingredientResponse?.data.items
   const columns: ColumnType<Ingredient>[] = [
     {
       title: 'ID',

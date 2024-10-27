@@ -19,9 +19,11 @@ const Sidebar: React.FC = () => {
     '/manager/dashboard/danh-muc': '1',
     '/manager/dashboard/nguyen-lieu-da-duyet': '2.1',
     '/manager/dashboard/nguyen-lieu-chua-duyet': '2.2',
-    '/manager/dashboard/dinh-duong': '3',
+    '/manager/dashboard/dinh-duong-da-duyet': '3.1',
+    '/manager/dashboard/dinh-duong-chua-duyet': '3.2',
     '/manager/dashboard/thuc-don': '4',
-    '/admin/dashboard/doanh-thu': '5'
+    '/admin/dashboard/doanh-thu': '5',
+    '/nutritionist/dashboard/chat': '6'
   }
 
   const [selectedKey, setSelectedKey] = React.useState<string>('1')
@@ -35,11 +37,14 @@ const Sidebar: React.FC = () => {
       '1': '/manager/dashboard/danh-muc',
       '2.1': '/manager/dashboard/nguyen-lieu-da-duyet',
       '2.2': '/manager/dashboard/nguyen-lieu-chua-duyet',
-      '3': '/manager/dashboard/dinh-duong',
+      '3.1': '/manager/dashboard/dinh-duong-da-duyet',
+      '3.2': '/manager/dashboard/dinh-duong-chua-duyet',
       '4': '/manager/dashboard/thuc-don',
-      '5': '/admin/dashboard/doanh-thu'
+      '5': '/admin/dashboard/doanh-thu',
+      '6': '/nutritionist/dashboard/chat'
     }
     console.log(keyToPathMap[key])
+    console.log(pathToKeyMap[location.pathname])
     navigate(keyToPathMap[key])
   }
 
@@ -74,14 +79,21 @@ const Sidebar: React.FC = () => {
         { key: '2.2', label: 'Chưa phê duyệt', onClick: () => handleMenuClick('2.2') }
       ]
     },
-    { key: '3', icon: <ContainerOutlined />, label: 'Dinh Dưỡng', onClick: () => handleMenuClick('3') },
+    {
+      key: '3',
+      icon: <ContainerOutlined />,
+      label: 'Dinh Dưỡng',
+      children: [
+        { key: '3.1', label: 'Đã phê duyệt', onClick: () => handleMenuClick('3.1') },
+        { key: '3.2', label: 'Chưa Phê Duyệt', onClick: () => handleMenuClick('3.2') }
+      ]
+    },
     {
       key: '4',
       label: 'Thực Đơn',
       icon: <MailOutlined />,
       onClick: () => handleMenuClick('4')
-    },
-   
+    }
   ]
   const adminItems: MenuItem[] = [
     {
@@ -91,17 +103,34 @@ const Sidebar: React.FC = () => {
       onClick: () => handleMenuClick('5')
     }
   ]
+  const nutritionistItems: MenuItem[] = [
+    {
+      key: '6',
+      label: 'Chat',
+      icon: <AppstoreOutlined />,
+      onClick: () => handleMenuClick('6')
+    }
+  ]
   let displayedItems: MenuItem[] = []
   let defaultOpenKeys = '1'
-  if(userRole === 'Manager' ) {
-    displayedItems = managerItems;
-  }else if(userRole === 'Admin'){
+  if (userRole === 'Manager') {
+    displayedItems = managerItems
+  } else if (userRole === 'Admin') {
     displayedItems = adminItems
     defaultOpenKeys = '5'
+  } else if (userRole === 'Nutritionist') {
+    displayedItems = nutritionistItems
+    defaultOpenKeys = '6'
   }
   return (
     <div className='sidebar'>
-      <Menu theme='light' mode='inline' selectedKeys={[selectedKey]} items={displayedItems} defaultOpenKeys={[defaultOpenKeys]} />
+      <Menu
+        theme='light'
+        mode='inline'
+        selectedKeys={[selectedKey]}
+        items={displayedItems}
+        defaultOpenKeys={[defaultOpenKeys]}
+      />
     </div>
   )
 }

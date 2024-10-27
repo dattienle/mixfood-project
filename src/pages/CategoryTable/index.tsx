@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button, Table, Input, Space, Switch } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useNavigate } from 'react-router-dom'
 import { SearchOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons'
 import Category from '~/Models/categoryModel'
 import { CommonButton } from '~/UI/button/Button'
-import { focusManager, Mutation, useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { createCategory, getCategories, updateCategory, updateStatusCategory } from '~/api/categoriesAPI'
-import Modal from 'antd/es/modal/Modal'
-import { Module } from 'module'
+
 import { toast } from 'react-toastify'
 import ModalUpdateCategory from '~/pages/CategoryTable/modal/modalUpdate'
 import ModalAddCategory from '~/pages/CategoryTable/modal/modalAdd'
@@ -28,8 +27,8 @@ export default function CategoryPage() {
     refetch: refetchCategories,
     isError
   } = useQuery('categories', getCategories)
-  const categories = categoriesResponse?.data
-
+  const categories = categoriesResponse?.data.items
+console.log(categories)
   // updateStatus
   const updateStatus = useMutation(updateStatusCategory, {
     onSuccess: () => {

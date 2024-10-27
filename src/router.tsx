@@ -5,13 +5,14 @@ import LoginPage from '~/auth/Login'
 import { Authentication } from '~/auth/protectedRoute'
 import ErrorPage from '~/components/ErrorPage'
 import CategoryPage from '~/pages/CategoryTable'
+import ChatPage from '~/pages/Chat/chatPage'
 import Dashboard from '~/pages/Dashboard'
 import IngredientApprovePage from '~/pages/IngredientTable/approve'
 import IngredientNotApprovePage from '~/pages/IngredientTable/notApprove'
-import NutritionPage from '~/pages/NutritionTable'
+import NutritionApprovePage from '~/pages/NutritionTable/approve'
+import NutritionPage from '~/pages/NutritionTable/approve'
+import NutritionNotApprovePage from '~/pages/NutritionTable/notApprove'
 import ProductPage from '~/pages/ProductTable'
-
-
 
 export const router = createBrowserRouter([
   {
@@ -41,8 +42,12 @@ export const router = createBrowserRouter([
             element: <CategoryPage />
           },
           {
-            path: 'dinh-duong',
-            element: <NutritionPage />
+            path: 'dinh-duong-da-duyet',
+            element: <NutritionApprovePage />
+          },
+          {
+            path: 'dinh-duong-chua-duyet',
+            element: <NutritionNotApprovePage />
           },
           {
             path: 'thuc-don',
@@ -62,6 +67,21 @@ export const router = createBrowserRouter([
           {
             path: 'doanh-thu',
             element: <Dashboard />
+          }
+        ]
+      },
+      {
+        path: '/nutritionist/dashboard',
+        element: <App />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <ChatPage />
+          },
+          {
+            path: 'chat',
+            element: <ChatPage />
           }
         ]
       }

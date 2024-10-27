@@ -4,7 +4,7 @@ interface JwtPayload {
   Id: string
   Email: string
   Name: string
-  Role: string
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string
 }
 
 const GetDataByToken = (token: string): any | null => {
@@ -12,7 +12,7 @@ const GetDataByToken = (token: string): any | null => {
   const id = decode?.Id
   const email = decode?.Email
   const name = decode?.Name
-  const role = decode?.Role
+  const role = decode?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
 
   return { id, email, name, role }
 }

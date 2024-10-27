@@ -1,0 +1,29 @@
+/* ChatBody.css */
+.chat-body {
+  flex-grow: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #ecf0f1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.message {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  max-width: 60%;
+}
+
+.sent {
+  align-self: flex-end;
+  background-color: #3498db;
+  color: white;
+}
+
+.received {
+  align-self: flex-start;
+  background-color: #e0e0e0;
+}

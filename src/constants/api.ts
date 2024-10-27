@@ -1,1 +1,1 @@
-export const API_ENDPOINT = "https://mixfood.azurewebsites.net/api"
+export const API_ENDPOINT = "https://dishadvisorapi.azurewebsites.net/api"

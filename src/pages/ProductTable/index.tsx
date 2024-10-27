@@ -11,9 +11,11 @@ import "./style.scss"
 import {  getProductTemplate } from '~/api/productTemplateApi'
 import Product from '~/Models/productTemplateModel'
 import Category from '~/Models/categoryModel'
+import ModalAddProduct from '~/pages/ProductTable/modal/modalAdd'
 export default function ProductPage() {
 
   const [searchText, setSearchText] = useState('')
+  const [isAddModalProduct, setIsAddModalProduct] = useState(false)
   const {data: productResponse, isLoading, isError} = useQuery('productTemplate',getProductTemplate)
   const products = productResponse?.data
   const columns: ColumnType<Product>[] = [
@@ -95,6 +97,15 @@ export default function ProductPage() {
     item.name.toLowerCase().includes(searchText.toLowerCase())
   ) || [];
 
+  const handleEditOk  = () =>{
+    setIsAddModalProduct(false)
+  }
+
+  const handleClose = () =>{
+    setIsAddModalProduct(false)
+  }
+  // handleClose
+  // handleChange
   return <div style={{ background: 'white', padding: '20px' }}>
     <h1>Quản Lý Thực Đơn</h1>
     <Space style={{ marginBottom: 16 }}>
@@ -104,10 +115,19 @@ export default function ProductPage() {
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
         />
-        <CommonButton type='primary' icon={<PlusOutlined />}>
+        <CommonButton type='primary'  onClick={() => setIsAddModalProduct(true)} icon={<PlusOutlined />}>
           Thêm Danh Mục
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} />
+      {isAddModalProduct && (
+        <ModalAddProduct
+          isOpen={isAddModalProduct}
+          handleOk={handleEditOk}
+          handleCancel={handleClose}
+          // handleChange={handleChange}
+          // formValues={formValues}
+        />
+      )}
   </div>
 }

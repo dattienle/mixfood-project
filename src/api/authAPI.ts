@@ -8,7 +8,7 @@ const api = axios.create({
 export const login = async (data: LoginType) => {
   try {
     console.log(data)
-      const response = await api.post("/Authentication/login",  {
+      const response = await api.post("/Account/Login",  {
         email: data.email,
         password: data.password
       } ,
@@ -17,10 +17,14 @@ export const login = async (data: LoginType) => {
           'Content-Type': 'application/json'  // Đảm bảo định dạng JSON
    } })
       if (response && response.data) {
-        return response.data; // Assuming response.data contains the token and user info
+        console.log("login thanh cong")
+        return response.data.data; // Assuming response.data contains the token and user info
+      }else {
+        // Trả về thông báo lỗi từ server (nếu có)
+        throw new Error(response?.data?.message || 'Đăng nhập thất bại.'); 
       }
   }catch(error: any){
-    console.log('Login failed: ', error.response ? error.response.data : error.message)
+    throw error;
   }
 
 }
