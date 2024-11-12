@@ -7,11 +7,11 @@ import ErrorPage from '~/components/ErrorPage'
 import CategoryPage from '~/pages/CategoryTable'
 import ChatPage from '~/pages/Chat/chatPage'
 import Dashboard from '~/pages/Dashboard'
+import IngredientForNutritionist from '~/pages/IngredientNutritionist'
 import IngredientApprovePage from '~/pages/IngredientTable/approve'
 import IngredientNotApprovePage from '~/pages/IngredientTable/notApprove'
+import IngredientTypePage from '~/pages/IngredientTypeTable'
 import NutritionApprovePage from '~/pages/NutritionTable/approve'
-import NutritionPage from '~/pages/NutritionTable/approve'
-import NutritionNotApprovePage from '~/pages/NutritionTable/notApprove'
 import ProductPage from '~/pages/ProductTable'
 
 export const router = createBrowserRouter([
@@ -46,8 +46,8 @@ export const router = createBrowserRouter([
             element: <NutritionApprovePage />
           },
           {
-            path: 'dinh-duong-chua-duyet',
-            element: <NutritionNotApprovePage />
+            path: 'loai-nguyen-lieu',
+            element: <IngredientTypePage />
           },
           {
             path: 'thuc-don',
@@ -82,6 +82,10 @@ export const router = createBrowserRouter([
           {
             path: 'chat',
             element: <ChatPage />
+          },
+          {
+            path: 'nguyen-lieu-chua-duyet',
+            element: <IngredientForNutritionist />
           }
         ]
       }

@@ -13,20 +13,14 @@ import {
   message,
   Select,
   Spin,
-  Avatar,
-  Radio
 } from 'antd'
 import Category from '~/Models/categoryModel'
-import ProductTemplate from '~/Models/productTemplateModel'
-
 import { PlusOutlined } from '@ant-design/icons'
 import { useQuery } from 'react-query'
 import { getCategories } from '~/api/categoriesAPI'
-import { getIngredients } from '~/api/ingredientApi'
-import Ingredient from '~/Models/ingredientModel'
 import { getIngredientType } from '~/api/ingredientTypeApi'
-import IngredientType from '~/Models/ingredientTypeModel'
-interface ModalAddProductProps {
+
+interface ModalUpdateProductProps {
   isOpen: boolean
   handleOk: () => void
   handleCancel: () => void
@@ -41,7 +35,7 @@ const getBase64 = (file: File): Promise<string> =>
     reader.onload = () => resolve(reader.result as string)
     reader.onerror = (error) => reject(error)
   })
-const ModalAddProduct: React.FC<ModalAddProductProps> = ({
+const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   isOpen,
   handleOk,
   handleCancel
@@ -78,16 +72,12 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
 
   // Call api category để selected
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedIngredientType, setSelectedIngredientType] = useState<string | null>("BASE")
+
   const { isLoading, error, data: categories } = useQuery('categories', getCategories)
+
   const {
-    isLoading: isLoadingIngredient,
-    error: errorIngredient,
-    data: ingredients
-  } = useQuery('ingredients', getIngredients)
-  const {
-    isLoading: isLoadingIngredientType,
-    error: errorIngredientType,
+    // isLoading: isLoadingIngredientType,
+    // error: errorIngredientType,
     data: ingredientType
   } = useQuery('ingredientType', getIngredientType)
   console.log(ingredientType)
@@ -102,18 +92,10 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
   const handleChangeCategory = (value: string) => {
     setSelectedCategory(value)
   }
-  const handleSelectIngredientType = (value: string) => {
-    setSelectedIngredientType(value)
-  }
-
-  const filteredIngredients = ingredients
-    ? ingredients.data.items.filter((ingredient: Ingredient) =>
-        selectedIngredientType ? ingredient.ingredientType.name === selectedIngredientType : true
-      )
-    : []
+  
   return (
     <Modal
-      title='Thêm món ăn mới'
+      title='Chỉnh sửa món ăn'
       open={isOpen}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -168,13 +150,7 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
             // onChange={value => handleChange(value, 'price')}
           />
         </Form.Item>
-        <Form.Item label='Mô tả'>
-          <Input.TextArea
-            placeholder='Nhập mô tả'
-            // value={formValues.description}
-            // onChange={e => handleChange(e.target.value, 'description')}
-          />
-        </Form.Item>
+      
         <Form.Item label='Chọn danh mục'>
           {categories ? (
             <Select placeholder='Chọn danh mục' onChange={handleChangeCategory} value={selectedCategory}>
@@ -188,30 +164,10 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
             <div>Chưa có danh mục nào </div>
           )}
         </Form.Item>
-        <Form.Item label='Chọn loại nguyên liệu'>
-  <Radio.Group onChange={(e) => handleSelectIngredientType(e.target.value)} value={selectedIngredientType} >
-    {ingredientType?.data.items.map((type: IngredientType) => (
-      <Radio.Button key={type.id} value={type.name}>
-        {type.name}
-      </Radio.Button>
-    ))}
-  </Radio.Group>
-</Form.Item>
-        <Form.Item label='Chọn nguyên liệu'>
-          <div>
-            {filteredIngredients.map((ingredient: Ingredient) => (
-              <Avatar
-                key={ingredient.id}
-                src={ingredient.imageUrl}
-                size={64}
-                style={{ marginRight: '8px', marginBottom: '8px' }}
-              />
-            ))}
-          </div>
-        </Form.Item>
+       
       </Form>
     </Modal>
   )
 }
 
-export default ModalAddProduct
+export default ModalUpdateProduct

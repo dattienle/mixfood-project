@@ -44,6 +44,7 @@ export const Authentication: React.FC = () => {
             if (!location.pathname.startsWith('/nutritionist/dashboard')) {
               navigate('/nutritionist/dashboard')
             }
+            break
           default:
             navigate('/dang-nhap')
         }

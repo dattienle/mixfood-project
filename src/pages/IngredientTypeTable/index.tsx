@@ -1,59 +1,87 @@
-
-
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Table, Input, Space, Switch } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import { useNavigate } from 'react-router-dom'
 import { SearchOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons'
+import Category from '~/Models/categoryModel'
 import { CommonButton } from '~/UI/button/Button'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { toast } from 'react-toastify'
-import { getNutrition, updateStatusNutrition } from '~/api/nutritionApi'
-import Nutrition from '~/Models/nutritionModel'
-import ModalAddProduct from '~/pages/NutritionTable/modal/modalAddNutrition'
-import ModalUpdateNutrition from '~/pages/NutritionTable/modal/modalUpdateNutrition'
+import { createCategory, getCategories, updateCategory, updateStatusCategory } from '~/api/categoriesAPI'
 
-export default function NutritionApprovePage() {
+import { toast } from 'react-toastify'
+import ModalUpdateCategory from '~/pages/CategoryTable/modal/modalUpdate'
+import ModalAddCategory from '~/pages/CategoryTable/modal/modalAdd'
+import { getIngredientType } from '~/api/ingredientTypeApi'
+import ModalAddIngredientType from '~/pages/IngredientTypeTable/modal/modalAdd'
+import IngredientType from '~/Models/ingredientTypeModel'
+import ModalUpdateIngredientType from '~/pages/IngredientTypeTable/modal/modalUpdate'
+
+export default function IngredientTypePage() {
   const [searchText, setSearchText] = useState('')
   const queryClient = useQueryClient()
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
-  const [selectedNutrition, setSelectedNutrition] = useState<Nutrition | null>(null)
+  const [selectedIngredientType, setSelectedIngredientType] = useState<IngredientType | null>(null)
+
+  // call api get categories
   const {
-    data: nutritions,
+    data: ingredientTypeResponse,
     isLoading,
-    refetch: refetchNutritions,
+    refetch,
     isError
-  } = useQuery('nutritions', getNutrition)
-  const nutritionItems = nutritions?.data.items || [];
+  } = useQuery('ingredientType', getIngredientType)
+  const categories = ingredientTypeResponse?.data.items
   // updateStatus
-  const updateStatus = useMutation(updateStatusNutrition, {
+  const updateStatus = useMutation(updateStatusCategory, {
     onSuccess: () => {
-      queryClient.invalidateQueries('nutritions')
+      queryClient.invalidateQueries('categories')
       toast.success('Cập nhật trạng thái thành công!');
+      refetch()
     },
     onError: (error) => {
-      console.log('loi', error)
+      console.log('loi')
     }
   })
-  const handleStatusChange = (id: number, isDelete: boolean) => {
-    updateStatus.mutate({ id, isDelete })
-  }
+// chỉnh sửa tên
+  const editCategory = useMutation(
+    (category: { id: number; name: string }) => updateCategory(category.id, category.name),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('categories')
+        refetch()
+        handleClose()
+      },
+      onError: (error) => {
+        console.log('loi update')
+      }
+    }
+  )
   // search
   const handleSearch = (value: string) => {
     setSearchText(value)
   }
+
+  // status || mutate
+  const handleStatusChange = (id: number, isDelete: boolean) => {
+    updateStatus.mutate({ id, isDelete })
+  }
+
   const handleAddOk = async () => {
+   
     setIsModalAddOpen(false)
-    setIsModalUpdateOpen(false)
-   await  refetchNutritions()
+   await  refetch()
   }
   
   const handleClose = () => {
     setIsModalAddOpen(false)
-   
+    setIsModalUpdateOpen(false)
   }
+  const handleUpdateOk = async() =>{
+    setIsModalUpdateOpen(false)
+    await refetch()
 
-  const columns: ColumnsType<Nutrition> = [
+      }
+  const columns: ColumnsType<Category> = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -62,51 +90,25 @@ export default function NutritionApprovePage() {
     },
     {
       title: 'Tên',
-      dataIndex: 'ingredient',
-      key: 'ingredient',
-      align: 'center',
-      render: (ingredient) => ingredient?.name
+      dataIndex: 'name',
+      key: 'name',
+      align: 'center'
     },
     {
       title: 'Hình ảnh',
       dataIndex: 'imageUrl',
-      key: 'image',
+      key: 'imageUrl',
       align: 'center',
-      render: (imageUrl: string) => <img src={imageUrl} alt='Hình ảnh sản phẩm' style={{ width: 100, height: 100 }} />
+      render: (imageUrl: string) => <img src={imageUrl} alt='Hình ảnh loại nguyên liệu' style={{ width: 50, height: 50 }} />
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'description',
-      key: 'description',
-      align: 'center',
-    },
-    {
-      title: 'Vitamin',
-      dataIndex: 'vitamin',
-      key: 'vitamin',
-      align: 'center',
-    },
-    {
-      title: 'Giá trị sức khỏe',
-      dataIndex: 'healthValue',
-      key: 'healthValue',
-      align: 'center',
-    },
-    {
-      title: 'Nutrilite',
-      dataIndex: 'nutrilite',
-      key: 'nutrilite',
-      align: 'center',
-    },
-    {
-      title: 'Hành động',
-      dataIndex: 'action',
-      key: 'action',
+      title: 'Chỉnh sửa',
+      key: 'edit',
       align: 'center',
       render: (_, record) => (
         <Space>
           <Button type='link' >
-            <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedNutrition(record); }} />
+            <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedIngredientType(record); }} />
           </Button>
         </Space>
       )
@@ -114,7 +116,7 @@ export default function NutritionApprovePage() {
     {
       title: 'Trạng thái',
       dataIndex: 'isDeleted',
-      key: 'isDeleted', // Change key to 'isDeleted'
+      key: 'status',
       render: (_, record) => (
         <Space>
           <Switch
@@ -140,11 +142,11 @@ export default function NutritionApprovePage() {
   }
 
   const filteredData =
-    nutritionItems?.filter((item: Nutrition) => item.ingredient.name.toLowerCase().includes(searchText.toLowerCase())) || []
+    categories?.filter((item: Category) => item.name.toLowerCase().includes(searchText.toLowerCase())) || []
 
   return (
     <div style={{ background: 'white', padding: '20px' }}>
-      <h1>Quản Lý Danh Mục</h1>
+      <h1>Quản Lý Loại Nguyên Liệu</h1>
       <Space style={{ marginBottom: 16 }}>
         <Input
           placeholder='Tìm kiếm theo tên'
@@ -157,21 +159,20 @@ export default function NutritionApprovePage() {
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} rowKey={(record) => record.id} />
-      
       {isModalAddOpen && (
-        <ModalAddProduct
+        <ModalAddIngredientType
           isOpen={isModalAddOpen}
           handleOk={handleAddOk}
           handleCancel={handleClose}
-  
         />
       )}
-      {isModalUpdateOpen &&(
-        <ModalUpdateNutrition
-        isOpen={isModalUpdateOpen}
-          handleOk={handleAddOk}
+      {isModalUpdateOpen && (
+        <ModalUpdateIngredientType
+          isOpen={isModalUpdateOpen}
+          handleOk={handleUpdateOk}
           handleCancel={handleClose}
-          nutritionId={selectedNutrition?.id || NaN}
+          ingredientTypeId={selectedIngredientType?.id || NaN}
+    
         />
       )}
     </div>

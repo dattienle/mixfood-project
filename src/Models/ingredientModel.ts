@@ -6,8 +6,11 @@ interface Ingredient {
   price: number,
   calo: number,
   description: string,
+  quantity: number,
+  urlInfo: string,
   imageUrl: string,
   isDeleted: boolean,
+  isApproved: boolean,
   ingredientType: IngredientType,
   
 }

@@ -19,11 +19,13 @@ const Sidebar: React.FC = () => {
     '/manager/dashboard/danh-muc': '1',
     '/manager/dashboard/nguyen-lieu-da-duyet': '2.1',
     '/manager/dashboard/nguyen-lieu-chua-duyet': '2.2',
-    '/manager/dashboard/dinh-duong-da-duyet': '3.1',
-    '/manager/dashboard/dinh-duong-chua-duyet': '3.2',
+    '/manager/dashboard/dinh-duong-da-duyet': '3',
     '/manager/dashboard/thuc-don': '4',
-    '/admin/dashboard/doanh-thu': '5',
-    '/nutritionist/dashboard/chat': '6'
+    '/manager/dashboard/loai-nguyen-lieu': '5',
+
+    '/admin/dashboard/doanh-thu': '6',
+    '/nutritionist/dashboard/chat': '7',
+     '/nutritionist/dashboard/nguyen-lieu-chua-duyet': '8'
   }
 
   const [selectedKey, setSelectedKey] = React.useState<string>('1')
@@ -37,11 +39,13 @@ const Sidebar: React.FC = () => {
       '1': '/manager/dashboard/danh-muc',
       '2.1': '/manager/dashboard/nguyen-lieu-da-duyet',
       '2.2': '/manager/dashboard/nguyen-lieu-chua-duyet',
-      '3.1': '/manager/dashboard/dinh-duong-da-duyet',
-      '3.2': '/manager/dashboard/dinh-duong-chua-duyet',
+      '3': '/manager/dashboard/dinh-duong-da-duyet',
       '4': '/manager/dashboard/thuc-don',
-      '5': '/admin/dashboard/doanh-thu',
-      '6': '/nutritionist/dashboard/chat'
+      '5': '/manager/dashboard/loai-nguyen-lieu',
+      '6': '/admin/dashboard/doanh-thu',
+      '7': '/nutritionist/dashboard/chat',
+      '8': '/nutritionist/dashboard/nguyen-lieu-chua-duyet',
+
     }
     console.log(keyToPathMap[key])
     console.log(pathToKeyMap[location.pathname])
@@ -83,21 +87,25 @@ const Sidebar: React.FC = () => {
       key: '3',
       icon: <ContainerOutlined />,
       label: 'Dinh Dưỡng',
-      children: [
-        { key: '3.1', label: 'Đã phê duyệt', onClick: () => handleMenuClick('3.1') },
-        { key: '3.2', label: 'Chưa Phê Duyệt', onClick: () => handleMenuClick('3.2') }
-      ]
+       onClick: () => handleMenuClick('3')
+
     },
     {
       key: '4',
       label: 'Thực Đơn',
       icon: <MailOutlined />,
       onClick: () => handleMenuClick('4')
+    },
+    {
+      key: '5',
+      label: 'Loại Nguyên Liệu',
+      icon: <MailOutlined />,
+      onClick: () => handleMenuClick('5')
     }
   ]
   const adminItems: MenuItem[] = [
     {
-      key: '5',
+      key: '6',
       label: 'Doanh thu',
       icon: <AppstoreOutlined />,
       onClick: () => handleMenuClick('5')
@@ -105,10 +113,16 @@ const Sidebar: React.FC = () => {
   ]
   const nutritionistItems: MenuItem[] = [
     {
-      key: '6',
+      key: '7',
       label: 'Chat',
       icon: <AppstoreOutlined />,
-      onClick: () => handleMenuClick('6')
+      onClick: () => handleMenuClick('7')
+    },
+    {
+      key: '8',
+      label: 'Nguyên liệu ',
+      icon: <MailOutlined />,
+      onClick: () => handleMenuClick('8') 
     }
   ]
   let displayedItems: MenuItem[] = []
@@ -117,10 +131,10 @@ const Sidebar: React.FC = () => {
     displayedItems = managerItems
   } else if (userRole === 'Admin') {
     displayedItems = adminItems
-    defaultOpenKeys = '5'
+    defaultOpenKeys = '6'
   } else if (userRole === 'Nutritionist') {
     displayedItems = nutritionistItems
-    defaultOpenKeys = '6'
+    defaultOpenKeys = '7'
   }
   return (
     <div className='sidebar'>

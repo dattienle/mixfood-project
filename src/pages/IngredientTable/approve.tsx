@@ -6,25 +6,59 @@ import Table, { ColumnType } from 'antd/es/table'
 import IngredientType from '~/Models/ingredientTypeModel'
 import Ingredient from '~/Models/ingredientModel'
 import { EditOutlined } from '@ant-design/icons'
-import { getIngredients } from '~/api/ingredientApi'
-import { useQuery } from 'react-query'
+import { approvedIngredient, getIngredients, updateStatusIngredient } from '~/api/ingredientApi'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { toast } from 'react-toastify'
 export default function IngredientApprovePage() {
-
+  const queryClient = useQueryClient()
   const [searchText, setSearchText] = useState('')
-  const {data: ingredientResponse, isLoading, isError} = useQuery('ingredient',getIngredients)
+  const {
+    data: ingredientResponse,
+    refetch: refetchIngredient,
+    isLoading,
+    isError
+  } = useQuery('ingredient', getIngredients)
   const ingredients = ingredientResponse?.data.items
+  const updateStatus = useMutation(updateStatusIngredient, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('categories')
+      toast.success('Cập nhật trạng thái thành công!')
+
+      refetchIngredient()
+    },
+    onError: (error) => {
+      console.log('loi')
+    }
+  })
+  const approvedStatus = useMutation(approvedIngredient, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('ingredient')
+      toast.success('Duyệt nguyên liệu thành công!')
+
+      refetchIngredient()
+    },
+    onError: (error) => {
+      console.log('loi')
+    }
+  })
+  const handleApproved = (id: number, isApproved: boolean) => {
+    approvedStatus.mutate({ id, isApproved })
+  }
+  const handleStatusChange = (id: number, isDelete: boolean) => {
+    updateStatus.mutate({ id, isDelete })
+  }
   const columns: ColumnType<Ingredient>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      align: 'center',
+      align: 'center'
     },
     {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',
-      align: 'center',
+      align: 'center'
     },
     {
       title: 'Giá',
@@ -33,8 +67,13 @@ export default function IngredientApprovePage() {
       align: 'center',
       render: (price: number) => `${price.toLocaleString()} VND`,
       sorter: (a, b) => a.price - b.price,
-      sortDirections: ['ascend', 'descend'],
-     
+      sortDirections: ['ascend', 'descend']
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
     },
     {
       title: 'Calo',
@@ -42,20 +81,20 @@ export default function IngredientApprovePage() {
       key: 'calo',
       align: 'center',
       sorter: (a, b) => a.calo - b.calo,
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['ascend', 'descend']
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'description',
-      key: 'description',
-      align: 'center',
+      title: 'Link',
+      dataIndex: 'urlInfo',
+      key: 'urlInfo',
+      align: 'center'
     },
     {
       title: 'Hình ảnh',
       dataIndex: 'imageUrl',
       key: 'imageUrl',
       align: 'center',
-      render: (imageUrl: string) => <img src={imageUrl} alt="Hình ảnh nguyên liệu" style={{ width: 50, height: 50 }} />,
+      render: (imageUrl: string) => <img src={imageUrl} alt='Hình ảnh nguyên liệu' style={{ width: 50, height: 50 }} />
     },
     {
       title: 'Loại gia vị',
@@ -63,18 +102,22 @@ export default function IngredientApprovePage() {
       key: 'ingredientType',
       align: 'center',
       sorter: (a, b) => a.ingredientType.name.localeCompare(b.ingredientType.name),
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['ascend', 'descend']
     },
     {
-      title: 'Chỉnh sửa',
-      key: 'edit',
+      title: 'Phê Duyệt',
+      key: 'status',
       align: 'center',
       render: (_, record) => (
-        <Button style={{color: '#F8B602', fontSize: '18px'}} icon={<EditOutlined />} 
-        // onClick={() => handleEditIngredient(record.id)}
-        >
-          Chỉnh sửa
-        </Button>
+        <Switch
+        style={{ backgroundColor: record.isApproved ? '#F8B602' : '' }}
+          checked={record.isApproved}
+          onChange={() => {
+            if (record.id) {
+              handleApproved(record.id, !record.isApproved)
+            }
+          }}
+        />
       ),
     },
     {
@@ -83,33 +126,37 @@ export default function IngredientApprovePage() {
       align: 'center',
       render: (_, record) => (
         <Switch
-        style={{ backgroundColor: record.isDeleted ? '' : '#F8B602' }}
+          style={{ backgroundColor: !record.isDeleted ? '#F8B602' : '' }}
           checked={!record.isDeleted}
-          // onChange={(checked) => handleUpdateStatus(record.id, checked)}
+          onChange={() => {
+            if (record.id) {
+              handleStatusChange(record.id, !record.isDeleted)
+            }
+          }}
         />
-      ),
-    },
+      )
+    }
   ]
   const handleSearch = (value: string) => {
     setSearchText(value)
   }
-  const filteredData = ingredients?.filter((item: Ingredient) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()) && item.isDeleted === false
-  ) || [];
+  const filteredData =
+    ingredients?.filter(
+      (item: Ingredient) => item.name.toLowerCase().includes(searchText.toLowerCase()) && item.isApproved === true
+    ) || []
 
-  return <div style={{ background: 'white', padding: '20px' }}>
-    <h1>Quản Lý Nguyên Liệu</h1>
-    <Space style={{ marginBottom: 16 }}>
+  return (
+    <div style={{ background: 'white', padding: '20px' }}>
+      <h1>Quản Lý Nguyên Liệu</h1>
+      <Space style={{ marginBottom: 16 }}>
         <Input
-          placeholder="Tìm kiếm theo tên"
+          placeholder='Tìm kiếm theo tên'
           onChange={(e) => handleSearch(e.target.value)}
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
         />
-        <CommonButton type='primary' icon={<PlusOutlined />}>
-          Thêm Danh Mục
-        </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} />
-  </div>
+    </div>
+  )
 }

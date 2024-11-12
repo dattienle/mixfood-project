@@ -1,18 +1,39 @@
 import { Button, Input, Space, Switch } from 'antd'
 import React, { useState } from 'react'
 import { CommonButton } from '~/UI/button/Button'
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
+import { SearchOutlined, PlusOutlined, FastBackwardFilled } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
 
 import Ingredient from '~/Models/ingredientModel'
 import { EditOutlined } from '@ant-design/icons'
-import { getIngredients } from '~/api/ingredientApi'
-import { useQuery } from 'react-query'
-export default function IngredientNotApprovePage() {
+import { approvedIngredient, getIngredients, updateStatusIngredient } from '~/api/ingredientApi'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import ModalUpdateIngredient from '~/pages/IngredientTable/modal/modalUpdateIngredient'
+import { toast } from 'react-toastify'
+import ModalAddIngredient from '~/pages/IngredientTable/modal/modalAddIngredient'
 
+export default function IngredientNotApprovePage() {
+  const queryClient = useQueryClient()
   const [searchText, setSearchText] = useState('')
-  const {data: ingredientResponse, isLoading, isError} = useQuery('ingredient',getIngredients)
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+  const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
+  const {data: ingredientResponse, refetch, isLoading, isError} = useQuery('ingredient',getIngredients)
   const ingredients = ingredientResponse?.data.items
+  const approvedStatus = useMutation(approvedIngredient, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('ingredient')
+      toast.success('Duyệt nguyên liệu thành công!')
+
+      refetch()
+    },
+    onError: (error) => {
+      console.log('loi')
+    }
+  })
+  const handleApproved = (id: number, isApproved: boolean) => {
+    approvedStatus.mutate({ id, isApproved })
+  }
   const columns: ColumnType<Ingredient>[] = [
     {
       title: 'ID',
@@ -40,10 +61,16 @@ export default function IngredientNotApprovePage() {
       align: 'center',
     },
     {
-      title: 'Mô tả',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
       align: 'center',
+    },
+    {
+      title: 'Link',
+      dataIndex: 'urlInfo',
+      key: 'urlInfo',
+      align: 'center'
     },
     {
       title: 'Hình ảnh',
@@ -63,22 +90,26 @@ export default function IngredientNotApprovePage() {
       key: 'edit',
       align: 'center',
       render: (_, record) => (
-        <Button style={{color: '#F8B602', fontSize: '18px'}} icon={<EditOutlined />} 
-        // onClick={() => handleEditIngredient(record.id)}
-        >
-          Chỉnh sửa
-        </Button>
-      ),
+        <Space>
+          <Button type='link' >
+            <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedIngredient(record); }} />
+          </Button>
+        </Space>
+      )
     },
     {
-      title: 'Trạng thái',
+      title: 'Phê Duyệt',
       key: 'status',
       align: 'center',
       render: (_, record) => (
         <Switch
-        style={{ backgroundColor: record.isDeleted ? '' : '#F8B602' }}
-          checked={!record.isDeleted}
-          // onChange={(checked) => handleUpdateStatus(record.id, checked)}
+        style={{ backgroundColor: record.isApproved ? '#F8B602' : '' }}
+          checked={record.isApproved}
+          onChange={() => {
+            if (record.id) {
+              handleApproved(record.id, !record.isApproved)
+            }
+          }}
         />
       ),
     },
@@ -87,8 +118,23 @@ export default function IngredientNotApprovePage() {
     setSearchText(value)
   }
   const filteredData = ingredients?.filter((item: Ingredient) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase()) && item.isDeleted === true
+    item.name.toLowerCase().includes(searchText.toLowerCase()) && item.isApproved === false
   ) || [];
+
+  const handleAddOk = async () => {
+   
+    setIsModalAddOpen(false)
+   await  refetch()
+  }
+  const handleUpdateOk = async() =>{
+    setIsModalUpdateOpen(false)
+    await refetch()
+
+      }
+  const handleClose = () => {
+    setIsModalUpdateOpen(false)
+   setIsModalAddOpen(false)
+  }
 
   return <div style={{ background: 'white', padding: '20px' }}>
     <h1>Quản Lý Nguyên Liệu Chưa Duyệt</h1>
@@ -99,10 +145,26 @@ export default function IngredientNotApprovePage() {
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
         />
-        <CommonButton type='primary' icon={<PlusOutlined />}>
+        <CommonButton type='primary' icon={<PlusOutlined />} onClick={ () => { console.log('Button clicked');setIsModalAddOpen(true)}}>
           Thêm Danh Mục
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} />
+      {isModalUpdateOpen &&(
+        <ModalUpdateIngredient
+        isOpen={isModalUpdateOpen}
+          handleOk={handleUpdateOk}
+          handleCancel={handleClose}
+          ingredientId={selectedIngredient?.id || NaN}
+
+        />
+      )}
+      {isModalAddOpen &&(
+        <ModalAddIngredient
+       isOpen= {isModalAddOpen}
+       handleOk={handleAddOk}
+       handleCancel={handleClose} 
+        />
+      )}
   </div>
 }

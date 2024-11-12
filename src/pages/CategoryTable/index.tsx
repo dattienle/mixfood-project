@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { Button, Table, Input, Space, Switch } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ import ModalAddCategory from '~/pages/CategoryTable/modal/modalAdd'
 
 export default function CategoryPage() {
   const [searchText, setSearchText] = useState('')
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
@@ -28,7 +28,6 @@ export default function CategoryPage() {
     isError
   } = useQuery('categories', getCategories)
   const categories = categoriesResponse?.data.items
-console.log(categories)
   // updateStatus
   const updateStatus = useMutation(updateStatusCategory, {
     onSuccess: () => {
@@ -73,8 +72,8 @@ console.log(categories)
     addCategory.mutate(formValues)
   }
   // status || mutate
-  const handleStatusChange = (id: number, isDeleted: boolean) => {
-    updateStatus.mutate({ id, isDeleted })
+  const handleStatusChange = (id: number, isDelete: boolean) => {
+    updateStatus.mutate({ id, isDelete })
   }
   // edit category || mutate
   const handleEditOk = () => {

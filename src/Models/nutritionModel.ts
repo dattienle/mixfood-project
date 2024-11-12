@@ -1,6 +1,8 @@
+import Ingredient from "~/Models/ingredientModel"
+
 interface Nutrition {
 id: number,
-ingredientId: number,
+ingredient: Ingredient,
 imageUrl: string,
 name: string,
 description: string,
@@ -9,3 +11,4 @@ healthValue: string,
 nutrition1: string,
 isDeleted: boolean
 }
+export default Nutrition
