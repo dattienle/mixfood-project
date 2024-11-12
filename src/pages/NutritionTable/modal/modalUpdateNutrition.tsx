@@ -86,7 +86,7 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
     <Modal
       title='Cập nhật dinh dưỡng'
       open={isOpen}
-      onOk={handleUpdateNutrition}
+      onOk={handleOk}
       onCancel={handleCancel}
       centered
       footer={[
