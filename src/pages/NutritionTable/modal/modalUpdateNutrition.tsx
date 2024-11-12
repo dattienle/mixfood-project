@@ -73,7 +73,7 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
     console.log(formData.get('imageUrl')); 
     try {
       await updateNutritionMutation({ id: nutritionId, data: formData })
-      queryClient.invalidateQueries('nutrition');
+     await  queryClient.invalidateQueries('nutrition');
       toast.success('Cập nhật dinh dưỡng thành công!')
       handleOk()
     } catch (error) {
