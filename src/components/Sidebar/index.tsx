@@ -5,14 +5,15 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { AppstoreOutlined, PieChartOutlined, DesktopOutlined, ContainerOutlined, MailOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import './style.scss'
-import GetDataByToken from '~/auth/auth'
+import GetDataByToken from '../../auth/auth'
+// import GetDataByToken from '~/auth/auth'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const token = localStorage.getItem('token')
+  const token = sessionStorage.getItem('token')
   const [userRole, setUserRole] = useState<string | null>(null)
 
   const pathToKeyMap: Record<string, string> = {

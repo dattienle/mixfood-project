@@ -1,4 +1,5 @@
-import Ingredient from "~/Models/ingredientModel"
+import Ingredient from "./ingredientModel"
+
 
 interface Nutrition {
 id: number,

@@ -21,7 +21,7 @@ export default tseslint.config(
     prettier: eslintPluginPrettier,
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }],
+      "@typescript-eslint/no-unused-vars": "off",
       "react-refresh/only-export-components": [
         "warn",
         {

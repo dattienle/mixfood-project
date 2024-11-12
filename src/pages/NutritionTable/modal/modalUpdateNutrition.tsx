@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { Modal, Input, Button, Form, message, Select, Spin, Typography } from 'antd'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
-import { updateNutritionById, getNutritionById } from '~/api/nutritionApi'
-import { getIngredients } from '~/api/ingredientApi'
-import Nutrition from '~/Models/nutritionModel'
+import { getNutritionById, updateNutritionById } from '../../../api/nutritionApi'
+// import { updateNutritionById, getNutritionById } from '~/api/nutritionApi'
+// import { getIngredients } from '~/api/ingredientApi'
+// import Nutrition from '~/Models/nutritionModel'
 
 interface ModalUpdateNutritionProps {
   isOpen: boolean

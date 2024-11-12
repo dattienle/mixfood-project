@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Input, Button } from 'antd';
-import Category from '~/Models/categoryModel';
+import Category from '../../../Models/categoryModel';
+
 
 
 interface ModalAddCategoryProps {

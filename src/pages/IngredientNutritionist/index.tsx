@@ -1,15 +1,18 @@
 import { Button, Input, Space, Switch } from 'antd'
 import React, { useState } from 'react'
-import { CommonButton } from '~/UI/button/Button'
+// import { CommonButton } from '~/UI/button/Button'
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
 
-import Ingredient from '~/Models/ingredientModel'
+// import Ingredient from '~/Models/ingredientModel'
 import { EditOutlined } from '@ant-design/icons'
-import { getIngredients, updateIngredientById } from '~/api/ingredientApi'
+// import { getIngredients, updateIngredientById } from '~/api/ingredientApi'
 import { QueryClient, useQuery, useQueryClient } from 'react-query'
-import ModalAddCalo from '~/pages/IngredientNutritionist/modal/modalAdd'
+// import ModalAddCalo from '~/pages/IngredientNutritionist/modal/modalAdd'
 import { toast } from 'react-toastify'
+import { getIngredients, updateIngredientById } from '../../api/ingredientApi'
+import Ingredient from '../../Models/ingredientModel'
+import ModalAddCalo from './modal/modalAdd'
 export default function IngredientForNutritionist() {
   const [searchText, setSearchText] = useState('')
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)

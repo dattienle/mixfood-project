@@ -4,7 +4,9 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import { router } from '~/router.tsx'
+import { router } from './router'
+// import { router } from './router'
+// import { router } from '~/router.tsx'
 const queryClient = new QueryClient()
 createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>

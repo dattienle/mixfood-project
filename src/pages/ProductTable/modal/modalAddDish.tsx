@@ -9,11 +9,14 @@ import {
   Select,
   Spin
 } from 'antd'
-import Category from '~/Models/categoryModel'
+// import Category from '~/Models/categoryModel'
 import {useMutation, useQuery } from 'react-query'
-import { getCategories } from '~/api/categoriesAPI'
-import { createDish } from '~/api/dishAPI'
+// import { getCategories } from '~/api/categoriesAPI'
+// import { createDish } from '~/api/dishAPI'
 import { toast } from 'react-toastify'
+import { getCategories } from '../../../api/categoriesAPI'
+import { createDish } from '../../../api/dishAPI'
+import Category from '../../../Models/categoryModel'
 // import Dish from '~/Models/DishModel'
 interface ModalAddProductProps {
   isOpen: boolean

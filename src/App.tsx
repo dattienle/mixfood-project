@@ -3,12 +3,14 @@ import { Header } from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import Sidebar from '~/components/Sidebar'
+// import Sidebar from '~/components/Sidebar'
 import './App.scss'
 import logo from './assets/image.png'
-import Navbar from '~/components/Navbar'
+// import Navbar from '~/components/Navbar'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Sidebar from './components/Sidebar'
+import Navbar from './components/Navbar'
 
 export default function App() {
   const siderStyle: React.CSSProperties = {

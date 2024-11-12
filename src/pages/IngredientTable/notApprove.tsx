@@ -1,16 +1,21 @@
 import { Button, Input, Space, Switch } from 'antd'
-import React, { useState } from 'react'
-import { CommonButton } from '~/UI/button/Button'
-import { SearchOutlined, PlusOutlined, FastBackwardFilled } from '@ant-design/icons'
+import  { useState } from 'react'
+// import { CommonButton } from '~/UI/button/Button'
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
 
-import Ingredient from '~/Models/ingredientModel'
+// import Ingredient from '~/Models/ingredientModel'
 import { EditOutlined } from '@ant-design/icons'
-import { approvedIngredient, getIngredients, updateStatusIngredient } from '~/api/ingredientApi'
+// import { approvedIngredient, getIngredients } from '~/api/ingredientApi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import ModalUpdateIngredient from '~/pages/IngredientTable/modal/modalUpdateIngredient'
+// import ModalUpdateIngredient from '~/pages/IngredientTable/modal/modalUpdateIngredient'
 import { toast } from 'react-toastify'
-import ModalAddIngredient from '~/pages/IngredientTable/modal/modalAddIngredient'
+import Ingredient from '../../Models/ingredientModel'
+import { approvedIngredient, getIngredients } from '../../api/ingredientApi'
+import { CommonButton } from '../../UI/button/Button'
+import ModalUpdateIngredient from './modal/modalUpdateIngredient'
+import ModalAddIngredient from './modal/modalAddIngredient'
+// import ModalAddIngredient from '~/pages/IngredientTable/modal/modalAddIngredient'
 
 export default function IngredientNotApprovePage() {
   const queryClient = useQueryClient()
@@ -18,6 +23,7 @@ export default function IngredientNotApprovePage() {
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
+  //ts
   const {data: ingredientResponse, refetch, isLoading, isError} = useQuery('ingredient',getIngredients)
   const ingredients = ingredientResponse?.data.items
   const approvedStatus = useMutation(approvedIngredient, {
@@ -28,7 +34,7 @@ export default function IngredientNotApprovePage() {
       refetch()
     },
     onError: (error) => {
-      console.log('loi')
+      console.log('loi', error)
     }
   })
   const handleApproved = (id: number, isApproved: boolean) => {

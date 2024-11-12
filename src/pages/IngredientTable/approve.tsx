@@ -1,14 +1,16 @@
 import { Button, Input, Space, Switch } from 'antd'
 import React, { useState } from 'react'
-import { CommonButton } from '~/UI/button/Button'
+// import { CommonButton } from '~/UI/button/Button'
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
-import IngredientType from '~/Models/ingredientTypeModel'
-import Ingredient from '~/Models/ingredientModel'
+// import IngredientType from '~/Models/ingredientTypeModel'
+// import Ingredient from '~/Models/ingredientModel'
 import { EditOutlined } from '@ant-design/icons'
-import { approvedIngredient, getIngredients, updateStatusIngredient } from '~/api/ingredientApi'
+// import { approvedIngredient, getIngredients, updateStatusIngredient } from '~/api/ingredientApi'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
+import { approvedIngredient, getIngredients, updateStatusIngredient } from '../../api/ingredientApi'
+import Ingredient from '../../Models/ingredientModel'
 export default function IngredientApprovePage() {
   const queryClient = useQueryClient()
   const [searchText, setSearchText] = useState('')

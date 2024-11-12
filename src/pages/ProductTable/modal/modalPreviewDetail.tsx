@@ -1,8 +1,9 @@
 import React from 'react';
 import { Modal, Button, Avatar, Collapse,Tooltip  } from 'antd';
 import { useQuery } from 'react-query';
-import { getPreviewDetails } from '~/api/templateSteps';
+// import { getPreviewDetails } from '~/api/templateSteps';
 import './../style.scss';
+import { getPreviewDetails } from '../../../api/templateSteps';
 
 interface ModalPreviewDetailProps {
   isOpen: boolean;

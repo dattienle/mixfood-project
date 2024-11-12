@@ -4,8 +4,10 @@ import { Modal, Input, Button, Form, message, Select, Spin } from 'antd'
 import { useMutation, useQuery } from 'react-query'
 
 import { toast } from 'react-toastify'
-import { createNutrition } from '~/api/nutritionApi'
-import { getIngredients } from '~/api/ingredientApi'
+import { getIngredients } from '../../../api/ingredientApi'
+import { createNutrition } from '../../../api/nutritionApi'
+// import { createNutrition } from '~/api/nutritionApi'
+// import { getIngredients } from '~/api/ingredientApi'
 
 interface ModalAddNutrition {
   isOpen: boolean

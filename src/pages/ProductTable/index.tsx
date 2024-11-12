@@ -1,23 +1,30 @@
 import { Button, Dropdown, Input, Menu, Space, Switch } from 'antd'
 import React, { useState } from 'react'
-import { CommonButton } from '~/UI/button/Button'
+// import { CommonButton } from '~/UI/button/Button'
 import { SearchOutlined, PlusOutlined, EllipsisOutlined, EyeOutlined } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
-import Ingredient from '~/Models/ingredientModel'
+// import Ingredient from '~/Models/ingredientModel'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import './style.scss'
-import Product from '~/Models/productTemplateModel'
-import ModalAddProduct from '~/pages/ProductTable/modal/modalAddDish'
-import { getDish } from '~/api/dishAPI'
-import ModalAddIngredient from '~/pages/ProductTable/modal/modalAddIngredient'
-import ModalPreviewDetail from '~/pages/ProductTable/modal/modalPreviewDetail'
+import { getDish } from '../../api/dishAPI'
+import ProductTemplate from '../../Models/productTemplateModel'
+import Ingredient from '../../Models/ingredientModel'
+import { CommonButton } from '../../UI/button/Button'
+import ModalAddProduct from './modal/modalAddDish'
+import ModalAddIngredient from './modal/modalAddIngredient'
+import ModalPreviewDetail from './modal/modalPreviewDetail'
+// import Product from '~/Models/productTemplateModel'
+// import ModalAddProduct from '~/pages/ProductTable/modal/modalAddDish'
+// import { getDish } from '~/api/dishAPI'
+// import ModalAddIngredient from '~/pages/ProductTable/modal/modalAddIngredient'
+// import ModalPreviewDetail from '~/pages/ProductTable/modal/modalPreviewDetail'
 export default function ProductPage() {
   const [searchText, setSearchText] = useState('')
   const [isAddModalProduct, setIsAddModalProduct] = useState(false)
   const [isEditModalProductOpen, setIsEditModalProductOpen] = useState(false)
   const [isEditIngredientsModalOpen, setIsEditIngredientsModalOpen] = useState(false)
   const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<ProductTemplate | null>(null)
   const [isPreviewDetailModalOpen, setIsPreviewDetailModalOpen] = useState(false)
   const { data: productResponse } = useQuery('productTemplate', getDish)
   const queryClient = useQueryClient()
@@ -30,7 +37,7 @@ export default function ProductPage() {
 
   const products = productResponse?.data.items || []
 
-  const columns: ColumnType<Product>[] = [
+  const columns: ColumnType<ProductTemplate>[] = [
     {
       title: 'Hình ảnh',
       dataIndex: 'imageUrl',

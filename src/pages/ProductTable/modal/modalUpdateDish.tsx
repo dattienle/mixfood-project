@@ -14,11 +14,14 @@ import {
   Select,
   Spin,
 } from 'antd'
-import Category from '~/Models/categoryModel'
+// import Category from '~/Models/categoryModel'
 import { PlusOutlined } from '@ant-design/icons'
 import { useQuery } from 'react-query'
-import { getCategories } from '~/api/categoriesAPI'
-import { getIngredientType } from '~/api/ingredientTypeApi'
+import { getCategories } from '../../../api/categoriesAPI'
+import { getIngredientType } from '../../../api/ingredientTypeApi'
+import Category from '../../../Models/categoryModel'
+// import { getCategories } from '~/api/categoriesAPI'
+// import { getIngredientType } from '~/api/ingredientTypeApi'
 
 interface ModalUpdateProductProps {
   isOpen: boolean

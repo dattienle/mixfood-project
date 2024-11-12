@@ -1,5 +1,6 @@
 import { Button, Input, Modal } from "antd";
-import Category from "~/Models/categoryModel";
+import Category from "../../../Models/categoryModel";
+
 
 interface ModalUpdateCategoryProps {
   isOpen: boolean;

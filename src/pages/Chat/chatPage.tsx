@@ -1,10 +1,13 @@
-import ChatBar from "~/pages/Chat/chatBar/chatBar";
-import ChatBody from "~/pages/Chat/chatBody/chatBody";
-import ChatFooter from "~/pages/Chat/chatFooter/chatFooter";
+// import ChatBar from "~/pages/Chat/chatBar/chatBar";
+// import ChatBody from "~/pages/Chat/chatBody/chatBody";
+// import ChatFooter from "~/pages/Chat/chatFooter/chatFooter";
 import './style.scss'
 import { Layout, Typography } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Footer, Header } from "antd/es/layout/layout";
+import ChatBar from './chatBar/chatBar';
+import ChatBody from './chatBody/chatBody';
+import ChatFooter from './chatFooter/chatFooter';
 const { Text } = Typography;
 const ChatPage = () =>{
   return (

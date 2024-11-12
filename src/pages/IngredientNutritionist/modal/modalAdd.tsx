@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, Input, Button, InputNumber, Form } from 'antd'
-import Ingredient from '~/Models/ingredientModel'
+import Ingredient from '../../../Models/ingredientModel'
+// import Ingredient from '~/Models/ingredientModel'
 
 interface ModalAddCategoryProps {
   isOpen: boolean

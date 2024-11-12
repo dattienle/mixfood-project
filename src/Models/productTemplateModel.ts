@@ -1,5 +1,7 @@
-import Category from "~/Models/categoryModel"
-import Ingredient from "~/Models/ingredientModel"
+// import Category from "~/Models/categoryModel"
+
+import Category from "./categoryModel"
+
 
 interface ProductTemplate {
     id: number

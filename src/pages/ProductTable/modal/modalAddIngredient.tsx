@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
 import { Modal, Button, Form, Avatar, Radio, InputNumber } from 'antd'
 import { useMutation, useQuery } from 'react-query'
-import { getIngredients } from '~/api/ingredientApi'
-import { getIngredientType } from '~/api/ingredientTypeApi'
+// import { getIngredients } from '~/api/ingredientApi'
+// import { getIngredientType } from '~/api/ingredientTypeApi'
 import { toast } from 'react-toastify'
-import { createIngredientProduct } from '~/api/templateSteps'
+// import { createIngredientProduct } from '~/api/templateSteps'
 import './../style.scss'
-import IngredientType from '~/Models/ingredientTypeModel'
-import Ingredient from '~/Models/ingredientModel'
+import { getIngredients } from '../../../api/ingredientApi'
+import { getIngredientType } from '../../../api/ingredientTypeApi'
+import { createIngredientProduct } from '../../../api/templateSteps'
+import IngredientType from '../../../Models/ingredientTypeModel'
+import Ingredient from '../../../Models/ingredientModel'
+// import IngredientType from '~/Models/ingredientTypeModel'
+// import Ingredient from '~/Models/ingredientModel'
 
 interface ModalAddIngredientProps {
   isOpen: boolean

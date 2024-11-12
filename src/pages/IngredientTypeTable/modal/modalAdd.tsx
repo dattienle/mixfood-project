@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Modal, Input, Button, Form } from 'antd'
-import Category from '~/Models/categoryModel'
+// import Category from '~/Models/categoryModel'
 import { useMutation, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
-import { addIngredientType } from '~/api/ingredientTypeApi'
+import { addIngredientType } from '../../../api/ingredientTypeApi'
+// import { addIngredientType } from '~/api/ingredientTypeApi'
 
 interface ModalAddIngredientTypeProps {
   isOpen: boolean

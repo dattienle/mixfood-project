@@ -1,11 +1,30 @@
+
+// "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+
 {
-  "files": [],
- 
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+  // "files": [],
+
+
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "skipLibCheck": true
-    // Các tùy chọn khác
-  }
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "noUnusedParameters": false
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

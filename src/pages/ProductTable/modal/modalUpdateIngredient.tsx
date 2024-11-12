@@ -16,16 +16,20 @@ import {
   Avatar,
   Radio
 } from 'antd'
-import Category from '~/Models/categoryModel'
-import ProductTemplate from '~/Models/productTemplateModel'
+// import Category from '~/Models/categoryModel'
+// import ProductTemplate from '~/Models/productTemplateModel'
 
 import { PlusOutlined } from '@ant-design/icons'
 import { useQuery } from 'react-query'
-import { getCategories } from '~/api/categoriesAPI'
-import { getIngredients } from '~/api/ingredientApi'
-import Ingredient from '~/Models/ingredientModel'
-import { getIngredientType } from '~/api/ingredientTypeApi'
-import IngredientType from '~/Models/ingredientTypeModel'
+import { getIngredients } from '../../../api/ingredientApi'
+import { getIngredientType } from '../../../api/ingredientTypeApi'
+import Ingredient from '../../../Models/ingredientModel'
+import IngredientType from '../../../Models/ingredientTypeModel'
+// import { getCategories } from '~/api/categoriesAPI'
+// import { getIngredients } from '~/api/ingredientApi'
+// import Ingredient from '~/Models/ingredientModel'
+// import { getIngredientType } from '~/api/ingredientTypeApi'
+// import IngredientType from '~/Models/ingredientTypeModel'
 interface ModalUpdateIngredientProps {
   isOpen: boolean
   handleOk: () => void

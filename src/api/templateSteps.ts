@@ -1,7 +1,9 @@
 import axios from 'axios'
-import { API_ENDPOINT } from '~/constants/api'
+import { API_ENDPOINT } from '../constants/api'
+import AddIngredientRequest from '../Models/templateSteps'
+// import { API_ENDPOINT } from '~/constants/api'
 
-import AddIngredientRequest from '~/Models/templateSteps'
+// import AddIngredientRequest from '~/Models/templateSteps'
 const api = axios.create({
   baseURL: API_ENDPOINT
 })

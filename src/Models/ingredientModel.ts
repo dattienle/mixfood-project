@@ -1,4 +1,5 @@
-import IngredientType from "~/Models/ingredientTypeModel";
+import IngredientType from "./ingredientTypeModel";
+
 
 interface Ingredient {
   id: number,

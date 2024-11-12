@@ -9,13 +9,16 @@ import {
 } from 'antd'
 
 import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query'
-import { getCategories } from '~/api/categoriesAPI'
-import { getIngredientType } from '~/api/ingredientTypeApi'
-import { createDish } from '~/api/dishAPI'
+// import { getCategories } from '~/api/categoriesAPI'
+// import { getIngredientType } from '~/api/ingredientTypeApi'
+// import { createDish } from '~/api/dishAPI'
 import { toast } from 'react-toastify'
-import Dish from '~/Models/DishModel'
-import IngredientType from '~/Models/ingredientTypeModel'
-import { addIngredient } from '~/api/ingredientApi'
+import { getIngredientType } from '../../../api/ingredientTypeApi'
+import { addIngredient } from '../../../api/ingredientApi'
+import IngredientType from '../../../Models/ingredientTypeModel'
+// import Dish from '~/Models/DishModel'
+// import IngredientType from '~/Models/ingredientTypeModel'
+// import { addIngredient } from '~/api/ingredientApi'
 
 interface ModalAddIngredientProps {
   isOpen: boolean

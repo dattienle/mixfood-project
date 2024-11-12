@@ -1,6 +1,8 @@
 import axios from 'axios'
-import { API_ENDPOINT } from '~/constants/api'
-import Category from '~/Models/categoryModel'
+import { API_ENDPOINT } from '../constants/api'
+import Category from '../Models/categoryModel'
+// import { API_ENDPOINT } from '~/constants/api'
+// import Category from '~/Models/categoryModel'
 
 const api = axios.create({
   baseURL: API_ENDPOINT

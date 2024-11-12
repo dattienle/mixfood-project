@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import GetDataByToken from '~/auth/auth'
+import GetDataByToken from './auth'
+// import GetDataByToken from '~/auth/auth'
 
 export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = localStorage.getItem('token')
+  const token = sessionStorage.getItem('token')
   if (!token) {
     return <Navigate to='/dang-nhap' replace />
   }
@@ -12,7 +13,7 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
 }
 
 export const Authentication: React.FC = () => {
-  const token = localStorage.getItem('token')
+  const token = sessionStorage.getItem('token')
   const location = useLocation()
   const navigate = useNavigate()
 

@@ -3,19 +3,22 @@ import { Form, Input, Button, Checkbox } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import './style.scss'
 import imageFile from '../../assets/image.png'
-import LoginType from '~/Models/loginModel'
-import { login } from '~/api/authAPI'
-import GetDataByToken from '~/auth/auth'
+// import LoginType from '~/Models/loginModel'
+// import { login } from '~/api/authAPI'
+// import GetDataByToken from '~/auth/auth'
 import { useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import GetDataByToken from '../auth'
+import LoginType from '../../Models/loginModel'
+import { login } from '../../api/authAPI'
 
 const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
 
     if (token) {
       const { role } = GetDataByToken(token)
@@ -44,7 +47,7 @@ const LoginPage: React.FC = () => {
         toast.error(errorMessage)
         return
       }
-      localStorage.setItem('token', response.token)
+      sessionStorage.setItem('token', response.token)
       const { role } = GetDataByToken(response.token)
       toast.success('Đăng nhập thành công!')
 

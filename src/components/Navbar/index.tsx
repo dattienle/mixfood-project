@@ -1,14 +1,14 @@
 import { Avatar, Dropdown, Menu, Badge } from 'antd';
 import { BellOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-
+import React from 'react'
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   // Hàm xử lý logout
   const handleLogout = () => {
     // Xóa token khỏi localStorage
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     // Điều hướng về trang đăng nhập
     navigate('/dang-nhap');
   };
