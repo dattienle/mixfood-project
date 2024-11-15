@@ -3,7 +3,7 @@
 interface Dish {
   name: string,
   price: number,
-  imageUrl: File | null,
+  imageUrl:   null| string ,
   categoryId: number
 }
 

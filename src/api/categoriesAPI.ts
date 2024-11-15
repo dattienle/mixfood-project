@@ -10,6 +10,7 @@ const api = axios.create({
 
 export const getCategories = async () => {
   const response = await api.get('/Category')
+  console.log("response",response)
   return response.data
 }
 export const deleteCategory = async (id: number) => {

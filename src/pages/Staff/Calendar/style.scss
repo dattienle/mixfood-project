@@ -1,0 +1,23 @@
+.body-calendar{
+  margin: 20px;
+  .events {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .event {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .time {
+    font-weight: bold;         /* Make the time bold */
+    font-size: 16px;           /* Increase font size */
+    color: #F8B602;            /* Set color for the time */
+    background-color: #eaf5fb; /* Light background color */
+    padding: 2px 8px;          /* Add some padding */
+    border-radius: 4px;        /* Rounded corners */
+  }
+}

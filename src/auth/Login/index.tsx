@@ -33,6 +33,9 @@ const LoginPage: React.FC = () => {
         case 'Nutritionist':
           navigate('/nutritionist/dashboard')
           break
+        case 'Staff':
+          navigate('/staff/dashboard')
+          break
         default:
           break
       }
@@ -61,6 +64,9 @@ const LoginPage: React.FC = () => {
         case 'Nutritionist':
           navigate('/nutritionist/dashboard')
           break
+          case 'Staff':
+            navigate('/staff/dashboard')
+            break
         default:
           console.error('Unknown role:', role)
           navigate('/dang-nhap')
