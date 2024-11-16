@@ -23,6 +23,7 @@ export interface Requests{
 requestDate: string
 timePeriod: TimePeriod;
 package: Package;
+meetUrl: string
 }
 export interface EventType {
   
