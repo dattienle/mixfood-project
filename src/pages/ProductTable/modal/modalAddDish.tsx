@@ -115,29 +115,7 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
           <Input placeholder='Nhập tên món ăn' value={name} onChange={(e) => setName(e.target.value)} />
         </Form.Item>
 
-        {/* <Form.Item label='Ảnh'>
-          <Upload
-          
-            listType='picture-circle'
-            fileList={fileList}
-            onPreview={handlePreview}
-            onChange={handleChange}
-            showUploadList={true}
-          >
-            {fileList.length >= 1 ? null : uploadButton}
-          </Upload>
-          {previewImage && (
-            <Image
-              wrapperStyle={{ display: 'none' }}
-              preview={{
-                visible: previewOpen,
-                onVisibleChange: (visible) => setPreviewOpen(visible),
-                afterOpenChange: (visible) => !visible && setPreviewImage('')
-              }}
-              src={previewImage}
-            />
-          )}
-        </Form.Item> */}
+       
         <Form.Item name='imageUrl' label='Image'>
           <input type='file' onChange={handleFileChange} />
         </Form.Item>

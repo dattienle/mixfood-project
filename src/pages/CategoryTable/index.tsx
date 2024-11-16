@@ -1,21 +1,15 @@
-import  { useState } from 'react'
+import { useState } from 'react'
 import { Button, Table, Input, Space, Switch } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useNavigate } from 'react-router-dom'
 import { SearchOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons'
-// import Category from '~/Models/categoryModel'
-// import { CommonButton } from '~/UI/button/Button'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-// import { createCategory, getCategories, updateCategory, updateStatusCategory } from '~/api/categoriesAPI'
-
 import { toast } from 'react-toastify'
-// import ModalUpdateCategory from '~/pages/CategoryTable/modal/modalUpdate'
-// import ModalAddCategory from '~/pages/CategoryTable/modal/modalAdd'
 import Category from '../../Models/categoryModel'
 import { CommonButton } from '../../UI/button/Button'
-import { createCategory, getCategories, updateCategory, updateStatusCategory } from '../../api/categoriesAPI'
-import ModalUpdateCategory from './modal/modalUpdate'
+import { getCategories, updateStatusCategory } from '../../api/categoriesAPI'
 import ModalAddCategory from './modal/modalAdd'
+import ModalUpdateCategory from './modal/modalUpdate'
 
 export default function CategoryPage() {
   const [searchText, setSearchText] = useState('')
@@ -23,9 +17,7 @@ export default function CategoryPage() {
   const queryClient = useQueryClient()
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
-  const [formValues, setFormValues] = useState<Category>({ id: 0, name: '', isDeleted: false })
-
-  // call api get categories
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const {
     data: categoriesResponse,
     isLoading,
@@ -37,7 +29,7 @@ export default function CategoryPage() {
   const updateStatus = useMutation(updateStatusCategory, {
     onSuccess: () => {
       queryClient.invalidateQueries('categories')
-      toast.success('Cập nhật trạng thái thành công!');
+      toast.success('Cập nhật trạng thái thành công!')
 
       refetchCategories()
     },
@@ -45,62 +37,30 @@ export default function CategoryPage() {
       console.log('loi')
     }
   })
-// chỉnh sửa tên
-  const editCategory = useMutation(
-    (category: { id: number; name: string }) => updateCategory(category.id, category.name),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('categories')
-        refetchCategories()
-        handleClose()
-      },
-      onError: (error) => {
-        console.log('loi update')
-      }
-    }
-  )
-//  Thêm mới danh mục
-  const addCategory = useMutation(
-    (body: Category) => createCategory(body), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('categories')
-      refetchCategories()
-      handleClose()
-    }
-  })
+  // chỉnh sửa tên
+
   // search
   const handleSearch = (value: string) => {
     setSearchText(value)
   }
   // add category || mutate
-  const handleAddOk = () =>{
-    addCategory.mutate(formValues)
+  const handleAddOk = async () => {
+    setIsModalAddOpen(false)
+    await refetchCategories()
   }
   // status || mutate
   const handleStatusChange = (id: number, isDelete: boolean) => {
     updateStatus.mutate({ id, isDelete })
   }
-  // edit category || mutate
-  const handleEditOk = () => {
-    const requestData = {
-      name: formValues.name
-    }
-    editCategory.mutate({ id: formValues.id, name: requestData.name })
+  const handleEditOk = async () => {
+    setIsModalUpdateOpen(false)
+    await refetchCategories()
   }
-  const handleEditCategory = (record: Category) => {
-    setFormValues(record)
-    setIsModalUpdateOpen(true)
-    console.log(isModalUpdateOpen)
-  }
-  const handleChange = (value: string, key: keyof Category) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }))
-  }
+
   const handleClose = () => {
     setIsModalUpdateOpen(false)
     setIsModalAddOpen(false)
-    setFormValues({ id: 0, name: '', isDeleted: false })
   }
-
 
   const columns: ColumnsType<Category> = [
     {
@@ -116,13 +76,26 @@ export default function CategoryPage() {
       align: 'center'
     },
     {
+      title: 'Hình ảnh',
+      dataIndex: 'imageUrl',
+      key: 'image',
+      align: 'center',
+      render: (imageUrl: string) => <img src={imageUrl} alt='Hình ảnh sản phẩm' style={{ width: 100, height: 100 }} />
+    },
+    {
       title: 'Hành động',
       dataIndex: 'action',
       key: 'action',
       align: 'center',
       render: (_, record) => (
         <Space>
-          <Button type='link' onClick={() => handleEditCategory(record)}>
+          <Button
+            type='link'
+            onClick={() => {
+              setIsModalUpdateOpen(true)
+              setSelectedCategory(record)
+            }}
+          >
             <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} />
           </Button>
         </Space>
@@ -175,23 +148,9 @@ export default function CategoryPage() {
       </Space>
       <Table columns={columns} dataSource={filteredData} rowKey={(record) => record.id} />
       {isModalUpdateOpen && (
-        <ModalUpdateCategory
-          isOpen={isModalUpdateOpen}
-          handleOk={handleEditOk}
-          handleCancel={handleClose}
-          handleChange={handleChange}
-          formValues={formValues}
-        />
+        <ModalUpdateCategory isOpen={isModalUpdateOpen} handleOk={handleEditOk} handleCancel={handleClose} categoryId={selectedCategory?.id || NaN} />
       )}
-      {isModalAddOpen && (
-        <ModalAddCategory
-          isOpen={isModalAddOpen}
-          handleOk={handleAddOk}
-          handleCancel={handleClose}
-          handleChange={handleChange}
-          formValues={formValues}
-        />
-      )}
+      {isModalAddOpen && <ModalAddCategory isOpen={isModalAddOpen} handleOk={handleAddOk} handleCancel={handleClose} />}
     </div>
   )
 }

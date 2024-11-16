@@ -8,7 +8,7 @@ import {
   Spin
 } from 'antd'
 
-import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query'
+import {  useQuery, useQueryClient } from 'react-query'
 // import { getCategories } from '~/api/categoriesAPI'
 // import { getIngredientType } from '~/api/ingredientTypeApi'
 // import { createDish } from '~/api/dishAPI'

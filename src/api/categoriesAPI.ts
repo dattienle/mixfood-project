@@ -10,7 +10,6 @@ const api = axios.create({
 
 export const getCategories = async () => {
   const response = await api.get('/Category')
-  console.log("response",response)
   return response.data
 }
 export const deleteCategory = async (id: number) => {
@@ -23,9 +22,37 @@ export const updateCategory = async (id: number, name: string) => {
   return response.data
 }
 
-export const createCategory = async (data: Category) => {
-  const response = await api.post('/Category', data)
-  return response.data
+export const createCategory = async (data: FormData) => {
+  try {
+    const response = await api.post('/Category', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+export const getCategoryById = async(id: number ) =>{
+  try {
+    const response = await api.get(`/Category/${id}`)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+export const updateCategoryById = async( {id, data}: {id: number, data: FormData}) =>{
+  try {
+  const response = await api.put(`/Category/${id}`, data)
+    return response.data
+  } catch (error: any) {
+    if (error.response && error.response.status === 400) {
+      console.error("Lỗi 400:", error.response.data);
+    } else {
+      throw error
+    }
+  }
 }
 export const updateStatusCategory = async ({ id, isDelete }: { id: number; isDelete: boolean }) => {
   try {
