@@ -128,8 +128,8 @@ export default function IngredientApprovePage() {
       align: 'center',
       render: (_, record) => (
         <Switch
-          style={{ backgroundColor: !record.isDeleted ? '#F8B602' : '' }}
-          checked={!record.isDeleted}
+          style={{ backgroundColor: !record.isDeleted ? '' : '#F8B602' }}
+          checked={record.isDeleted}
           onChange={() => {
             if (record.id) {
               handleStatusChange(record.id, !record.isDeleted)

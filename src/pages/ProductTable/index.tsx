@@ -13,6 +13,7 @@ import { CommonButton } from '../../UI/button/Button'
 import ModalAddProduct from './modal/modalAddDish'
 import ModalAddIngredient from './modal/modalAddIngredient'
 import ModalPreviewDetail from './modal/modalPreviewDetail'
+import ModalUpdateDish from './modal/modalUpdateDish'
 // import Product from '~/Models/productTemplateModel'
 // import ModalAddProduct from '~/pages/ProductTable/modal/modalAddDish'
 // import { getDish } from '~/api/dishAPI'
@@ -26,7 +27,9 @@ export default function ProductPage() {
   const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<ProductTemplate | null>(null)
   const [isPreviewDetailModalOpen, setIsPreviewDetailModalOpen] = useState(false)
-  const { data: productResponse } = useQuery('productTemplate', getDish)
+  const { data: productResponse, refetch: refetchDish } = useQuery('productTemplate', getDish, {
+    refetchOnMount: true,
+  })
   const queryClient = useQueryClient()
   const { mutate: refetchProducts } = useMutation({
     mutationFn: getDish,
@@ -36,7 +39,7 @@ export default function ProductPage() {
   })
 
   const products = productResponse?.data.items || []
-
+console.log(products)
   const columns: ColumnType<ProductTemplate>[] = [
     {
       title: 'Hình ảnh',
@@ -63,9 +66,10 @@ export default function ProductPage() {
 
     {
       title: 'Danh mục',
-      dataIndex: 'categoryName',
+      dataIndex: 'category',
       key: 'category',
       align: 'center',
+      render: (category) => category.name,
       
     },
     // {
@@ -135,9 +139,14 @@ export default function ProductPage() {
     setIsAddModalProduct(false)
     setIsAddIngredientModalOpen(false)
     setIsPreviewDetailModalOpen(false)
+    setIsEditModalProductOpen(false)
   }
   // handleClose
   // handleChange
+  const handleUpdateOk = async() =>{
+    setIsEditModalProductOpen(false)
+    await refetchDish()
+      }
   return (
     <div style={{ background: 'white', padding: '20px' }}>
       <h1>Quản Lý Thực Đơn</h1>
@@ -181,7 +190,17 @@ export default function ProductPage() {
         dishId={selectedProduct?.id || NaN} 
         />
       )
-     }
+     },
+     {isEditModalProductOpen &&(
+        <ModalUpdateDish
+        isOpen={isEditModalProductOpen}
+          handleOk={handleUpdateOk}
+          handleCancel={handleClose}
+          dishId={selectedProduct?.id || NaN}
+
+        />
+      )}
+
 
     </div>
   )

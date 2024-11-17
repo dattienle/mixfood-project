@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, Input, Button, Form, message, Select, Spin } from 'antd'
 
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import { toast } from 'react-toastify'
 import { getIngredients } from '../../../api/ingredientApi'
@@ -31,7 +31,7 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
   const [vitamin, setVitamin] = useState('')
   const [healthValue, setHealthValue] = useState('')
   const [nutrilite, setNutrilite] = useState('')
-
+  const queryClient = useQueryClient();
   const [selectedIngredients, setSelectedIngredients] = useState<any[]>([])
 
   const {
@@ -63,10 +63,15 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
   }
   const handleAddNutrition = async () => {
     if (!selectedIngredients) {
-      message.error('Vui lòng chọn nguyên liệu.')
+      toast.error('Vui lòng chọn nguyên liệu.')
       return
     }
-
+    if(
+      !description || !vitamin || !healthValue || !nutrilite || !fileList
+    ){
+      toast.error('Vui lòng điền đủ thông tin nguyên liệu.')
+      return
+    }
     const formData = new FormData()
     formData.append('ingredientId', selectedIngredients.toString())
     formData.append('description', description)
@@ -80,6 +85,7 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
 
     try {
       await addNutrition(formData) // Dùng await để bắt lỗi trực tiếp
+      await queryClient.invalidateQueries('nutritions')
       handleOk()
       toast.success('Thêm dinh dưỡng thành công!')
     } catch (error) {

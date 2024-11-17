@@ -34,7 +34,7 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
   // formValues
 }) => {
   // const [previewOpen, setPreviewOpen] = useState(false)
-  // const [previewImage, setPreviewImage] = useState('')
+  const [previewImage, setPreviewImage] = useState('')
   const [fileList, setFileList] = useState<File | null>(null)
   const [name, setName] = useState('')
   const [price, setPrice] = useState<number | null>(null)
@@ -68,10 +68,10 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFileList(event.target.files[0])
-      // setPreviewImage(URL.createObjectURL(event.target.files[0]))
+      setPreviewImage(URL.createObjectURL(event.target.files[0]))
     } else {
       setFileList(null)
-      // setPreviewImage('')
+      setPreviewImage('')
     }
   }
 
@@ -114,11 +114,10 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
         <Form.Item label='Tên món ăn'>
           <Input placeholder='Nhập tên món ăn' value={name} onChange={(e) => setName(e.target.value)} />
         </Form.Item>
-
-       
         <Form.Item name='imageUrl' label='Image'>
           <input type='file' onChange={handleFileChange} />
         </Form.Item>
+        
         <Form.Item label='Giá'>
           <InputNumber placeholder='Nhập giá' value={price} onChange={(e) => setPrice(e)} />
         </Form.Item>

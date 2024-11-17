@@ -28,7 +28,7 @@ export default function NutritionApprovePage() {
     isLoading,
     refetch: refetchNutritions,
     isError
-  } = useQuery('nutritions', getNutrition)
+  } = useQuery('nutritions', getNutrition,{refetchOnMount: true,})
   const nutritionItems = nutritions?.data.items || [];
   // updateStatus
   const updateStatus = useMutation(updateStatusNutrition, {

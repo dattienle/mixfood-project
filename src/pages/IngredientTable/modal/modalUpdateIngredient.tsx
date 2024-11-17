@@ -16,10 +16,14 @@ interface ModalUpdateIngredientProps {
   handleOk: () => void
   handleCancel: () => void
   ingredientId: number // Nhận ID của nutrition cần update
-
 }
 
-const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({ isOpen, handleOk, handleCancel, ingredientId }) => {
+const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
+  isOpen,
+  handleOk,
+  handleCancel,
+  ingredientId
+}) => {
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
   const [imageUrl, setImageUrl] = useState('')
@@ -27,7 +31,7 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({ isOpen, h
   const [urlInfo, setUrlInfo] = useState('')
   const [fileList, setFileList] = useState<File | null>(null)
   const [selectedIngredientType, setSelectedIngredientType] = useState<number | null>(null)
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const {
     isLoading: nutritionLoading,
@@ -36,17 +40,27 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({ isOpen, h
   } = useQuery(['ingredient', ingredientId], () => getIngredientById(ingredientId), {
     enabled: isOpen && !!ingredientId,
     onSuccess: (data: any) => {
-      setName(data.data.name);
-      setPrice(data.data.price);
-      setImageUrl(data.data.imageUrl);
-      setQuantity(data.data.quantity);
-      setUrlInfo(data.data.urlInfo);
+      setName(data.data.name)
+      setPrice(data.data.price)
+      setImageUrl(data.data.imageUrl)
+      setQuantity(data.data.quantity)
+      setUrlInfo(data.data.urlInfo)
       setSelectedIngredientType(data.data.ingredientType.id)
       console.log(data.data.quantity)
     }
   })
   const { isLoading, error, data: ingredientType } = useQuery('ingredientType', getIngredientType)
-  const { mutate: updateIngredientMutation  } = useMutation(updateIngredientById, {})
+  const { mutate: updateIngredientMutation } = useMutation(updateIngredientById, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries('ingredient')
+      toast.success('Cập nhật dinh dưỡng thành công!')
+      handleOk()
+    },
+    onError: (error) => {
+      toast.error('Cập nhật dinh dưỡng thất bại!')
+      console.error('Error updating nutrition:', error)
+    }
+  })
   const handleChangeIngredientType = (value: number) => {
     setSelectedIngredientType(value)
   }
@@ -58,70 +72,62 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({ isOpen, h
     }
   }
 
-  const handleUpdateIngredient  = async () => {
-
-
+  const handleUpdateIngredient = async () => {
     const formData = new FormData()
     formData.append('name', name)
     formData.append('price', String(price))
-    formData.append('quantity', String(quantity)) 
+    formData.append('quantity', String(quantity))
     formData.append('urlInfo', urlInfo)
-    if(selectedIngredientType)
-    formData.append('IngredientTypeId', selectedIngredientType.toString() )
+    if (selectedIngredientType) formData.append('IngredientTypeId', selectedIngredientType.toString())
 
     if (fileList) {
-        formData.append('imageUrl', fileList)
+      formData.append('imageUrl', fileList)
     }
 
-    try {
-      await updateIngredientMutation({ id: ingredientId, data: formData })
-       await queryClient.invalidateQueries('ingredient');
+    await updateIngredientMutation({ id: ingredientId, data: formData })
+    
   
-      toast.success('Cập nhật dinh dưỡng thành công!')
-      handleOk()
-    } catch (error) {
-      toast.error('Cập nhật dinh dưỡng thất bại!')
-      console.error('Error updating nutrition:', error)
-    }
   }
 
   return (
     <Modal
-    title='Cập nhật nguyên liệu'
-    open={isOpen}
-    onOk={handleUpdateIngredient}
-    onCancel={handleCancel}
-    centered
-    footer={[
-      <Button key='cancel' onClick={handleCancel}>
-        Hủy
-      </Button>,
-      <Button key='submit' type='primary' onClick={handleUpdateIngredient}>
-        Cập nhật
-      </Button>,
-    ]}
-  >
-    <Form layout='vertical'>
-
-      <Form.Item label='Tên'>
+      title='Cập nhật nguyên liệu'
+      open={isOpen}
+      onOk={handleUpdateIngredient}
+      onCancel={handleCancel}
+      centered
+      footer={[
+        <Button key='cancel' onClick={handleCancel}>
+          Hủy
+        </Button>,
+        <Button key='submit' type='primary' onClick={handleUpdateIngredient}>
+          Cập nhật
+        </Button>
+      ]}
+    >
+      <Form layout='vertical'>
+        <Form.Item label='Tên'>
           <Input value={name} onChange={(e) => setName(e.target.value)} />
-      </Form.Item>
+        </Form.Item>
 
-      <Form.Item label='Giá'>
-        <Input type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} /> {/* Use parseInt and handle NaN */}
-      </Form.Item>
+        <Form.Item label='Giá'>
+          <Input type='number' value={price} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
+          {/* Use parseInt and handle NaN */}
+        </Form.Item>
 
-      <Form.Item name='imageUrl' label='Image'>
-        {imageUrl && <img src={imageUrl} alt="Ingredient" style={{ maxWidth: '100px' }} />} {/* Display existing image */}
-        <input type='file' onChange={handleFileChange} />
-      </Form.Item>
-      <Form.Item label='Số lượng'>
-          <Input type="number" value={quantity}   onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 0)} /> {/* Use parseInt and handle NaN */}
-      </Form.Item>
-      <Form.Item label='URL thông tin'>
-        <Input value={urlInfo} onChange={(e) => setUrlInfo(e.target.value)} />
-      </Form.Item>
-      <Form.Item label='Chọn loại nguyên liệu'>
+        <Form.Item name='imageUrl' label='Image'>
+          {imageUrl && <img src={imageUrl} alt='Ingredient' style={{ maxWidth: '100px' }} />}{' '}
+          {/* Display existing image */}
+          <input type='file' onChange={handleFileChange} />
+        </Form.Item>
+        <Form.Item label='Số lượng'>
+          <Input type='number' value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 0)} />{' '}
+          {/* Use parseInt and handle NaN */}
+        </Form.Item>
+        <Form.Item label='URL thông tin'>
+          <Input value={urlInfo} onChange={(e) => setUrlInfo(e.target.value)} />
+        </Form.Item>
+        <Form.Item label='Chọn loại nguyên liệu'>
           {ingredientType ? (
             <Select placeholder='Loại nguyên liệu' onChange={handleChangeIngredientType} value={selectedIngredientType}>
               {ingredientType.data.items.map((ingredientType: IngredientType) => (
@@ -134,8 +140,8 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({ isOpen, h
             <div>Chưa có danh mục nào </div>
           )}
         </Form.Item>
-    </Form>
-  </Modal>
+      </Form>
+    </Modal>
   )
 }
 

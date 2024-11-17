@@ -23,3 +23,24 @@ export const createDish = async (formData: FormData) => {
     throw error;
   }
 };
+export const getDishById = async(id: number ) =>{
+  try {
+    const response = await api.get(`/Dish/${id}`)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+export const updateDishById = async( {id, data}: {id: number, data: FormData}) =>{
+  try {
+  const response = await api.put(`/Dish/${id}`, data)
+    return response.data
+  } catch (error: any) {
+    if (error.response && error.response.status === 400) {
+      console.error("Lỗi 400:", error.response.data); // In ra thông tin lỗi từ server
+      // Hiển thị thông báo lỗi cho người dùng
+    } else {
+      throw error
+    }
+  }
+}

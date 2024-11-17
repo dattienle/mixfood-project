@@ -67,13 +67,13 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
     if (fileList) {
       formData.append('imageUrl', fileList)
     }
-    for (const pair of formData.entries()) {
-      console.log(pair[0]+ ', '+ pair[1]); 
-    }
-    console.log(formData.get('imageUrl')); 
+    // for (const pair of formData.entries()) {
+    //   console.log(pair[0]+ ', '+ pair[1]); 
+    // }
+    // console.log(formData.get('imageUrl')); 
     try {
       await updateNutritionMutation({ id: nutritionId, data: formData })
-     await  queryClient.invalidateQueries('nutrition');
+     await  queryClient.invalidateQueries('nutritions');
       toast.success('Cập nhật dinh dưỡng thành công!')
       handleOk()
     } catch (error) {

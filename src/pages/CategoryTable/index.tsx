@@ -23,7 +23,7 @@ export default function CategoryPage() {
     isLoading,
     refetch: refetchCategories,
     isError
-  } = useQuery('categories', getCategories)
+  } = useQuery('categories', getCategories, { refetchOnMount: true })
   const categories = categoriesResponse?.data.items
   // updateStatus
   const updateStatus = useMutation(updateStatusCategory, {
@@ -108,8 +108,8 @@ export default function CategoryPage() {
       render: (_, record) => (
         <Space>
           <Switch
-            style={{ backgroundColor: record.isDeleted ? '' : '#F8B602' }}
-            checked={!record.isDeleted}
+            style={{ backgroundColor: !record.isDeleted ? '' : '#F8B602' }}
+            checked={record.isDeleted}
             onChange={() => {
               if (record.id) {
                 handleStatusChange(record.id, !record.isDeleted)
@@ -148,7 +148,12 @@ export default function CategoryPage() {
       </Space>
       <Table columns={columns} dataSource={filteredData} rowKey={(record) => record.id} />
       {isModalUpdateOpen && (
-        <ModalUpdateCategory isOpen={isModalUpdateOpen} handleOk={handleEditOk} handleCancel={handleClose} categoryId={selectedCategory?.id || NaN} />
+        <ModalUpdateCategory
+          isOpen={isModalUpdateOpen}
+          handleOk={handleEditOk}
+          handleCancel={handleClose}
+          categoryId={selectedCategory?.id || NaN}
+        />
       )}
       {isModalAddOpen && <ModalAddCategory isOpen={isModalAddOpen} handleOk={handleAddOk} handleCancel={handleClose} />}
     </div>

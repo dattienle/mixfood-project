@@ -24,13 +24,14 @@ export default function IngredientNotApprovePage() {
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
   //ts
-  const {data: ingredientResponse, refetch, isLoading, isError} = useQuery('ingredient',getIngredients)
+  const {data: ingredientResponse, refetch, isLoading, isError} = useQuery('ingredient',getIngredients,{
+    refetchOnMount: true,
+  })
   const ingredients = ingredientResponse?.data.items
   const approvedStatus = useMutation(approvedIngredient, {
     onSuccess: () => {
       queryClient.invalidateQueries('ingredient')
       toast.success('Duyệt nguyên liệu thành công!')
-
       refetch()
     },
     onError: (error) => {
@@ -135,7 +136,6 @@ export default function IngredientNotApprovePage() {
   const handleUpdateOk = async() =>{
     setIsModalUpdateOpen(false)
     await refetch()
-
       }
   const handleClose = () => {
     setIsModalUpdateOpen(false)
