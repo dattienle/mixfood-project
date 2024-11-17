@@ -25,32 +25,21 @@ import { getIngredients } from '../../../api/ingredientApi'
 import { getIngredientType } from '../../../api/ingredientTypeApi'
 import Ingredient from '../../../Models/ingredientModel'
 import IngredientType from '../../../Models/ingredientTypeModel'
-// import { getCategories } from '~/api/categoriesAPI'
-// import { getIngredients } from '~/api/ingredientApi'
-// import Ingredient from '~/Models/ingredientModel'
-// import { getIngredientType } from '~/api/ingredientTypeApi'
-// import IngredientType from '~/Models/ingredientTypeModel'
 interface ModalUpdateIngredientProps {
   isOpen: boolean
   handleOk: () => void
   handleCancel: () => void
-  // handleChange: (value: string, key: keyof ProductTemplate) => void;
-  // formValues: ProductTemplate;
 }
 
 const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
   isOpen,
   handleOk,
   handleCancel
-  // handleChange,
-  // formValues
 }) => {
 
 
 
-  // Call api category để selected
-
-  const [selectedIngredientType, setSelectedIngredientType] = useState<string | null>('BASE')
+  const [selectedIngredientType, setSelectedIngredientType] = useState<string | null>('')
 
   const {
     isLoading: isLoadingIngredient,
@@ -76,7 +65,7 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
     : []
   return (
     <Modal
-      title='Thêm món ăn mới'
+      title='Chỉnh sửa nguyên liệu cho món ăn'
       open={isOpen}
       onOk={handleOk}
       onCancel={handleCancel}

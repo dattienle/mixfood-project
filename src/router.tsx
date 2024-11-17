@@ -15,6 +15,7 @@ import IngredientForNutritionist from './pages/IngredientNutritionist'
 import LoginPage from './auth/Login'
 import CalendarForStaff from './pages/Staff/Calendar'
 import OrderPage from './pages/Staff/Order'
+import MaterialIngredient from './pages/ComponentIngredient'
 // import App from '~/App'
 // import LoginPage from '~/auth/Login'
 // import { Authentication } from '~/auth/protectedRoute'
@@ -101,6 +102,10 @@ export const router = createBrowserRouter([
           {
             path: 'nguyen-lieu-chua-duyet',
             element: <IngredientForNutritionist />
+          },
+          {
+            path: 'thanh-phan-nguyen-lieu',
+            element: <MaterialIngredient />
           }
         ]
       },

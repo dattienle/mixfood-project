@@ -29,6 +29,7 @@ const Sidebar: React.FC = () => {
      '/nutritionist/dashboard/nguyen-lieu-chua-duyet': '8',
      '/staff/dashboard/calendar': '9',
      '/staff/dashboard/order': '10',
+     '/nutritionist/dashboard/thanh-phan-nguyen-lieu': '11',
 
      
   }
@@ -51,7 +52,8 @@ const Sidebar: React.FC = () => {
       '7': '/nutritionist/dashboard/chat',
       '8': '/nutritionist/dashboard/nguyen-lieu-chua-duyet',
       '9': '/staff/dashboard/calendar',
-      '10': '/staff/dashboard/order'
+      '10': '/staff/dashboard/order',
+      '11': '/nutritionist/dashboard/thanh-phan-nguyen-lieu',
 
 
     }
@@ -131,6 +133,12 @@ const Sidebar: React.FC = () => {
       label: 'Nguyên liệu ',
       icon: <MailOutlined />,
       onClick: () => handleMenuClick('8') 
+    },
+    {
+      key: '11',
+      label: 'Thành Phần Nguyên liệu ',
+      icon: <DesktopOutlined />,
+      onClick: () => handleMenuClick('11') 
     }
   ]
   const staffItems: MenuItem[] = [

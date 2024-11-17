@@ -152,7 +152,7 @@ export default function IngredientNotApprovePage() {
           prefix={<SearchOutlined />}
         />
         <CommonButton type='primary' icon={<PlusOutlined />} onClick={ () => { console.log('Button clicked');setIsModalAddOpen(true)}}>
-          Thêm Danh Mục
+          Thêm Nguyên Liệu
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} />

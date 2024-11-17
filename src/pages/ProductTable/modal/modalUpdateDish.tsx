@@ -80,8 +80,6 @@ const ModalUpdateDish: React.FC<ModalUpdateDishProps> = ({ isOpen, handleOk, han
       console.log(key, value);
     }
       await updateDishMutation({ id: dishId, data: formData })
-      
-   
   }
 
   return (
