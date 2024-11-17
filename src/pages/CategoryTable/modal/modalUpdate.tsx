@@ -54,10 +54,10 @@ useEffect(() =>{
   const handleUpdateIngredient = async () => {
  
     const formData = new FormData()
-    formData.append('name', name)
+    formData.append('Name', name)
 
     if (fileList) {
-      formData.append('imageUrl', fileList)
+      formData.append('Images', fileList)
     }
 
     try {
