@@ -5,9 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import { toast } from 'react-toastify'
 import { getIngredients } from '../../../api/ingredientApi'
-import { createNutrition } from '../../../api/nutritionApi'
-// import { createNutrition } from '~/api/nutritionApi'
-// import { getIngredients } from '~/api/ingredientApi'
+import { createNutrition, getNutrition } from '../../../api/nutritionApi'
 
 interface ModalAddNutrition {
   isOpen: boolean
@@ -31,7 +29,7 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
   const [vitamin, setVitamin] = useState('')
   const [healthValue, setHealthValue] = useState('')
   const [nutrilite, setNutrilite] = useState('')
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const [selectedIngredients, setSelectedIngredients] = useState<any[]>([])
 
   const {
@@ -40,7 +38,8 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
     data: ingredientsData
   } = useQuery('ingredients', getIngredients)
   const { mutate: addNutrition } = useMutation(createNutrition, {})
-
+  const { data: existingNutritionsResponse } = useQuery('existingNutritions', getNutrition)
+  const existingNutrition = existingNutritionsResponse?.data.items || []
   if (ingredientsLoading) {
     return <Spin size='large' />
   }
@@ -66,9 +65,7 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
       toast.error('Vui lòng chọn nguyên liệu.')
       return
     }
-    if(
-      !description || !vitamin || !healthValue || !nutrilite || !fileList
-    ){
+    if (!description || !vitamin || !healthValue || !nutrilite || !fileList) {
       toast.error('Vui lòng điền đủ thông tin nguyên liệu.')
       return
     }
@@ -113,11 +110,18 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
       <Form layout='vertical'>
         <Form.Item label='Nguyên liệu'>
           <Select placeholder='Chọn nguyên liệu' onChange={handleIngredientChange} style={{ width: '100%' }}>
-            {ingredientsData?.data?.items.map((ingredient: any) => (
-              <Select.Option key={ingredient.id} value={ingredient.id}>
-                {ingredient.name}
-              </Select.Option>
-            ))}
+            {ingredientsData?.data?.items
+              .filter(
+                (ingredient: any) =>
+                  !existingNutrition.some(
+                    (nutrition: any) => nutrition.ingredient.name.toLowerCase() === ingredient.name.toLowerCase() // So sánh không phân biệt chữ hoa chữ thường
+                  )
+              )
+              .map((ingredient: any) => (
+                <Select.Option key={ingredient.id} value={ingredient.id}>
+                  {ingredient.name}
+                </Select.Option>
+              ))}
           </Select>
         </Form.Item>
 

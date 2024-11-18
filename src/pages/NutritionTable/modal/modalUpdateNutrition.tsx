@@ -1,11 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Input, Button, Form, message, Select, Spin, Typography } from 'antd'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
 import { getNutritionById, updateNutritionById } from '../../../api/nutritionApi'
-// import { updateNutritionById, getNutritionById } from '~/api/nutritionApi'
-// import { getIngredients } from '~/api/ingredientApi'
-// import Nutrition from '~/Models/nutritionModel'
 
 interface ModalUpdateNutritionProps {
   isOpen: boolean
@@ -18,11 +15,17 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
   const [description, setDescription] = useState('')
   const [vitamin, setVitamin] = useState('')
   const [healthValue, setHealthValue] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
   const [nutrilite, setNutrilite] = useState('')
   const [selectedIngredients, setSelectedIngredients] = useState('')
   const [fileList, setFileList] = useState<File | null>(null)
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
+  const [dataLoaded, setDataLoaded] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
 
+  useEffect(() => {
+    if (!isOpen) setDataLoaded(false) // Reset cờ khi modal đóng
+  }, [isOpen])
   const {
     isLoading: nutritionLoading,
     error: nutritionError,
@@ -30,56 +33,59 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
   } = useQuery(['nutrition', nutritionId], () => getNutritionById(nutritionId), {
     enabled: isOpen && !!nutritionId,
     onSuccess: (data: any) => {
-      setDescription(data.data.description)
-      setVitamin(data.data.vitamin)
-      setHealthValue(data.data.healthValue)
-      setNutrilite(data.data.nutrilite)
+      if (!dataLoaded) {
+        setDescription(data.data.description)
+        setVitamin(data.data.vitamin)
+        setHealthValue(data.data.healthValue)
+        setImageUrl(data.data.imageUrl)
+        setNutrilite(data.data.nutrilite)
+        setDataLoaded(true)
+      }
 
-      const ingredientNames = data.data.ingredient.name 
+      const ingredientNames = data.data.ingredient.name
       setSelectedIngredients(ingredientNames)
     }
   })
 
-  const { mutate: updateNutritionMutation } = useMutation(updateNutritionById, {})
+  const { mutate: updateNutritionMutation } = useMutation(updateNutritionById, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries('nutritions')
+      toast.success('Cập nhật dinh dưỡng thành công!')
+      handleOk()
+    },
+    onError: (error) => {
+      toast.error('Cập nhật dinh dưỡng thất bại!')
+      console.error('Error updating nutrition:', error)
+    }
+  })
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFileList(event.target.files[0])
+      setPreviewImage(URL.createObjectURL(event.target.files[0]))
     } else {
       setFileList(null)
+      setPreviewImage('')
     }
   }
-
   const handleUpdateNutrition = async () => {
-
     if (!selectedIngredients) {
       message.error('Vui lòng chọn nguyên liệu.')
       return
     }
 
     const formData = new FormData()
-  
+
     formData.append('description', description)
     formData.append('vitamin', vitamin)
     formData.append('healthValue', healthValue)
     formData.append('nutrilite', nutrilite)
-   
+
     if (fileList) {
       formData.append('imageUrl', fileList)
     }
-    // for (const pair of formData.entries()) {
-    //   console.log(pair[0]+ ', '+ pair[1]); 
-    // }
-    // console.log(formData.get('imageUrl')); 
-    try {
-      await updateNutritionMutation({ id: nutritionId, data: formData })
-     await  queryClient.invalidateQueries('nutritions');
-      toast.success('Cập nhật dinh dưỡng thành công!')
-      handleOk()
-    } catch (error) {
-      toast.error('Cập nhật dinh dưỡng thất bại!')
-      console.error('Error updating nutrition:', error)
-    }
+
+    await updateNutritionMutation({ id: nutritionId, data: formData })
   }
 
   return (
@@ -100,11 +106,12 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
     >
       <Form layout='vertical'>
         <Form.Item label='Nguyên liệu'>
-        
-            <Typography.Text>{selectedIngredients}</Typography.Text>
-        
+          <Typography.Text>{selectedIngredients}</Typography.Text>
         </Form.Item>
         <Form.Item name='imageUrl' label='Image'>
+          {(previewImage || imageUrl) && (
+            <img src={previewImage || imageUrl} alt='Ingredient' style={{ maxWidth: '100px' }} />
+          )}
           <input type='file' onChange={handleFileChange} />
         </Form.Item>
         <Form.Item label='Description'>

@@ -55,7 +55,7 @@ export default function NutritionApprovePage() {
   
   const handleClose = () => {
     setIsModalAddOpen(false)
-   
+   setIsModalUpdateOpen(false)
   }
 
   const columns: ColumnsType<Nutrition> = [
@@ -123,8 +123,8 @@ export default function NutritionApprovePage() {
       render: (_, record) => (
         <Space>
           <Switch
-            style={{ backgroundColor: record.isDeleted ? '' : '#F8B602' }}
-            checked={!record.isDeleted}
+             style={{ backgroundColor: !record.isDeleted ? '' : '#F8B602' }}
+             checked={record.isDeleted}
             onChange={() => {
               if (record.id) {
                 handleStatusChange(record.id, !record.isDeleted)
@@ -158,7 +158,7 @@ export default function NutritionApprovePage() {
           prefix={<SearchOutlined />}
         />
         <CommonButton onClick={() => setIsModalAddOpen(true)} type='primary' icon={<PlusOutlined />}>
-          Thêm Danh Mục
+          Thêm Dinh Dưỡng
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} rowKey={(record) => record.id} />
