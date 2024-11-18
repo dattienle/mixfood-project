@@ -6,12 +6,11 @@ import { toast } from 'react-toastify'
 
 import { getCategoryById, updateCategoryById } from '../../../api/categoriesAPI'
 
-
 interface ModalUpdateIngredientTypeProps {
   isOpen: boolean
   handleOk: () => void
   handleCancel: () => void
- categoryId: number
+  categoryId: number
 }
 
 const ModalUpdateIngredientType: React.FC<ModalUpdateIngredientTypeProps> = ({
@@ -25,7 +24,11 @@ const ModalUpdateIngredientType: React.FC<ModalUpdateIngredientTypeProps> = ({
   const [fileList, setFileList] = useState<File | null>(null)
   const [name, setName] = useState('')
   const [imageUrl, setImageUrl] = useState('')
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
+  const [dataLoaded, setDataLoaded] = useState(false)
+  useEffect(() => {
+    if (!isOpen) setDataLoaded(false) // Reset cờ khi modal đóng
+  }, [isOpen])
   const {
     isLoading: nutritionLoading,
     error: nutritionError,
@@ -33,15 +36,18 @@ const ModalUpdateIngredientType: React.FC<ModalUpdateIngredientTypeProps> = ({
   } = useQuery(['ingredientType', categoryId], () => getCategoryById(categoryId), {
     enabled: isOpen && !!categoryId,
     onSuccess: (data: any) => {
-      setName(data.data.name);
-      setImageUrl(data.data.imageUrl)
+      if (!dataLoaded) {
+        setName(data.data.name)
+        setImageUrl(data.data.imageUrl)
+        setDataLoaded(true)
+      }
     }
   })
-useEffect(() =>{
-  if(fileList){
-    setImageUrl(previewImage)
-  }
-},[fileList])
+  // useEffect(() => {
+  //   if (fileList) {
+  //     setImageUrl(previewImage)
+  //   }
+  // }, [fileList])
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFileList(event.target.files[0])
@@ -52,7 +58,6 @@ useEffect(() =>{
     }
   }
   const handleUpdateIngredient = async () => {
- 
     const formData = new FormData()
     formData.append('Name', name)
 
@@ -91,9 +96,9 @@ useEffect(() =>{
         </Form.Item>
 
         <Form.Item name='imageUrl' label='Image'>
-        {(previewImage || imageUrl) && (
-    <img src={previewImage || imageUrl} alt='Ingredient' style={{ maxWidth: '100px' }} />
-  )}
+          {(previewImage || imageUrl) && (
+            <img src={previewImage || imageUrl} alt='Ingredient' style={{ maxWidth: '100px' }} />
+          )}
           <input type='file' onChange={handleFileChange} />
         </Form.Item>
       </Form>

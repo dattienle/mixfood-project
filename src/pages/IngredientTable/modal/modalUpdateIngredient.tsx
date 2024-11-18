@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Input, Button, Form, message, Select, Spin, Typography } from 'antd'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
@@ -32,7 +32,11 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
   const [fileList, setFileList] = useState<File | null>(null)
   const [selectedIngredientType, setSelectedIngredientType] = useState<number | null>(null)
   const queryClient = useQueryClient()
-
+  const [dataLoaded, setDataLoaded] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  useEffect(() => {
+    if (!isOpen) setDataLoaded(false) // Reset cờ khi modal đóng
+  }, [isOpen])
   const {
     isLoading: nutritionLoading,
     error: nutritionError,
@@ -40,13 +44,16 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
   } = useQuery(['ingredient', ingredientId], () => getIngredientById(ingredientId), {
     enabled: isOpen && !!ingredientId,
     onSuccess: (data: any) => {
-      setName(data.data.name)
-      setPrice(data.data.price)
-      setImageUrl(data.data.imageUrl)
-      setQuantity(data.data.quantity)
-      setUrlInfo(data.data.urlInfo)
-      setSelectedIngredientType(data.data.ingredientType.id)
-      console.log(data.data.quantity)
+      if (!dataLoaded) {
+        // Chỉ load dữ liệu lần đầu
+        setName(data.data.name)
+        setPrice(data.data.price)
+        setImageUrl(data.data.imageUrl)
+        setQuantity(data.data.quantity)
+        setUrlInfo(data.data.urlInfo)
+        setSelectedIngredientType(data.data.ingredientType.id)
+        setDataLoaded(true)
+      }
     }
   })
   const { isLoading, error, data: ingredientType } = useQuery('ingredientType', getIngredientType)
@@ -67,8 +74,10 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFileList(event.target.files[0])
+      setPreviewImage(URL.createObjectURL(event.target.files[0]))
     } else {
       setFileList(null)
+      setPreviewImage('')
     }
   }
 
@@ -81,12 +90,10 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
     if (selectedIngredientType) formData.append('IngredientTypeId', selectedIngredientType.toString())
 
     if (fileList) {
-      formData.append('imageUrl', fileList)
+      formData.append('Images', fileList)
     }
 
     await updateIngredientMutation({ id: ingredientId, data: formData })
-    
-  
   }
 
   return (
@@ -116,8 +123,9 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
         </Form.Item>
 
         <Form.Item name='imageUrl' label='Image'>
-          {imageUrl && <img src={imageUrl} alt='Ingredient' style={{ maxWidth: '100px' }} />}{' '}
-          {/* Display existing image */}
+          {(previewImage || imageUrl) && (
+            <img src={previewImage || imageUrl} alt='Ingredient' style={{ maxWidth: '100px' }} />
+          )}
           <input type='file' onChange={handleFileChange} />
         </Form.Item>
         <Form.Item label='Số lượng'>
