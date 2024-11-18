@@ -127,8 +127,8 @@ export default function IngredientTypePage() {
       render: (_, record) => (
         <Space>
           <Switch
-            style={{ backgroundColor: record.isDeleted ? '' : '#F8B602' }}
-            checked={!record.isDeleted}
+             style={{ backgroundColor: !record.isDeleted ? '' : '#F8B602' }}
+             checked={record.isDeleted}
             onChange={() => {
               if (record.id) {
                 handleStatusChange(record.id, !record.isDeleted)
@@ -162,7 +162,7 @@ export default function IngredientTypePage() {
           prefix={<SearchOutlined />}
         />
         <CommonButton onClick={() => setIsModalAddOpen(true)} type='primary' icon={<PlusOutlined />}>
-          Thêm Danh Mục
+          Thêm Loại Nguyên Liệu
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} rowKey={(record) => record.id} />
