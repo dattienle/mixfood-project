@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from 'react-query'
 // import { createDish } from '~/api/dishAPI'
 import { toast } from 'react-toastify'
 import { getIngredientType } from '../../../api/ingredientTypeApi'
-import { addIngredient } from '../../../api/ingredientApi'
+import { addIngredient, getIngredients } from '../../../api/ingredientApi'
 import IngredientType from '../../../Models/ingredientTypeModel'
 import { getMaterial } from '../../../api/material'
 import { DefaultOptionType } from 'antd/es/select'
@@ -44,6 +44,8 @@ const ModalAddIngredient: React.FC<ModalAddIngredientProps> = ({
   const { data: materialResponse } = useQuery('material', getMaterial)
   const materials = materialResponse?.data || []
 
+  const { data: existingIngredientsResponse } = useQuery('existingIngredients', getIngredients)
+  const existingIngredients = existingIngredientsResponse?.data.items || []
   if (isLoading) {
     return <Spin size='large' />
   }
@@ -110,18 +112,22 @@ const ModalAddIngredient: React.FC<ModalAddIngredientProps> = ({
           <Select
             placeholder='Chọn nguyên liệu'
             onChange={(value) => {
-              const selected = materials.find((material: any) => material.id === value);
+              const selected = materials.find((material: any) => material.id === value)
               if (selected) {
-                setSelectedMaterial(selected);
+                setSelectedMaterial(selected)
               }
             }}
             value={selectedMaterial?.id}
           >
-            {materials.map((material: any) => (
-              <Select.Option key={material.id} value={material.id}>
-                {material.name}
-              </Select.Option>
-            ))}
+            {materials
+              .filter(
+                (material: any) => !existingIngredients.some((ingredient: any) => ingredient.name.toLowerCase() === material.name.toLowerCase())
+              ) 
+              .map((material: any) => (
+                <Select.Option key={material.id} value={material.id}>
+                  {material.name}
+                </Select.Option>
+              ))}
           </Select>
         </Form.Item>
 

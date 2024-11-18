@@ -27,6 +27,7 @@ export default function IngredientNotApprovePage() {
   const {data: ingredientResponse, refetch, isLoading, isError} = useQuery('ingredient',getIngredients,{
     refetchOnMount: true,
   })
+  
   const ingredients = ingredientResponse?.data.items
   const approvedStatus = useMutation(approvedIngredient, {
     onSuccess: () => {
