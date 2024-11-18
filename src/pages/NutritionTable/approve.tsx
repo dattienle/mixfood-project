@@ -149,7 +149,7 @@ export default function NutritionApprovePage() {
 
   return (
     <div style={{ background: 'white', padding: '20px' }}>
-      <h1>Quản Lý Danh Mục</h1>
+      <h1>Quản Lý Dinh Dưỡng</h1>
       <Space style={{ marginBottom: 16 }}>
         <Input
           placeholder='Tìm kiếm theo tên'

@@ -76,13 +76,13 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
   }
 
   const handleAddDish = () => {
-    if (!name || !price || !selectedCategory || !fileList) {
+    if (!name || !selectedCategory || !fileList) {
       toast.warning('Vui lòng điền đầy đủ thông tin!')
       return
     }
     const formData = new FormData()
     formData.append('name', name)
-    formData.append('price', price.toString())
+    formData.append('price',  (price ?? 0).toString())
     formData.append('categoryId', selectedCategory.toString())
     formData.append('imageUrl', fileList)
     console.log(formData)

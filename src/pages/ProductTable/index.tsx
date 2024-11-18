@@ -14,6 +14,8 @@ import ModalAddProduct from './modal/modalAddDish'
 import ModalAddIngredient from './modal/modalAddIngredient'
 import ModalPreviewDetail from './modal/modalPreviewDetail'
 import ModalUpdateDish from './modal/modalUpdateDish'
+import { getPreviewDetails } from '../../api/templateSteps'
+import AddIngredientRequest from '../../Models/templateSteps'
 // import Product from '~/Models/productTemplateModel'
 // import ModalAddProduct from '~/pages/ProductTable/modal/modalAddDish'
 // import { getDish } from '~/api/dishAPI'
@@ -23,12 +25,11 @@ export default function ProductPage() {
   const [searchText, setSearchText] = useState('')
   const [isAddModalProduct, setIsAddModalProduct] = useState(false)
   const [isEditModalProductOpen, setIsEditModalProductOpen] = useState(false)
-  const [isEditIngredientsModalOpen, setIsEditIngredientsModalOpen] = useState(false)
   const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<ProductTemplate | null>(null)
   const [isPreviewDetailModalOpen, setIsPreviewDetailModalOpen] = useState(false)
   const { data: productResponse, refetch: refetchDish } = useQuery('productTemplate', getDish, {
-    refetchOnMount: true,
+    refetchOnMount: true
   })
   const queryClient = useQueryClient()
   const { mutate: refetchProducts } = useMutation({
@@ -37,9 +38,10 @@ export default function ProductPage() {
       queryClient.invalidateQueries('productTemplate')
     }
   })
-
+  const { data: ingredientDetail } = useQuery('ingredientDetail', getPreviewDetails)
   const products = productResponse?.data.items || []
-console.log(products)
+  const dishData = ingredientDetail?.data.items || []
+  console.log(products)
   const columns: ColumnType<ProductTemplate>[] = [
     {
       title: 'Hình ảnh',
@@ -69,8 +71,7 @@ console.log(products)
       dataIndex: 'category',
       key: 'category',
       align: 'center',
-      render: (category) => category.name,
-      
+      render: (category) => category.name
     },
     // {
     //   title: 'Nguyên liệu',
@@ -85,9 +86,12 @@ console.log(products)
       align: 'center',
       render: (_, record) => (
         <EyeOutlined
-          style={{ color: '#F8B602', fontSize: '25px'  }}
+          style={{ color: '#F8B602', fontSize: '25px' }}
           checked={!record.isDeleted}
-          onClick={() => {setIsPreviewDetailModalOpen(true); setSelectedProduct(record);}}
+          onClick={() => {
+            setIsPreviewDetailModalOpen(true)
+            setSelectedProduct(record)
+          }}
           // onChange={(checked) => handleUpdateStatus(record.id, checked)}
         />
       )
@@ -96,19 +100,39 @@ console.log(products)
       title: 'Chỉnh sửa',
       key: 'edit',
       align: 'center',
-      render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item onClick={() => { setIsEditModalProductOpen(true); setSelectedProduct(record); }}>Chỉnh sửa món ăn</Menu.Item>
-              <Menu.Item onClick={() => { setIsEditIngredientsModalOpen(true); setSelectedProduct(record); }}>Chỉnh sửa nguyên liệu</Menu.Item>
-              <Menu.Item onClick={() => { setIsAddIngredientModalOpen(true); setSelectedProduct(record); }}>Thêm mới nguyên liệu</Menu.Item>
-            </Menu>
-          }
-        >
-          <Button icon={<EllipsisOutlined />} />
-        </Dropdown>
-      )
+      render: (_, record) => {
+        const hasTemplateStep = dishData?.some((detail: any) => detail.dishId === record.id);
+        return (
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu>
+                  <Menu.Item
+                    onClick={() => {
+                      setIsEditModalProductOpen(true)
+                      setSelectedProduct(record)
+                    }}
+                  >
+                    Chỉnh sửa món ăn
+                  </Menu.Item>
+                  {!hasTemplateStep ? (
+                    <Menu.Item
+                      onClick={() => {
+                        setIsAddIngredientModalOpen(true)
+                        setSelectedProduct(record)
+                      }}
+                    >
+                      Thêm mới nguyên liệu
+                    </Menu.Item>
+                  ) : null}
+                </Menu>
+              </Menu>
+            }
+          >
+            <Button icon={<EllipsisOutlined />} />
+          </Dropdown>
+        )
+      }
     },
 
     {
@@ -117,8 +141,8 @@ console.log(products)
       align: 'center',
       render: (_, record) => (
         <Switch
-          style={{ backgroundColor: record.isDeleted ? '' : '#F8B602' }}
-          checked={!record.isDeleted}
+          style={{ backgroundColor: !record.isDeleted ? '' : '#F8B602' }}
+          checked={record.isDeleted}
           // onChange={(checked) => handleUpdateStatus(record.id, checked)}
         />
       )
@@ -132,7 +156,7 @@ console.log(products)
 
   const handleEditOk = async () => {
     setIsAddModalProduct(false)
-   await  refetchProducts()
+    await refetchProducts()
   }
 
   const handleClose = () => {
@@ -143,10 +167,10 @@ console.log(products)
   }
   // handleClose
   // handleChange
-  const handleUpdateOk = async() =>{
+  const handleUpdateOk = async () => {
     setIsEditModalProductOpen(false)
     await refetchDish()
-      }
+  }
   return (
     <div style={{ background: 'white', padding: '20px' }}>
       <h1>Quản Lý Thực Đơn</h1>
@@ -158,7 +182,7 @@ console.log(products)
           prefix={<SearchOutlined />}
         />
         <CommonButton type='primary' onClick={() => setIsAddModalProduct(true)} icon={<PlusOutlined />}>
-          Thêm Danh Mục
+          Thêm món ăn
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} />
@@ -167,41 +191,36 @@ console.log(products)
           isOpen={isAddModalProduct}
           handleOk={handleEditOk}
           handleCancel={handleClose}
-          
+
           // handleChange={handleChange}
           // formValues={formValues}
         />
       )}
-      {
-        isAddIngredientModalOpen && (
-          <ModalAddIngredient
-            isOpen = {isAddIngredientModalOpen}
-            handleOk={handleEditOk}
-            handleCancel={handleClose}
-            dishId={selectedProduct?.id || NaN} 
-          />
-     ) }
-     {
-      isPreviewDetailModalOpen && (
-        <ModalPreviewDetail
-        isOpen ={isPreviewDetailModalOpen}
-        handleOk={handleEditOk}
-        handleCancel={handleClose} 
-        dishId={selectedProduct?.id || NaN} 
+      {isAddIngredientModalOpen && (
+        <ModalAddIngredient
+          isOpen={isAddIngredientModalOpen}
+          handleOk={handleEditOk}
+          handleCancel={handleClose}
+          dishId={selectedProduct?.id || NaN}
         />
-      )
-     },
-     {isEditModalProductOpen &&(
+      )}
+      {isPreviewDetailModalOpen && (
+        <ModalPreviewDetail
+          isOpen={isPreviewDetailModalOpen}
+          handleOk={handleEditOk}
+          handleCancel={handleClose}
+          dishId={selectedProduct?.id || NaN}
+        />
+      )}
+      ,
+      {isEditModalProductOpen && (
         <ModalUpdateDish
-        isOpen={isEditModalProductOpen}
+          isOpen={isEditModalProductOpen}
           handleOk={handleUpdateOk}
           handleCancel={handleClose}
           dishId={selectedProduct?.id || NaN}
-
         />
       )}
-
-
     </div>
   )
 }

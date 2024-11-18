@@ -26,6 +26,10 @@ const ModalUpdateIngredientType: React.FC<ModalUpdateIngredientTypeProps> = ({
   const [name, setName] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const queryClient = useQueryClient();
+  const [dataLoaded, setDataLoaded] = useState(false)
+  useEffect(() => {
+    if (!isOpen) setDataLoaded(false) // Reset cờ khi modal đóng
+  }, [isOpen])
   const {
     isLoading: nutritionLoading,
     error: nutritionError,
@@ -33,8 +37,12 @@ const ModalUpdateIngredientType: React.FC<ModalUpdateIngredientTypeProps> = ({
   } = useQuery(['ingredientType', ingredientTypeId], () => getIngredientTypeById(ingredientTypeId), {
     enabled: isOpen && !!ingredientTypeId,
     onSuccess: (data: any) => {
-      setName(data.data.name);
-      setImageUrl(data.data.imageUrl)
+      if(!dataLoaded){
+        setName(data.data.name);
+        setImageUrl(data.data.imageUrl)
+        setDataLoaded(true)
+      }
+     
     }
   })
 useEffect(() =>{

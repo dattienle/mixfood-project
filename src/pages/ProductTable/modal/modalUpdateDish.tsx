@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Input, Button, Form, message, Select, Spin, Typography } from 'antd'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
@@ -25,7 +25,12 @@ const ModalUpdateDish: React.FC<ModalUpdateDishProps> = ({ isOpen, handleOk, han
   const [fileList, setFileList] = useState<File | null>(null)
   const [selectedCategorytype, setSelectedCategoryType] = useState<number | null>(null)
   const queryClient = useQueryClient();
+  const [dataLoaded, setDataLoaded] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
 
+  useEffect(() => {
+    if (!isOpen) setDataLoaded(false) // Reset cờ khi modal đóng
+  }, [isOpen])
   const {
     isLoading: dishLoading,
     error: dishError,
@@ -33,10 +38,13 @@ const ModalUpdateDish: React.FC<ModalUpdateDishProps> = ({ isOpen, handleOk, han
   } = useQuery(['dish', dishId], () => getDishById(dishId), {
     enabled: isOpen && !!dishId,
     onSuccess: (data: any) => {
+      if (!dataLoaded) {
       setName(data.data.name);
       setPrice(data.data.price);
       setImageUrl(data.data.imageUrl);
       setSelectedCategoryType(data.data.category.id)
+      setDataLoaded(true)
+    }
     }
   })
   const { isLoading, error, data: categoriesResponse } = useQuery('categories', getCategories)
@@ -58,8 +66,10 @@ const ModalUpdateDish: React.FC<ModalUpdateDishProps> = ({ isOpen, handleOk, han
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFileList(event.target.files[0])
+      setPreviewImage(URL.createObjectURL(event.target.files[0]))
     } else {
       setFileList(null)
+      setPreviewImage('')
     }
   }
 
@@ -109,9 +119,11 @@ const ModalUpdateDish: React.FC<ModalUpdateDishProps> = ({ isOpen, handleOk, han
       </Form.Item>
 
       <Form.Item name='imageUrl' label='Image'>
-        {imageUrl && <img src={imageUrl} alt="Ingredient" style={{ maxWidth: '100px' }} />} {/* Display existing image */}
-        <input type='file' onChange={handleFileChange} />
-      </Form.Item>
+          {(previewImage || imageUrl) && (
+            <img src={previewImage || imageUrl} alt='Ingredient' style={{ maxWidth: '100px' }} />
+          )}
+          <input type='file' onChange={handleFileChange} />
+        </Form.Item>
       <Form.Item label='Chọn danh mục'>
           {categoriesResponse ? (
             <Select placeholder='Danh mục' onChange={handleChangeCategoryType} value={selectedCategorytype}>
