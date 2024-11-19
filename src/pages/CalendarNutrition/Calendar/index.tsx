@@ -7,10 +7,10 @@ import ModalCalendarDetails from './modal/modalCalendarDetails'
 import { EventType } from '../../../Models/calendar'
 
 import { useQuery } from 'react-query'
-import {  getFullCalendar } from '../../../api/calendarApi'
+import {  getAppointment, getFullCalendar } from '../../../api/calendarApi'
 import dayjs from 'dayjs'
 
-export default function CalendarForStaff() {
+export default function CalendarForNutritionist() {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState('')
   const [eventsForDate, setEventsForDate] = useState<EventType[]>([])
@@ -18,7 +18,7 @@ export default function CalendarForStaff() {
   const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
     console.log(value.format('YYYY-MM-DD'), mode)
   }
-  const { data: calendarResponse , isLoading} = useQuery('calendar', getFullCalendar,{
+  const { data: calendarResponse , isLoading} = useQuery('calendar', getAppointment,{
   
     refetchOnMount: true,
     refetchInterval: 6000

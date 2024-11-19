@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import dayjs, { Dayjs } from 'dayjs'
 import { toast } from 'react-toastify'
 import { CommonButton } from '../../../../UI/button/Button'
+import ChatWindow from './modalChat'
 
 const { Panel } = Collapse
 
@@ -18,11 +19,11 @@ interface ModalCalendarDetailProps {
 
 const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, selectedDate, onClose }) => {
   const [eventsForDate, setEventsForDate] = useState<EventType[]>([])
+  const [isChatVisible, setChatVisible] = useState(false)
   const { data: calendarResponse, isLoading } = useQuery('calendarByTime', getFullCalendar, {
-    refetchInterval: 60000 // Thêm dòng này để fetch API mỗi 60 giây
+    refetchInterval: 60000 
   })
-  const [meetUrlInputVisible, setMeetUrlInputVisible] = useState<number | null>(null)
-  const [meetUrlInputValue, setMeetUrlInputValue] = useState('')
+
   const queryClient = useQueryClient()
   const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
   const { mutate: updateRequestMutation } = useMutation(
@@ -40,8 +41,7 @@ const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, sel
       onSuccess: () => {
         toast.success('Meet URL updated successfully!')
         queryClient.invalidateQueries('calendarByTime')
-        setMeetUrlInputVisible(null)
-        setMeetUrlInputValue('')
+    
       },
       onError: (error) => {
         toast.error('Failed to update Meet URL.')
@@ -50,15 +50,6 @@ const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, sel
     }
   )
 
-  const handleAddMeetUrl = (index: number) => {
-    setMeetUrlInputVisible(index)
-  }
-  const handleMeetUrlInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMeetUrlInputValue(e.target.value)
-  }
-  const handleSaveMeetUrl = (eventId: number) => {
-    updateRequestMutation({ requestId: eventId, meetUrl: meetUrlInputValue })
-  }
   React.useEffect(() => {
     if (calendarResponse && formattedDate) {
       const events = calendarResponse.data.flatMap((item: any) => {
@@ -95,23 +86,16 @@ const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, sel
             <p>
               <strong>Price:</strong> {event.subPackage?.price || 'N/A'}
             </p>
-            <p>
-              <strong>Meet URL:</strong> {event.meetUrl || 'N/A'}
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '16px' }}>
+        <Button type="link" href={event.meetUrl} target="_blank">Meet URL</Button>
+        <CommonButton type="primary" onClick={() => setChatVisible(true)}>Chat</CommonButton>
+      </div>
 
-            {!event.meetUrl && meetUrlInputVisible === index ? ( // Conditional rendering for input
-              <div>
-                <Input value={meetUrlInputValue} onChange={handleMeetUrlInputChange} />
-                <CommonButton onClick={() => handleSaveMeetUrl(event.id)} type='primary'>
-                  Save
-                </CommonButton>
-              </div>
-            ) : (
-              !event.meetUrl && <CommonButton onClick={() => handleAddMeetUrl(index)}>Add Meet URL</CommonButton>
-            )}
+          
           </Panel>
         ))}
       </Collapse>
+      <ChatWindow visible={isChatVisible} onClose={() => setChatVisible(false)} />
     </Modal>
   )
 }

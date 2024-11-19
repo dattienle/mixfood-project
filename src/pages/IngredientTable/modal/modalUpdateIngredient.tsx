@@ -83,7 +83,7 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
 
   const handleUpdateIngredient = async () => {
     const formData = new FormData()
-    formData.append('name', name)
+  
     formData.append('price', String(price))
     formData.append('quantity', String(quantity))
     formData.append('urlInfo', urlInfo)
@@ -113,10 +113,9 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
       ]}
     >
       <Form layout='vertical'>
-        <Form.Item label='Tên'>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+        <Form.Item label='Nguyên liệu'>
+          <Typography.Text>{name}</Typography.Text>
         </Form.Item>
-
         <Form.Item label='Giá'>
           <Input type='number' value={price} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
           {/* Use parseInt and handle NaN */}

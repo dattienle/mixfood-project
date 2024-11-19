@@ -27,8 +27,8 @@ const Sidebar: React.FC = () => {
     '/admin/dashboard/doanh-thu': '6',
     '/nutritionist/dashboard/chat': '7',
      '/nutritionist/dashboard/nguyen-lieu-chua-duyet': '8',
-     '/staff/dashboard/calendar': '9',
-     '/staff/dashboard/order': '10',
+     '/staff/dashboard/order': '9',
+     '/staff/dashboard/calendar': '10',
      '/nutritionist/dashboard/thanh-phan-nguyen-lieu': '11',
 
      
@@ -51,8 +51,8 @@ const Sidebar: React.FC = () => {
       '6': '/admin/dashboard/doanh-thu',
       '7': '/nutritionist/dashboard/chat',
       '8': '/nutritionist/dashboard/nguyen-lieu-chua-duyet',
-      '9': '/staff/dashboard/calendar',
-      '10': '/staff/dashboard/order',
+      '9': '/staff/dashboard/order',
+      '10': '/staff/dashboard/calendar',
       '11': '/nutritionist/dashboard/thanh-phan-nguyen-lieu',
 
 
@@ -144,13 +144,13 @@ const Sidebar: React.FC = () => {
   const staffItems: MenuItem[] = [
     {
       key: '9',
-      label: 'Đặt lịch',
+      label: 'Đơn hàng',
       icon: <AppstoreOutlined />,
       onClick: () => handleMenuClick('9')
     },
     {
       key: '10',
-      label: 'Đơn hàng',
+      label: 'Đặt lịch',
       icon: <MailOutlined />,
       onClick: () => handleMenuClick('10')
     }

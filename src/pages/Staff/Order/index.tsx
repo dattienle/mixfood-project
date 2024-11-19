@@ -1,4 +1,4 @@
-import { Input, Space, Switch, Tag } from 'antd'
+import { Input, Select, Space, Switch, Tag } from 'antd'
 import React, { useState } from 'react'
 // import { CommonButton } from '~/UI/button/Button'
 import { SearchOutlined, EyeOutlined } from '@ant-design/icons'
@@ -16,10 +16,12 @@ export default function OrderPage() {
   const [isAddModalProduct, setIsAddModalProduct] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [selectedOrderId, setSelectedOrderId] = useState<number>()
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined)
   const { data: orderResponse } = useQuery('order', getOrder, {
     staleTime: 5000,
     cacheTime: 300000,
-    refetchOnMount: true
+    refetchOnMount: true,
+    refetchInterval: 6000
   })
   const queryClient = useQueryClient()
   const { mutate: refetchProducts } = useMutation({
@@ -28,15 +30,17 @@ export default function OrderPage() {
       queryClient.invalidateQueries('order')
     }
   })
-  console.log(orderResponse)
   const orders: Order[] = orderResponse?.data || []
-  // const cartProducts: CartProduct[] = orders.flatMap((order) => {
-  //   return order.cartProducts.map((cartProduct) => ({
-  //     ...cartProduct,
-  //     orderStatus: order.status
-  //   }))
-  // })
 
+  const handleStatusChange = (value: string) => {
+    setSelectedStatus(value)
+  }
+
+  const filteredOrders = orders.filter(order => {
+    const matchesStatus = selectedStatus ? order.status === selectedStatus : true
+    const matchesSearchText = order.customerName.toLowerCase().includes(searchText.toLowerCase())
+    return matchesStatus && matchesSearchText
+  })
   const columns: ColumnType<Order>[] = [
     {
       title: 'Tên',
@@ -161,15 +165,43 @@ export default function OrderPage() {
   return (
     <div style={{ background: 'white', padding: '20px' }}>
       <h1>Quản lý đơn hàng</h1>
-      <Space style={{ marginBottom: 16 }}>
-        <Input
-          placeholder='Tìm kiếm theo tên'
-          onChange={(e) => handleSearch(e.target.value)}
-          style={{ width: 200 }}
-          prefix={<SearchOutlined />}
-        />
-      </Space>
-      <Table columns={columns} dataSource={orders} />
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16 
+      }}>
+        {/* Phần tìm kiếm bên trái */}
+        <Space>
+          <Input
+            placeholder='Tìm kiếm theo tên'
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 200 }}
+            prefix={<SearchOutlined />}
+          />
+        </Space>
+
+        {/* Phần lọc trạng thái bên phải */}
+        <Select
+          placeholder="Lọc theo trạng thái"
+          onChange={handleStatusChange}
+          style={{ 
+            width: 200,
+            borderRadius: '6px',
+          }}
+          allowClear
+          dropdownStyle={{ 
+            borderRadius: '6px',
+          }}
+          className="status-filter-select"
+        >
+          <Select.Option value="Đã Xác Nhận">Đã Xác Nhận</Select.Option>
+          <Select.Option value="Đã Chuẩn Bị Xong">Đã Chuẩn Bị Xong</Select.Option>
+          <Select.Option value="Đã Giao Shipper">Đã Giao Shipper</Select.Option>
+          <Select.Option value="Hoàn Thành">Hoàn Thành</Select.Option>
+        </Select>
+      </div>
+      <Table columns={columns} dataSource={filteredOrders} />
       {selectedOrderId && isPreviewDetailModalOpen && (
         <OrderDetailPage
           visible={isPreviewDetailModalOpen}

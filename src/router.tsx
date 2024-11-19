@@ -10,12 +10,13 @@ import NutritionApprovePage from './pages/NutritionTable/approve'
 import IngredientTypePage from './pages/IngredientTypeTable'
 import ProductPage from './pages/ProductTable'
 import Dashboard from './pages/Dashboard'
-import ChatPage from './pages/Chat/chatPage'
+
 import IngredientForNutritionist from './pages/IngredientNutritionist'
 import LoginPage from './auth/Login'
 import CalendarForStaff from './pages/Staff/Calendar'
 import OrderPage from './pages/Staff/Order'
 import MaterialIngredient from './pages/ComponentIngredient'
+import CalendarForNutritionist from './pages/CalendarNutrition/Calendar'
 // import App from '~/App'
 // import LoginPage from '~/auth/Login'
 // import { Authentication } from '~/auth/protectedRoute'
@@ -93,11 +94,11 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <ChatPage />
+            element: <CalendarForNutritionist />
           },
           {
             path: 'chat',
-            element: <ChatPage />
+            element: <CalendarForNutritionist />
           },
           {
             path: 'nguyen-lieu-chua-duyet',

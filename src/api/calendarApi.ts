@@ -4,10 +4,20 @@ const api = axios.create({
   baseURL: API_ENDPOINT
 })
 export const getFullCalendar = async () => {
-  const token = sessionStorage.getItem('token')
 
   try {
     const response = await api.get('/ConsultationRequest')
+
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+export const getAppointment = async () => {
+
+
+  try {
+    const response = await api.get('/Appointment')
 
     return response.data
   } catch (error) {
@@ -22,6 +32,19 @@ export const getCalendarByTime = async () => {
     throw error
   }
 }
+export const createCalendar = async (data: FormData) => {
+  try {
+    const response = await api.post('/Appointment', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const addMeetUrl = async (requestId: number, meetUrl: string) => {
   const token = sessionStorage.getItem('token')
   try {
