@@ -16,9 +16,10 @@ export default function OrderPage() {
   const [isAddModalProduct, setIsAddModalProduct] = useState(false)
   const [searchText, setSearchText] = useState('')
   const [selectedOrderId, setSelectedOrderId] = useState<number>()
-  const { data: orderResponse } = useQuery('order', getOrder,{
+  const { data: orderResponse } = useQuery('order', getOrder, {
     staleTime: 5000,
-    cacheTime:300000
+    cacheTime: 300000,
+    refetchOnMount: true
   })
   const queryClient = useQueryClient()
   const { mutate: refetchProducts } = useMutation({
@@ -27,7 +28,7 @@ export default function OrderPage() {
       queryClient.invalidateQueries('order')
     }
   })
-console.log(orderResponse)
+  console.log(orderResponse)
   const orders: Order[] = orderResponse?.data || []
   // const cartProducts: CartProduct[] = orders.flatMap((order) => {
   //   return order.cartProducts.map((cartProduct) => ({
@@ -68,23 +69,32 @@ console.log(orderResponse)
       align: 'center',
       render: (cartProducts: CartProduct[]) => (
         <div style={{ display: 'flex', overflowX: 'auto', gap: '8px', padding: '8px', maxWidth: '300px' }}>
-  {cartProducts.map((product) => (
-    <div key={product.id} style={{ flexShrink: 0 }}> 
-      {product.dish.imageUrl ? (
-        <img
-          src={product.dish.imageUrl }
-          alt={product.dish.name || "Hình ảnh sản phẩm"}
-          style={{ width: 80, height: 80, borderRadius: '8px', display: 'block' }}
-        />
-      ) : (
-        <div style={{ width: 80, height: 80, backgroundColor: '#f0f0f0', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          Không có ảnh
+          {cartProducts.map((product) => (
+            <div key={product.id} style={{ flexShrink: 0 }}>
+              {product.dish.imageUrl ? (
+                <img
+                  src={product.dish.imageUrl}
+                  alt={product.dish.name || 'Hình ảnh sản phẩm'}
+                  style={{ width: 80, height: 80, borderRadius: '8px', display: 'block' }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 80,
+                    height: 80,
+                    backgroundColor: '#f0f0f0',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  Không có ảnh
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-      )}
-    </div>
-  ))}
-</div>
-
       )
     },
     {
@@ -116,32 +126,32 @@ console.log(orderResponse)
       key: 'status',
       align: 'center',
 
-render: (_, record) => {
-  let statusTag: string | React.ReactNode = "Unknown";  // Default to "Unknown"
-  let color = "gray";
+      render: (_, record) => {
+        let statusTag: string | React.ReactNode = 'Unknown' // Default to "Unknown"
+        let color = 'gray'
 
-  switch (record.status) {
-    case "Đã Xác Nhận":
-      statusTag = "Đã Xác Nhận";
-      color = "blue"; // Or your preferred color
-      break;
-    case "Đã Chuẩn Bị Xong":
-      statusTag = "Đã Chuẩn Bị Xong";
-      color = "gold"; // Or your preferred color
-      break;
-    case "Đã Giao Shipper":
-      statusTag = "Đã Giao Shipper";
-      color = "orange"; // Or your preferred color
-      break;
-    case "Hoàn Thành":
-      statusTag = "Hoàn Thành";
-      color = "green"; // Or your preferred color
-      break;
-      //No need for a default case, as it is handled initially
-  }
+        switch (record.status) {
+          case 'Đã Xác Nhận':
+            statusTag = 'Đã Xác Nhận'
+            color = 'blue' // Or your preferred color
+            break
+          case 'Đã Chuẩn Bị Xong':
+            statusTag = 'Đã Chuẩn Bị Xong'
+            color = 'gold' // Or your preferred color
+            break
+          case 'Đã Giao Shipper':
+            statusTag = 'Đã Giao Shipper'
+            color = 'orange' // Or your preferred color
+            break
+          case 'Hoàn Thành':
+            statusTag = 'Hoàn Thành'
+            color = 'green' // Or your preferred color
+            break
+          //No need for a default case, as it is handled initially
+        }
 
-  return <Tag color={color}>{statusTag}</Tag>;
-}
+        return <Tag color={color}>{statusTag}</Tag>
+      }
     }
   ]
   const handleSearch = (value: string) => {

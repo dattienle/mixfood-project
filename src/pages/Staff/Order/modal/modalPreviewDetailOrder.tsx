@@ -3,7 +3,7 @@ import { Modal, Collapse, Spin } from 'antd'
 import { Order } from '../../../../Models/order'
 import { getOrderById } from '../../../../api/orderAPI'
 import { useQuery } from 'react-query'
-
+import './styles.scss'
 interface OrderDetailPageProps {
   visible: boolean
   onClose: () => void
@@ -42,41 +42,53 @@ const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ visible, onClose, sel
       onCancel={onClose}
       footer={null}
       width={800}
-      style={{ maxHeight: '70vh', overflowY: 'auto' }} 
+      
+      className="modal-order-detail"
     >
       {selectedOrder ? (
-        <div>
-          <h3>Thông Tin Đơn Hàng</h3>
-          <p><strong>Mã đơn hàng:</strong> {selectedOrder.id}</p>
-          <p><strong>Tên khách hàng:</strong> {selectedOrder.customerName}</p>
-          <p><strong>Địa chỉ:</strong> {selectedOrder.address}</p>
-          <p><strong>Số điện thoại:</strong> {selectedOrder.phone}</p>
-          <h4>Sản Phẩm trong Đơn Hàng</h4>
-          <Collapse>
-            {selectedOrder.cartProducts && selectedOrder.cartProducts.length > 0 ? (
-              selectedOrder.cartProducts.map((product: any, index: any) => (
-                <Collapse.Panel header={product.dish.name} key={index}>
-                  <p><strong>Giá:</strong> {product.price.toLocaleString()} VND</p>
-                  <p><strong>Số lượng:</strong> {product.quantity}</p>
-                  <p><strong>Nguyên liệu:</strong></p>
-                  <ul>
-                    {product.ingredient && Array.isArray(product.ingredient) ? (
-                      product.ingredient.map((ing: any, i: any) => (
-                        <li key={i}>{ing.name}</li>
-                      ))
-                    ) : (
-                      <li>Không có nguyên liệu</li>
-                    )}
-                  </ul>
-                </Collapse.Panel>
-              ))
-            ) : (
-              <p>Không có sản phẩm nào trong đơn hàng</p>
-            )}
-          </Collapse>
+        <div className="order-content">
+          <div className="order-header">
+            <h3>Thông Tin Đơn Hàng</h3>
+            <div className="order-info">
+              <p><strong>Mã đơn hàng:</strong> <span>{selectedOrder.id}</span></p>
+              <p><strong>Tên khách hàng:</strong> <span>{selectedOrder.customerName}</span></p>
+              <p><strong>Địa chỉ:</strong> <span>{selectedOrder.address}</span></p>
+              <p><strong>Số điện thoại:</strong> <span>{selectedOrder.phone}</span></p>
+            </div>
+          </div>
+
+          <div className="order-products">
+            <h4>Sản Phẩm trong Đơn Hàng</h4>
+            <Collapse className="product-list">
+              {selectedOrder.cartProducts && selectedOrder.cartProducts.length > 0 ? (
+                selectedOrder.cartProducts.map((product: any, index: any) => (
+                  <Collapse.Panel header={product.dish.name} key={index} className="product-item">
+                    <div className="product-details">
+                      <p><strong>Giá:</strong> <span>{product.price.toLocaleString()} VND</span></p>
+                      <p><strong>Số lượng:</strong> <span>{product.quantity}</span></p>
+                      <div className="ingredients">
+                        <p><strong>Nguyên liệu:</strong></p>
+                        <ul>
+                          {product.ingredient && Array.isArray(product.ingredient) ? (
+                            product.ingredient.map((ing: any, i: any) => (
+                              <li key={i}>{ing.name}</li>
+                            ))
+                          ) : (
+                            <li>Không có nguyên liệu</li>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  </Collapse.Panel>
+                ))
+              ) : (
+                <p className="no-products">Không có sản phẩm nào trong đơn hàng</p>
+              )}
+            </Collapse>
+          </div>
         </div>
       ) : (
-        <div>Không tìm thấy chi tiết đơn hàng</div>
+        <div className="no-order">Không tìm thấy chi tiết đơn hàng</div>
       )}
     </Modal>
   )

@@ -10,12 +10,13 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import { toast } from 'react-toastify'
 import IngredientType from '../../Models/ingredientTypeModel'
-import { getIngredientType } from '../../api/ingredientTypeApi'
+import { getIngredientType, updateStatusIngredientType } from '../../api/ingredientTypeApi'
 import { updateCategory, updateStatusCategory } from '../../api/categoriesAPI'
 import Category from '../../Models/categoryModel'
 import { CommonButton } from '../../UI/button/Button'
 import ModalAddIngredientType from './modal/modalAdd'
 import ModalUpdateIngredientType from './modal/modalUpdate'
+import { updateStatusIngredient } from '../../api/ingredientApi'
 // import ModalUpdateCategory from '~/pages/CategoryTable/modal/modalUpdate'
 // import ModalAddCategory from '~/pages/CategoryTable/modal/modalAdd'
 // import { getIngredientType } from '~/api/ingredientTypeApi'
@@ -39,9 +40,9 @@ export default function IngredientTypePage() {
   } = useQuery('ingredientType', getIngredientType)
   const categories = ingredientTypeResponse?.data.items
   // updateStatus
-  const updateStatus = useMutation(updateStatusCategory, {
+  const updateStatus = useMutation(updateStatusIngredientType, {
     onSuccess: () => {
-      queryClient.invalidateQueries('categories')
+      queryClient.invalidateQueries('ingredientType')
       toast.success('Cập nhật trạng thái thành công!');
       refetch()
     },
@@ -49,28 +50,14 @@ export default function IngredientTypePage() {
       console.log('loi')
     }
   })
-// chỉnh sửa tên
-  const editCategory = useMutation(
-    (category: { id: number; name: string }) => updateCategory(category.id, category.name),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('categories')
-        refetch()
-        handleClose()
-      },
-      onError: (error) => {
-        console.log('loi update')
-      }
-    }
-  )
   // search
   const handleSearch = (value: string) => {
     setSearchText(value)
   }
 
   // status || mutate
-  const handleStatusChange = (id: number, isDelete: boolean) => {
-    updateStatus.mutate({ id, isDelete })
+  const handleStatusChange = (id: number, isDeleted: boolean) => {
+    updateStatus.mutate({ id, isDeleted })
   }
 
   const handleAddOk = async () => {

@@ -100,11 +100,11 @@ const onSelectDate = (value: Dayjs) => {
         selectedDate={selectedDate}
         onClose={handleCloseModal}
       />
-      {/* <ModalAddCanlendar
+      <ModalAddCanlendar
         onAddEvent={() => setIsModalAddOpen(false)}
         visible={isModalAddOpen}
         onClose={() => setIsModalAddOpen(false)}
-      /> */}
+      />
     </div>
   )
 }

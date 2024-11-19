@@ -1,11 +1,11 @@
 import { Button, Input, Modal, Space, Switch, Upload } from 'antd'
 import React, { useState } from 'react'
-import { SearchOutlined, PlusOutlined,UploadOutlined } from '@ant-design/icons'
+import { SearchOutlined, PlusOutlined,UploadOutlined,DownloadOutlined } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
 import { EditOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
-import { createMaterial, getMaterial } from '../../api/material'
+import { createMaterial, getMaterial, getMaterialExport } from '../../api/material'
 import Ingredient from '../../Models/ingredientModel'
 import { CommonButton } from '../../UI/button/Button'
 
@@ -29,6 +29,28 @@ export default function MaterialIngredient() {
   })
   const handleUpload = (file: File) => {
     mutation.mutate(file)
+  }
+  // Tải xuống excel
+  const handleDownloadExcel = async () => {
+    try {
+      const response = await getMaterialExport()
+      const blob = new Blob([response.data], { 
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      })
+      
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'ingredients.xlsx')
+      document.body.appendChild(link)
+      link.click()
+
+      window.URL.revokeObjectURL(url)
+      link.remove()
+      toast.success('Tải xuống thành công!')
+    } catch (error) {
+      toast.error('Tải xuống thất bại!')
+    }
   }
   const columns: ColumnType<Ingredient>[] = [
     {
@@ -99,6 +121,9 @@ export default function MaterialIngredient() {
         />
       </Space>
       <Table columns={columns} dataSource={filteredData} />
+      <CommonButton type='primary' icon={<DownloadOutlined />} onClick={handleDownloadExcel}>
+          Tải xuống Excel
+        </CommonButton>
       <Modal
         title="Tải lên file Excel"
         visible={isModalAddOpen}

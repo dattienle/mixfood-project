@@ -1,23 +1,64 @@
-.body-calendar{
-  margin: 20px;
+.body-calendar {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 4px;
+      background-color: #ffcc00;
+    }
+  }
+
+  .ant-btn-primary {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+    font-weight: bold;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    &:hover {
+      background-color: #e6b800;
+      border-color: #e6b800;
+    }
+  }
+
+  .ant-picker-cell {
+    &.ant-picker-cell-in-view {
+      &:hover {
+        background-color: #e6f7ff;
+      }
+    }
+  }
+
   .events {
     list-style: none;
     padding: 0;
     margin: 0;
-  }
 
-  .event {
-    display: flex;
-    align-items: center;
-    margin-bottom: 4px;
-  }
+    .event {
+      background-color: #ffcc00;
+      color: #fff;
+      padding: 5px;
+      border-radius: 4px;
+      margin-bottom: 5px;
+      text-align: center;
+    }
 
-  .time {
-    font-weight: bold;         /* Make the time bold */
-    font-size: 16px;           /* Increase font size */
-    color: #F8B602;            /* Set color for the time */
-    background-color: #eaf5fb; /* Light background color */
-    padding: 2px 8px;          /* Add some padding */
-    border-radius: 4px;        /* Rounded corners */
+    .no-events {
+      color: #999;
+      text-align: center;
+    }
   }
 }

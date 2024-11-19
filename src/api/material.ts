@@ -26,3 +26,13 @@ export const createMaterial = async (file: File) => {
     throw error;
   }
 }
+export const getMaterialExport = async () => {
+  const response = await api.get('/Material/Export', {
+    responseType: 'arraybuffer',  // Thêm cấu hình này
+    headers: {
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    }
+  })
+  return response
+}
