@@ -14,7 +14,7 @@ export default function CalendarForNutritionist() {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState('')
   const [eventsForDate, setEventsForDate] = useState<EventType[]>([])
-  const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+
   const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
     console.log(value.format('YYYY-MM-DD'), mode)
   }
@@ -22,15 +22,19 @@ export default function CalendarForNutritionist() {
   
     refetchOnMount: true,
     refetchInterval: 6000
-  })
+  })  
+console.log(calendarResponse?.data)
 
 const onSelectDate = (value: Dayjs) => {
   const formattedDate = value.format('YYYY-MM-DD');
   const events = calendarResponse?.data?.flatMap((item: any) => {
-    if (dayjs(item.date).format('YYYY-MM-DD') === formattedDate) {
-      return item.requests.map((request: any) => ({
-        timePeriod: request.package.timePeriod,
-      }));
+    if (dayjs(item.appointmentDate).format('YYYY-MM-DD') === formattedDate) {
+      return [{
+        timePeriod: {
+          startTime: item.timePeriod.startTime,
+          endTime: item.timePeriod.endTime,
+        },
+      }];
     }
     return [];
   }) || [];
@@ -63,16 +67,19 @@ const onSelectDate = (value: Dayjs) => {
       );
     }
     const events = calendarResponse?.data?.flatMap((item: any) => {
-      if (dayjs(item.date).format('YYYY-MM-DD') === formattedDate  && item.requests) {
-        return item.requests.map((request: any) => ({
-          timePeriod: request.timePeriod,
-        }));
+      if (dayjs(item.appointmentDate).format('YYYY-MM-DD') === formattedDate) {
+        return [{
+          timePeriod: {
+            startTime: item.timePeriod.startTime,
+            endTime: item.timePeriod.endTime,
+          },
+        }];
       }
       return [];
-    });
+    }) || [];
     return (
       <ul className='events'>
-        {events.length > 0  ? (
+        {events.length > 0 ? (
           events.map((event: any, index: number) => (
             <li key={index} className='event'>
               <div className='time'>

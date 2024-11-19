@@ -14,11 +14,13 @@ export const getFullCalendar = async () => {
   }
 }
 export const getAppointment = async () => {
-
-
+  const token = sessionStorage.getItem('token')
   try {
-    const response = await api.get('/Appointment')
-
+    const response = await api.get('/Appointment',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+     },
+    })
     return response.data
   } catch (error) {
     throw error
