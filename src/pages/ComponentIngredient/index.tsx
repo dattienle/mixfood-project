@@ -93,7 +93,8 @@ export default function MaterialIngredient() {
       title: 'Ngày tạo',
       dataIndex: 'createdDate',
       key: 'createdDate',
-      align: 'center'
+      align: 'center',
+      render: (text: string) => new Date(text).toLocaleDateString('vi-VN')
     }
   ]
 
@@ -109,21 +110,25 @@ export default function MaterialIngredient() {
   return (
     <div style={{ background: 'white', padding: '20px' }}>
       <h1>Quản Lý Nguyên Liệu</h1>
-      <CommonButton type='primary' icon={<PlusOutlined />} onClick={() => setIsModalAddOpen(true)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <div> <CommonButton type='primary' icon={<PlusOutlined />} onClick={() => setIsModalAddOpen(true)}>
         Thêm thành phần nguyên liệu
       </CommonButton>
-      <Space style={{ marginBottom: 16 }}>
+      <Space style={{ marginBottom: 16, marginLeft:16 }}>
         <Input
           placeholder='Tìm kiếm theo tên'
           onChange={(e) => handleSearch(e.target.value)}
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
         />
-      </Space>
-      <Table columns={columns} dataSource={filteredData} />
-      <CommonButton type='primary' icon={<DownloadOutlined />} onClick={handleDownloadExcel}>
+      </Space></div>
+     
+      <CommonButton type='primary' icon={<DownloadOutlined />} onClick={handleDownloadExcel} style={{ marginLeft: 'auto' }}>
           Tải xuống Excel
         </CommonButton>
+        </div>
+      <Table columns={columns} dataSource={filteredData} />
+     
       <Modal
         title="Tải lên file Excel"
         visible={isModalAddOpen}

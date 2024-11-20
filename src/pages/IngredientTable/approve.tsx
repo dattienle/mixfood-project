@@ -19,7 +19,7 @@ export default function IngredientApprovePage() {
     refetch: refetchIngredient,
     isLoading,
     isError
-  } = useQuery('ingredient', getIngredients)
+  } = useQuery('ingredient', getIngredients, { refetchOnMount: true })
   const ingredients = ingredientResponse?.data.items
   const updateStatus = useMutation(updateStatusIngredient, {
     onSuccess: () => {

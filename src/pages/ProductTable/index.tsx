@@ -16,11 +16,7 @@ import ModalPreviewDetail from './modal/modalPreviewDetail'
 import ModalUpdateDish from './modal/modalUpdateDish'
 import { getPreviewDetails } from '../../api/templateSteps'
 import AddIngredientRequest from '../../Models/templateSteps'
-// import Product from '~/Models/productTemplateModel'
-// import ModalAddProduct from '~/pages/ProductTable/modal/modalAddDish'
-// import { getDish } from '~/api/dishAPI'
-// import ModalAddIngredient from '~/pages/ProductTable/modal/modalAddIngredient'
-// import ModalPreviewDetail from '~/pages/ProductTable/modal/modalPreviewDetail'
+
 export default function ProductPage() {
   const [searchText, setSearchText] = useState('')
   const [isAddModalProduct, setIsAddModalProduct] = useState(false)

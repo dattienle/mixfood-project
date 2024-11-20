@@ -28,6 +28,7 @@
   background-color: #F8B602; // Màu nền cho tin nhắn gửi
   margin-left: auto; // Đẩy tin nhắn gửi sang bên phải
   text-align: right; // Căn chỉnh nội dung tin nhắn sang bên phải
+  margin-bottom: 15px;
   .message-time {
     font-size: 0.8em;
     color: gray;
@@ -39,10 +40,21 @@
   align-self: flex-start;
   background-color: #f1f0f0; // Màu nền cho tin nhắn nhận
   margin-right: auto; // Đẩy tin nhắn nhận sang bên trái
+  margin-bottom: 15px;
+
 }
 
 .message-time {
   font-size: 0.8em;
   color: gray;
   text-align: right;
+}
+.input-container{
+  display: flex;
+  margin-top: 20px;
+  button{
+    padding: 0px 20px;
+    width: 65px;
+    background-color: #F8B602;
+  }
 }

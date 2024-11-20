@@ -37,7 +37,7 @@ export default function IngredientTypePage() {
     isLoading,
     refetch,
     isError
-  } = useQuery('ingredientType', getIngredientType)
+  } = useQuery('ingredientType', getIngredientType, { refetchOnMount: true })
   const categories = ingredientTypeResponse?.data.items
   // updateStatus
   const updateStatus = useMutation(updateStatusIngredientType, {

@@ -105,22 +105,7 @@ export default function IngredientNotApprovePage() {
         </Space>
       )
     },
-    // {
-    //   title: 'Phê Duyệt',
-    //   key: 'status',
-    //   align: 'center',
-    //   render: (_, record) => (
-    //     <Switch
-    //     style={{ backgroundColor: record.isApproved ? '#F8B602' : '' }}
-    //       checked={record.isApproved}
-    //       onChange={() => {
-    //         if (record.id) {
-    //           handleApproved(record.id, !record.isApproved)
-    //         }
-    //       }}
-    //     />
-    //   ),
-    // },
+   
   ]
   const handleSearch = (value: string) => {
     setSearchText(value)

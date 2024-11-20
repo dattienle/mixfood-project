@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { Modal, Input, Button } from 'antd';
 import './chat.scss'
 import { CommonButton } from '../../../../UI/button/Button';
+import { SendOutlined } from '@ant-design/icons'
 const socket = io('https://chat-app-3i7k.onrender.com/'); // Update with your server IP
 
 interface Message {
@@ -94,9 +95,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, appointmentId
             onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}
             style={{ flex: 1, marginRight: '8px' }} // Để ô nhập liệu chiếm không gian
           />
-          <CommonButton type="primary" onClick={onSendMessage}>
-            Gửi
-          </CommonButton>
+          <Button type="primary" icon={<SendOutlined />} style={{width: '65px'}} onClick={onSendMessage}>
+            
+          </Button>
         </div>
       </div>
     </Modal>

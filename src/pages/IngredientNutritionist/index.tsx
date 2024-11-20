@@ -7,20 +7,33 @@ import Table, { ColumnType } from 'antd/es/table'
 // import Ingredient from '~/Models/ingredientModel'
 import { EditOutlined } from '@ant-design/icons'
 // import { getIngredients, updateIngredientById } from '~/api/ingredientApi'
-import { QueryClient, useQuery, useQueryClient } from 'react-query'
+import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query'
 // import ModalAddCalo from '~/pages/IngredientNutritionist/modal/modalAdd'
 import { toast } from 'react-toastify'
-import { getIngredients, updateIngredientById } from '../../api/ingredientApi'
+import { approvedIngredient, getIngredients, updateIngredientById } from '../../api/ingredientApi'
 import Ingredient from '../../Models/ingredientModel'
 import ModalAddCalo from './modal/modalAdd'
 export default function IngredientForNutritionist() {
   const [searchText, setSearchText] = useState('')
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
-  const { data: ingredientResponse, isLoading, isError } = useQuery('ingredient', getIngredients)
+  const { data: ingredientResponse, isLoading, isError, refetch } = useQuery('ingredient', getIngredients, { refetchOnMount: true })
   const queryClient = useQueryClient()
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
   const ingredients = ingredientResponse?.data.items
+  const approvedStatus = useMutation(approvedIngredient, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('ingredient')
+      toast.success('Duyệt nguyên liệu thành công!')
+      refetch()
+    },
+    onError: (error) => {
+      console.log('loi', error)
+    }
+  })
+  const handleApproved = (id: number, isApproved: boolean) => {
+    approvedStatus.mutate({ id, isApproved })
+  }
   const columns: ColumnType<Ingredient>[] = [
     {
       title: 'ID',
@@ -87,17 +100,21 @@ export default function IngredientForNutritionist() {
       )
     },
     {
-      title: 'Trạng thái',
+      title: 'Phê Duyệt',
       key: 'status',
       align: 'center',
       render: (_, record) => (
         <Switch
-          style={{ backgroundColor: record.isDeleted ? '' : '#F8B602' }}
-          checked={!record.isDeleted}
-          // onChange={(checked) => handleUpdateStatus(record.id, checked)}
+        style={{ backgroundColor: record.isApproved ? '#F8B602' : '' }}
+          checked={record.isApproved}
+          onChange={() => {
+            if (record.id) {
+              handleApproved(record.id, !record.isApproved)
+            }
+          }}
         />
-      )
-    }
+      ),
+    },
   ]
 
   const handleSearch = (value: string) => {

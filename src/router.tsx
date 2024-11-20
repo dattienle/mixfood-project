@@ -17,6 +17,8 @@ import CalendarForStaff from './pages/Staff/Calendar'
 import OrderPage from './pages/Staff/Order'
 import MaterialIngredient from './pages/ComponentIngredient'
 import CalendarForNutritionist from './pages/CalendarNutrition/Calendar'
+import AccountPage from './pages/Admin/Account'
+import StaffPage from './pages/Admin/Account/staff'
 // import App from '~/App'
 // import LoginPage from '~/auth/Login'
 // import { Authentication } from '~/auth/protectedRoute'
@@ -84,6 +86,14 @@ export const router = createBrowserRouter([
           {
             path: 'doanh-thu',
             element: <Dashboard />
+          },
+          {
+            path: 'tai-khoan-nhan-vien',
+            element: <StaffPage />
+          },
+          {
+            path: 'tai-khoan-khach-hang',
+            element: <AccountPage />
           }
         ]
       },

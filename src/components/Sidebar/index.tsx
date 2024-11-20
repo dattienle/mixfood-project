@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { AppstoreOutlined, PieChartOutlined, DesktopOutlined, ContainerOutlined, MailOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, PieChartOutlined, UserOutlined,GoldOutlined,AreaChartOutlined, ContainerOutlined, MailOutlined,CalendarOutlined  } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import './style.scss'
 import GetDataByToken from '../../auth/auth'
@@ -30,6 +30,10 @@ const Sidebar: React.FC = () => {
      '/staff/dashboard/order': '9',
      '/staff/dashboard/calendar': '10',
      '/nutritionist/dashboard/thanh-phan-nguyen-lieu': '11',
+     '/admin/dashboard/tai-khoan-khach-hang': '12.1',
+     '/admin/dashboard/tai-khoan-nhan-vien': '12.2',
+
+
 
      
   }
@@ -54,7 +58,8 @@ const Sidebar: React.FC = () => {
       '9': '/staff/dashboard/order',
       '10': '/staff/dashboard/calendar',
       '11': '/nutritionist/dashboard/thanh-phan-nguyen-lieu',
-
+      '12.1': '/admin/dashboard/tai-khoan-khach-hang',
+      '12.2': '/admin/dashboard/tai-khoan-nhan-vien'
 
     }
     console.log(keyToPathMap[key])
@@ -86,7 +91,7 @@ const Sidebar: React.FC = () => {
     { key: '1', icon: <PieChartOutlined />, label: 'Danh Mục', onClick: () => handleMenuClick('1') },
     {
       key: '2',
-      icon: <DesktopOutlined />,
+      icon: <GoldOutlined />,
       label: 'Nguyên Liệu',
       children: [
         { key: '2.1', label: 'Đã phê duyệt ', onClick: () => handleMenuClick('2.1') },
@@ -117,27 +122,37 @@ const Sidebar: React.FC = () => {
     {
       key: '6',
       label: 'Doanh thu',
-      icon: <AppstoreOutlined />,
-      onClick: () => handleMenuClick('5')
+      icon: <AreaChartOutlined />,
+      onClick: () => handleMenuClick('6')
+    },
+    {
+      key: '12',
+      label: 'Tài Khoản',
+      icon: <UserOutlined />,
+      children: [
+        { key: '12.1', label: 'Khách Hàng', onClick: () => handleMenuClick('12.1') },
+        { key: '12.2', label: 'Nhân Viên', onClick: () => handleMenuClick('12.2') }
+      ]
     }
+
   ]
   const nutritionistItems: MenuItem[] = [
     {
       key: '7',
       label: 'Chat',
-      icon: <AppstoreOutlined />,
+      icon: <CalendarOutlined />,
       onClick: () => handleMenuClick('7')
     },
     {
       key: '8',
       label: 'Nguyên liệu ',
-      icon: <MailOutlined />,
+      icon: <GoldOutlined />,
       onClick: () => handleMenuClick('8') 
     },
     {
       key: '11',
       label: 'Thành Phần Nguyên liệu ',
-      icon: <DesktopOutlined />,
+      icon: <ContainerOutlined />,
       onClick: () => handleMenuClick('11') 
     }
   ]
