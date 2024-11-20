@@ -1,22 +1,70 @@
 // src/components/ChatWindow.tsx
-import React, { useState } from 'react'
-import { Modal, Input, Button, List } from 'antd'
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+import { Modal, Input, Button } from 'antd';
+import './chat.scss'
+import { CommonButton } from '../../../../UI/button/Button';
+const socket = io('https://chat-app-3i7k.onrender.com/'); // Update with your server IP
 
-interface ChatWindowProps {
-  visible: boolean
-  onClose: () => void
+interface Message {
+  _id: number;
+  text: string;
+  user: string;
+  time: string;
+  userId: number;
+  appointmentId: number;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose }) => {
-  const [messages, setMessages] = useState<string[]>([])
-  const [inputValue, setInputValue] = useState<string>('')
+interface ChatWindowProps {
+  visible: boolean;
+  onClose: () => void;
+  appointmentId: number;
+}
 
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      setMessages([...messages, inputValue])
-      setInputValue('') // Xóa ô nhập sau khi gửi
+const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, appointmentId }) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState('');
+
+  const formatTime = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    return `${hours}:${minutes}, ${day}/${month}`;
+  };
+
+  useEffect(() => {
+    socket.emit('fetchMessages', appointmentId);
+
+    socket.on('messages', (loadedMessages: Message[]) => {
+      setMessages(loadedMessages);
+    });
+
+    socket.on('newMessage', (newMessage: Message) => {
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+    });
+
+    return () => {
+      socket.off('messages');
+      socket.off('newMessage');
+    };
+  }, [appointmentId]);
+
+  const onSendMessage = () => {
+    if (inputText.trim()) {
+      const newMessage: Message = {
+        _id: Date.now(),
+        text: inputText,
+        user: 'Chuyên gia',
+        time: formatTime(new Date()),
+        userId: 15,
+        appointmentId: appointmentId,
+      };
+
+      socket.emit('sendMessage', newMessage);
+      setInputText('');
     }
-  }
+  };
 
   return (
     <Modal
@@ -24,27 +72,35 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose }) => {
       title="Chat"
       onCancel={onClose}
       footer={null}
-      width={400}
+      width={700}
+      style={{ maxHeight: '60vh' }}
     >
-      <List
-        size="small"
-        bordered
-        dataSource={messages}
-        renderItem={(item) => <List.Item>{item}</List.Item>}
-        style={{ maxHeight: '300px', overflowY: 'auto' }}
-      />
-      <Input
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onPressEnter={handleSendMessage}
-        placeholder="Nhập tin nhắn..."
-        style={{ marginTop: '16px' }}
-      />
-      <Button type="primary" onClick={handleSendMessage} style={{ marginTop: '8px' }}>
-        Gửi
-      </Button>
+      <div className="chat-container">
+        <div className="messages">
+          {messages.map(message => (
+            <div key={message._id} className={`message ${message.user === 'Chuyên gia' ? 'sent' : 'received'}`}>
+              <div className="message-sender">{message.user}</div>
+              <div className="message-text">{message.text}</div>
+              <div className="message-time">{message.time}</div>
+            </div>
+          ))}
+        </div>
+        <div className="input-container">
+          <Input
+            type="text"
+            placeholder="Type your message..."
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}
+            style={{ flex: 1, marginRight: '8px' }} // Để ô nhập liệu chiếm không gian
+          />
+          <CommonButton type="primary" onClick={onSendMessage}>
+            Gửi
+          </CommonButton>
+        </div>
+      </div>
     </Modal>
-  )
-}
+  );
+};
 
-export default ChatWindow
+export default ChatWindow;

@@ -1,0 +1,48 @@
+
+.chat-container {
+  display: flex;
+  flex-direction: column; // Để sắp xếp các phần tử theo chiều dọc
+  height: 100%; // Chiều cao đầy đủ của modal
+}
+.messages {
+
+  overflow-y: auto; // Cho phép cuộn dọc
+  height: 50vh; // Chiều cao tối đa cho phần tin nhắn
+}
+.message {
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 65%;
+  max-height: 500px;
+  position: relative; // Thêm để có thể sử dụng cho pseudo-element nếu cần
+}
+
+.message-sender {
+  font-weight: bold; // Đậm
+  font-size: 0.9em; // Kích thước chữ nhỏ hơn
+  margin-bottom: 5px; // Khoảng cách dưới tên
+}
+.sent {
+  align-self: flex-end;
+  background-color: #F8B602; // Màu nền cho tin nhắn gửi
+  margin-left: auto; // Đẩy tin nhắn gửi sang bên phải
+  text-align: right; // Căn chỉnh nội dung tin nhắn sang bên phải
+  .message-time {
+    font-size: 0.8em;
+    color: gray;
+    text-align: left;
+  }
+}
+
+.received {
+  align-self: flex-start;
+  background-color: #f1f0f0; // Màu nền cho tin nhắn nhận
+  margin-right: auto; // Đẩy tin nhắn nhận sang bên trái
+}
+
+.message-time {
+  font-size: 0.8em;
+  color: gray;
+  text-align: right;
+}
