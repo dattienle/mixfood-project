@@ -19,6 +19,7 @@ import MaterialIngredient from './pages/ComponentIngredient'
 import CalendarForNutritionist from './pages/CalendarNutrition/Calendar'
 import AccountPage from './pages/Admin/Account'
 import StaffPage from './pages/Admin/Account/staff'
+import OrderChefPage from './pages/Chef/Order'
 // import App from '~/App'
 // import LoginPage from '~/auth/Login'
 // import { Authentication } from '~/auth/protectedRoute'
@@ -136,6 +137,23 @@ export const router = createBrowserRouter([
           {
             path: 'order',
             element:<OrderPage/>
+          }
+        
+        ]
+      },
+      {
+        path: '/chef/dashboard',
+        element: <App />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <OrderChefPage />
+          },
+  
+          {
+            path: 'order',
+            element:<OrderChefPage/>
           }
         
         ]

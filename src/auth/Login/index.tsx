@@ -67,6 +67,9 @@ const LoginPage: React.FC = () => {
           case 'Staff':
             navigate('/staff/dashboard')
             break
+            case 'Chef':
+              navigate('/chef/dashboard')
+              break
         default:
           console.error('Unknown role:', role)
           navigate('/dang-nhap')

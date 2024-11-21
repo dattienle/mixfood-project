@@ -7,9 +7,11 @@ import { EllipsisOutlined } from '@ant-design/icons'
 import { CommonButton } from '../../../UI/button/Button'
 import { getAccount, updateStatusAccount } from '../../../api/accountApi'
 import { Account } from '../../../Models/accountModel'
+import ModalAddAccount from './modal/modalAdd'
 
 export default function StaffPage() {
   const [searchText, setSearchText] = useState('')
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const queryClient = useQueryClient()
   const {
     data: accountsResponse,
@@ -19,7 +21,7 @@ export default function StaffPage() {
   } = useQuery('accounts', getAccount, { refetchOnMount: true })
   const accounts = accountsResponse?.data.items
   const filteredAccounts = accounts?.filter((account: Account) => account.role.name !== 'Customer') || [] 
-  console.log(accounts)
+
   // search
   const handleSearch = (value: string) => {
     setSearchText(value)
@@ -38,6 +40,14 @@ export default function StaffPage() {
   const handleStatusChange = (id: number, isDelete: boolean) => {
     updateStatus.mutate({ id, isDelete })
   }
+
+  const handleAddOk = async () => {
+    setIsModalAddOpen(false)
+    await refetchAccounts()
+  }
+  const handleClose = () => {
+    setIsModalAddOpen(false);
+  };
   const columns: ColumnsType<Account> = [
     {
       title: 'ID',
@@ -119,9 +129,10 @@ export default function StaffPage() {
       <h1>Quản Lý Tài Khoản</h1>
       <Space style={{ marginBottom: 16 }}>
         <Input placeholder='Tìm kiếm theo tên' onChange={(e) => handleSearch(e.target.value)} style={{ width: 200 }} />
-        <CommonButton type='primary'>Thêm Tài Khoản</CommonButton>
+        <CommonButton  onClick={() => setIsModalAddOpen(true)} type='primary'>Thêm Tài Khoản</CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredAccounts} rowKey={(record) => record.id} />
+      {isModalAddOpen && <ModalAddAccount isOpen={isModalAddOpen} handleOk={handleAddOk} handleCancel={handleClose} />}
     </div>
   )
 }

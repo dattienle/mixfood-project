@@ -51,6 +51,11 @@ export const Authentication: React.FC = () => {
                 navigate('/staff/dashboard')
               }
               break
+              case 'Chef':
+                if (!location.pathname.startsWith('/chef/dashboard')) {
+                  navigate('/chef/dashboard')
+                }
+                break
           default:
             navigate('/dang-nhap')
         }

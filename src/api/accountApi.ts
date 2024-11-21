@@ -32,3 +32,15 @@ export const updateStatusAccount = async ({ id, isDelete }: { id: number; isDele
     throw error
   }
 }
+export const createAccount = async (data: object) => {
+  try {
+    const response = await api.post('/Account/Register', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

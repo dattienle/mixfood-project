@@ -59,8 +59,10 @@ const Sidebar: React.FC = () => {
       '10': '/staff/dashboard/calendar',
       '11': '/nutritionist/dashboard/thanh-phan-nguyen-lieu',
       '12.1': '/admin/dashboard/tai-khoan-khach-hang',
-      '12.2': '/admin/dashboard/tai-khoan-nhan-vien'
+      '12.2': '/admin/dashboard/tai-khoan-nhan-vien',
+      '13': '/chef/dashboard/order'
 
+      
     }
     console.log(keyToPathMap[key])
     console.log(pathToKeyMap[location.pathname])
@@ -170,6 +172,17 @@ const Sidebar: React.FC = () => {
       onClick: () => handleMenuClick('10')
     }
    
+    
+  ]
+  const chefItems: MenuItem[] = [
+    {
+      key: '13',
+      label: 'Đơn hàng',
+      icon: <AppstoreOutlined />,
+      onClick: () => handleMenuClick('13')
+    },
+   
+   
   ]
   let displayedItems: MenuItem[] = []
   let defaultOpenKeys = '1'
@@ -184,6 +197,9 @@ const Sidebar: React.FC = () => {
   }else if (userRole === 'Staff') {
     displayedItems = staffItems
     defaultOpenKeys = '9'
+  }else if (userRole === 'Chef') {
+    displayedItems = chefItems
+    defaultOpenKeys = '13'
   }
   return (
     <div className='sidebar'>
