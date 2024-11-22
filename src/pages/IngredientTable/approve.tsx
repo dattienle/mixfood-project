@@ -11,9 +11,12 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
 import { approvedIngredient, getIngredients, updateStatusIngredient } from '../../api/ingredientApi'
 import Ingredient from '../../Models/ingredientModel'
+import ModalUpdateIngredient from './modal/modalUpdateIngredient'
 export default function IngredientApprovePage() {
   const queryClient = useQueryClient()
   const [searchText, setSearchText] = useState('')
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
+  const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
   const {
     data: ingredientResponse,
     refetch: refetchIngredient,
@@ -49,6 +52,15 @@ export default function IngredientApprovePage() {
   const handleStatusChange = (id: number, isDelete: boolean) => {
     updateStatus.mutate({ id, isDelete })
   }
+  const handleUpdateOk = async() =>{
+    setIsModalUpdateOpen(false)
+    await refetchIngredient()
+      }
+  const handleClose = () => {
+    setIsModalUpdateOpen(false)
+
+  }
+
   const columns: ColumnType<Ingredient>[] = [
     {
       title: 'ID',
@@ -123,6 +135,18 @@ export default function IngredientApprovePage() {
       ),
     },
     {
+      title: 'Chỉnh sửa',
+      key: 'edit',
+      align: 'center',
+      render: (_, record) => (
+        <Space>
+          <Button type='link' >
+            <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedIngredient(record); }} />
+          </Button>
+        </Space>
+      )
+    },
+    {
       title: 'Trạng thái',
       key: 'status',
       align: 'center',
@@ -159,6 +183,15 @@ export default function IngredientApprovePage() {
         />
       </Space>
       <Table columns={columns} dataSource={filteredData} />
+      {isModalUpdateOpen &&(
+        <ModalUpdateIngredient
+        isOpen={isModalUpdateOpen}
+          handleOk={handleUpdateOk}
+          handleCancel={handleClose}
+          ingredientId={selectedIngredient?.id || NaN}
+
+        />
+      )}
     </div>
   )
 }

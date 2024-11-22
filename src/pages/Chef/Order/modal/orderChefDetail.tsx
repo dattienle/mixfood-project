@@ -3,26 +3,28 @@ import { Modal, Collapse, Spin } from 'antd'
 import { Order } from '../../../../Models/order'
 import { getOrderById } from '../../../../api/orderAPI'
 import { useQuery } from 'react-query'
-import './styles.scss'
+
+import { getOrderChefById } from '../../../../api/chefApi'
+import { CartProduct } from '../../../../Models/orderChef'
 interface OrderDetailPageProps {
   visible: boolean
   onClose: () => void
   selectedOrderId: number
 }
 
-const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ visible, onClose, selectedOrderId }) => {
-  // useEffect(() => {
-  //   console.log('selectedOrder changed:', selectedOrder);
-  // }, [selectedOrder]);
+const OrderDetailChefPage: React.FC<OrderDetailPageProps> = ({ visible, onClose, selectedOrderId }) => {
 
+const {Panel} = Collapse
   const {
     data: selectedOrderResonse,
     isLoading,
     error
-  } = useQuery(['orderDetail', selectedOrderId], () => getOrderById(selectedOrderId), {
+  } = useQuery(['orderDetail', selectedOrderId], () => getOrderChefById(selectedOrderId), {
     enabled: !!selectedOrderId // Chỉ gọi API khi selectedOrderId không phải là null hoặc undefined
   })
   const selectedOrder = selectedOrderResonse?.data
+  console.log(selectedOrder?.cartProducts)
+  const cartProducts = selectedOrder?.cartProducts
   if (!selectedOrderId) {
     return <div>Không có đơn hàng chi tiết</div>
   }
@@ -36,62 +38,51 @@ const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ visible, onClose, sel
   }
 
   return (
-    <Modal
-      title="Chi Tiết Đơn Hàng"
-      visible={visible}
-      onCancel={onClose}
-      footer={null}
-      width={800}
-      
-      className="modal-order-detail"
-    >
-      {selectedOrder ? (
-        <div className="order-content">
-          <div className="order-header">
-            <h3>Thông Tin Đơn Hàng</h3>
-            <div className="order-info">
-              <p><strong>Mã đơn hàng:</strong> <span>{selectedOrder.id}</span></p>
-              <p><strong>Tên khách hàng:</strong> <span>{selectedOrder.customerName}</span></p>
-              <p><strong>Địa chỉ:</strong> <span>{selectedOrder.address}</span></p>
-              <p><strong>Số điện thoại:</strong> <span>{selectedOrder.phone}</span></p>
-            </div>
-          </div>
+  
 
-          <div className="order-products">
-            <h4>Sản Phẩm trong Đơn Hàng</h4>
-            <Collapse className="product-list">
-              {selectedOrder.cartProducts && selectedOrder.cartProducts.length > 0 ? (
-                selectedOrder.cartProducts.map((product: any, index: any) => (
-                  <Collapse.Panel header={product.dish.name} key={index} className="product-item">
-                    <div className="product-details">
-                      <p><strong>Giá:</strong> <span>{product.price.toLocaleString()} VND</span></p>
-                      <p><strong>Số lượng:</strong> <span>{product.quantity}</span></p>
-                      <div className="ingredients">
-                        <p><strong>Nguyên liệu:</strong></p>
-                        <ul>
-                          {product.ingredient && Array.isArray(product.ingredient) ? (
-                            product.ingredient.map((ing: any, i: any) => (
-                              <li key={i}>{ing.name}</li>
-                            ))
-                          ) : (
-                            <li>Không có nguyên liệu</li>
-                          )}
-                        </ul>
-                      </div>
-                    </div>
-                  </Collapse.Panel>
-                ))
-              ) : (
-                <p className="no-products">Không có sản phẩm nào trong đơn hàng</p>
-              )}
-            </Collapse>
-          </div>
-        </div>
-      ) : (
-        <div className="no-order">Không tìm thấy chi tiết đơn hàng</div>
-      )}
-    </Modal>
+    <Modal
+    title="Thông Tin Chi Tiết"
+    visible={visible}
+      onCancel={onClose}
+    footer={null}
+    style={{ maxHeight: '70vh', overflowY: 'auto' }}
+  >
+    <Collapse>
+      {cartProducts?.map((product: CartProduct, index: any) => (
+       <Panel header={product.dish.name} key={index}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <img
+                src={product.dish.imageUrl}
+                alt={product.dish.name}
+                style={{
+                  width: '100%',
+                  height: '200px',
+                  objectFit: 'contain',
+                  borderRadius: '8px',
+                }}
+              />
+              <p>
+                <strong>Giá:</strong> {product.price.toLocaleString()} VND
+              </p>
+              <p>
+                <strong>Số lượng:</strong> {product.quantity}
+              </p>
+              <p>
+                <strong>Calo:</strong> {product.calo}
+              </p>
+              <p>
+                <strong>Nguyên liệu:</strong>{' '}
+                {product.ingredient && product.ingredient.length > 0
+                  ? product.ingredient.map((ing) => ing.name).join(', ')
+                  : 'Không có nguyên liệu'}
+              </p>
+            </div>
+     </Panel>
+      ))}
+    </Collapse>
+  </Modal>
+  
   )
 }
 
-export default OrderDetailPage
+export default OrderDetailChefPage

@@ -19,3 +19,16 @@ export const getOrderChef = async () => {
   }
 
 }
+export const getOrderChefById = async(orderId: number ) =>{
+  const token = sessionStorage.getItem('token')
+  try {
+    const response = await api.get(`/Order/${orderId}`, {
+      headers: {
+         'Authorization': `Bearer ${token}`,
+      },
+    })
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

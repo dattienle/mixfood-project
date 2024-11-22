@@ -16,6 +16,19 @@ export const getAccount = async () => {
     throw error
   }
 }
+export const getAccountShipper = async () => {
+  const token = sessionStorage.getItem('token')
+  try {
+    const response = await api.get('/Account/Shipper',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+     },
+    })
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
 export const updateStatusAccount = async ({ id, isDelete }: { id: number; isDelete: boolean }) => {
   try {
     const response = await api.put(
@@ -34,7 +47,7 @@ export const updateStatusAccount = async ({ id, isDelete }: { id: number; isDele
 }
 export const createAccount = async (data: object) => {
   try {
-    const response = await api.post('/Account/Register', data, {
+    const response = await api.post('/Account', data, {
       headers: {
         'Content-Type': 'application/json',
       },

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { AppstoreOutlined, PieChartOutlined, UserOutlined,GoldOutlined,AreaChartOutlined, ContainerOutlined, MailOutlined,CalendarOutlined  } from '@ant-design/icons'
+import { AppstoreOutlined, PieChartOutlined,BookOutlined ,UserOutlined,GoldOutlined,AreaChartOutlined, ContainerOutlined, MailOutlined,CalendarOutlined  } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import './style.scss'
 import GetDataByToken from '../../auth/auth'
@@ -23,6 +23,7 @@ const Sidebar: React.FC = () => {
     '/manager/dashboard/dinh-duong-da-duyet': '3',
     '/manager/dashboard/thuc-don': '4',
     '/manager/dashboard/loai-nguyen-lieu': '5',
+    '/manager/dashboard/tin-tuc': '14',
 
     '/admin/dashboard/doanh-thu': '6',
     '/nutritionist/dashboard/chat': '7',
@@ -60,7 +61,9 @@ const Sidebar: React.FC = () => {
       '11': '/nutritionist/dashboard/thanh-phan-nguyen-lieu',
       '12.1': '/admin/dashboard/tai-khoan-khach-hang',
       '12.2': '/admin/dashboard/tai-khoan-nhan-vien',
-      '13': '/chef/dashboard/order'
+      '13': '/chef/dashboard/order',
+      '14': '/manager/dashboard/tin-tuc',
+
 
       
     }
@@ -101,6 +104,12 @@ const Sidebar: React.FC = () => {
       ]
     },
     {
+      key: '5',
+      label: 'Loại Nguyên Liệu',
+      icon: <MailOutlined />,
+      onClick: () => handleMenuClick('5')
+    },
+    {
       key: '3',
       icon: <ContainerOutlined />,
       label: 'Dinh Dưỡng',
@@ -114,10 +123,10 @@ const Sidebar: React.FC = () => {
       onClick: () => handleMenuClick('4')
     },
     {
-      key: '5',
-      label: 'Loại Nguyên Liệu',
-      icon: <MailOutlined />,
-      onClick: () => handleMenuClick('5')
+      key: '14',
+      label: 'Tin Tức',
+      icon: <BookOutlined />,
+      onClick: () => handleMenuClick('14')
     }
   ]
   const adminItems: MenuItem[] = [

@@ -10,6 +10,7 @@ import { CartProduct, Order } from '../../../Models/order'
 import { CommonButton } from '../../../UI/button/Button'
 import OrderDetailPage from './modal/modalPreviewDetailOrder'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { getAccount, getAccountShipper } from '../../../api/accountApi'
 
 export default function OrderPage() {
   const [isPreviewDetailModalOpen, setIsPreviewDetailModalOpen] = useState(false)
@@ -35,7 +36,13 @@ export default function OrderPage() {
   const handleStatusChange = (value: string) => {
     setSelectedStatus(value)
   }
-
+  const {
+    data: accountsResponse,
+    isLoading,
+    refetch: refetchAccounts,
+    isError
+  } = useQuery('accounts', getAccountShipper, { refetchOnMount: true })
+  const shipper = accountsResponse?.data
   const filteredOrders = orders.filter(order => {
     const matchesStatus = selectedStatus ? order.status === selectedStatus : true
     const matchesSearchText = order.customerName.toLowerCase().includes(searchText.toLowerCase())
@@ -156,7 +163,28 @@ export default function OrderPage() {
 
         return <Tag color={color}>{statusTag}</Tag>
       }
-    }
+    },
+    {
+      title: 'Shipper',
+      key: 'shipper',
+      align: 'center',
+      render: (_, record) => (
+        record.status === 'Đã Xác Nhận' ? ( // Kiểm tra trạng thái
+          <Select
+            placeholder="Chọn Shipper"
+            // onChange={(value) => setSelectedShipper(value)}
+            style={{ width: 150 }}
+            allowClear
+          >
+            {shipper?.map((s:any) => (
+              <Select.Option key={s.id} value={s.id}>
+                {s.name}
+              </Select.Option>
+            ))}
+          </Select>
+        ) : null // Không hiển thị nếu không phải trạng thái "Đã Xác Nhận"
+      )
+    },
   ]
   const handleSearch = (value: string) => {
     setSearchText(value)

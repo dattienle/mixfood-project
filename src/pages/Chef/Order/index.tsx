@@ -5,17 +5,17 @@ import Table, { ColumnType } from 'antd/es/table'
 
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { getOrderChef } from '../../../api/chefApi'
-import { CartProduct, OrderChef } from '../../../Models/orderChef'
-import { CommonButton } from '../../../UI/button/Button'
+import {  OrderChef } from '../../../Models/orderChef'
+
+import OrderDetailChefPage from './modal/orderChefDetail'
 
 export default function ProductPage() {
   const [searchText, setSearchText] = useState('')
   const [visible, setVisible] = useState(false);
   const queryClient = useQueryClient()
-  const [selectedCartProducts, setSelectedCartProducts] = useState<CartProduct[]>([]);
+  const [selectedCartProductsId, setSelectedCartProductsId] = useState<number>();
   const { data: orderChefResponse } = useQuery('orderChef', getOrderChef)
 
-  const { Panel } = Collapse;
 console.log(orderChefResponse?.data)
   const columns: ColumnType<OrderChef>[] = [
     {
@@ -61,13 +61,13 @@ console.log(orderChefResponse?.data)
 
     {
       title: 'Chi tiết',
-      dataIndex: 'cartProducts',
-      key: 'cartProducts',
+   
+      key: 'detail',
       align: 'center',
-      render: (cartProducts: CartProduct[]) => (
+      render: (_, record) => (
         
   
-          <Button onClick={() =>{ setSelectedCartProducts(cartProducts); setVisible(true)}} icon={<EllipsisOutlined />} />
+          <Button onClick={() =>{ setSelectedCartProductsId(record.id); setVisible(true)}} icon={<EllipsisOutlined />} />
        
       )
     },
@@ -122,49 +122,12 @@ console.log(orderChefResponse?.data)
         />
       </Space>
       <Table columns={columns} dataSource={filteredData} />
-
-      <Modal
-      title="Thông Tin Chi Tiết"
-      visible={visible}
-      onCancel={() => setVisible(false)}
-      footer={null}
-      style={{ maxHeight: '70vh', overflowY: 'auto' }}
-
-    >
-      <Collapse>
-        {selectedCartProducts?.map((product, index) => (
-         <Panel header={product.dish.name} key={index}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <img
-                  src={product.dish.imageUrl}
-                  alt={product.dish.name}
-                  style={{
-                    width: '100%',
-                    height: '200px',
-                    objectFit: 'contain',
-                    borderRadius: '8px',
-                  }}
-                />
-                <p>
-                  <strong>Giá:</strong> {product.price.toLocaleString()} VND
-                </p>
-                <p>
-                  <strong>Số lượng:</strong> {product.quantity}
-                </p>
-                <p>
-                  <strong>Calo:</strong> {product.calo}
-                </p>
-                <p>
-                  <strong>Nguyên liệu:</strong>{' '}
-                  {product.ingredient && product.ingredient.length > 0
-                    ? product.ingredient.map((ing) => ing.name).join(', ')
-                    : 'Không có nguyên liệu'}
-                </p>
-              </div>
-       </Panel>
-        ))}
-      </Collapse>
-    </Modal>
+    <OrderDetailChefPage
+     visible={visible}
+     onClose={() => setVisible(false)}
+     selectedOrderId={selectedCartProductsId || NaN}
+    />
+    
     </div>
   )
 }

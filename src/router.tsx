@@ -20,6 +20,7 @@ import CalendarForNutritionist from './pages/CalendarNutrition/Calendar'
 import AccountPage from './pages/Admin/Account'
 import StaffPage from './pages/Admin/Account/staff'
 import OrderChefPage from './pages/Chef/Order'
+import NewsPage from './pages/News'
 // import App from '~/App'
 // import LoginPage from '~/auth/Login'
 // import { Authentication } from '~/auth/protectedRoute'
@@ -72,6 +73,10 @@ export const router = createBrowserRouter([
           {
             path: 'thuc-don',
             element: <ProductPage />
+          },
+          {
+            path: 'tin-tuc',
+            element: <NewsPage />
           }
         ]
       },

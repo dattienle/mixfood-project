@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Input, Button, Form } from 'antd'
+import { Modal, Input, Button, Form, Select } from 'antd'
 
 import { toast } from 'react-toastify'
 import { createAccount } from '../../../../api/accountApi'
@@ -14,8 +14,8 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [address,setAddress] = useState('')
 
+  const [roleId, setRoleId] = useState<number | undefined>(undefined);
   const handlePhoneChange = (value: string) => {
     // Chỉ cho phép nhập số
     const numericValue = value.replace(/[^0-9]/g, '');
@@ -24,7 +24,7 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
 
   const handleAddAccount = async () => {
 
-    if(!email || !name || !password || !phone || !address){
+    if(!email || !name || !password || !phone || !roleId){
       toast.error("Vui lòng nhập đủ thông tin")
       return
     }
@@ -37,7 +37,7 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
       password,
       name,
       phone,
-      address
+      roleId
     }
     console.log('Dữ liệu gửi đi:', accountData);
     try {
@@ -78,10 +78,17 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
       <Form.Item label='Số điện thoại'>
         <Input type='tel' value={phone} onChange={(e) => handlePhoneChange(e.target.value)} />
       </Form.Item>
-      <Form.Item label='Địa chỉ'>
-        <Input value={address} onChange={(e) => setAddress(e.target.value)} />
-      </Form.Item>
-
+      <Form.Item label='Vai trò'>
+          <Select value={roleId} onChange={(value) => setRoleId(value)} placeholder="Chọn vai trò">
+            <Select.Option value={1}>Admin</Select.Option>
+            <Select.Option value={2}>Manager</Select.Option>
+            <Select.Option value={3}>Staff</Select.Option>
+            <Select.Option value={4}>Shipper</Select.Option>
+            <Select.Option value={5}>Customer</Select.Option>
+            <Select.Option value={6}>Nutritionist</Select.Option>
+            <Select.Option value={7}>Chef</Select.Option>
+          </Select>
+        </Form.Item>
     </Form>
   </Modal>
   )
