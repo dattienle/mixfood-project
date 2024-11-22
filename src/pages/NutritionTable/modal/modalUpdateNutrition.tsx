@@ -38,7 +38,6 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
         setVitamin(data.data.vitamin)
         setHealthValue(data.data.healthValue)
         setImageUrl(data.data.imageUrl)
-        setNutrilite(data.data.nutrilite)
         setDataLoaded(true)
       }
 
@@ -79,7 +78,7 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
     formData.append('description', description)
     formData.append('vitamin', vitamin)
     formData.append('healthValue', healthValue)
-    formData.append('nutrilite', nutrilite)
+  
 
     if (fileList) {
       formData.append('imageUrl', fileList)
@@ -123,9 +122,7 @@ const ModalUpdateNutrition: React.FC<ModalUpdateNutritionProps> = ({ isOpen, han
         <Form.Item label='Health Value'>
           <Input value={healthValue} onChange={(e) => setHealthValue(e.target.value)} />
         </Form.Item>
-        <Form.Item label='Nutrilite'>
-          <Input value={nutrilite} onChange={(e) => setNutrilite(e.target.value)} />
-        </Form.Item>
+
       </Form>
     </Modal>
   )

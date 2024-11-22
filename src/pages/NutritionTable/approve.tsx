@@ -1,9 +1,9 @@
 
 
 import { useState } from 'react'
-import { Button, Table, Input, Space, Switch } from 'antd'
+import { Button, Table, Input, Space, Switch, Popover } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { SearchOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons'
+import { SearchOutlined, PlusOutlined, EditOutlined,EllipsisOutlined } from '@ant-design/icons'
 // import { CommonButton } from '~/UI/button/Button'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
@@ -30,6 +30,8 @@ export default function NutritionApprovePage() {
     isError
   } = useQuery('nutritions', getNutrition,{refetchOnMount: true,})
   const nutritionItems = nutritions?.data.items || [];
+  console.log(nutritionItems)
+  // console.log(nut)
   // updateStatus
   const updateStatus = useMutation(updateStatusNutrition, {
     onSuccess: () => {
@@ -102,6 +104,28 @@ export default function NutritionApprovePage() {
       dataIndex: 'nutrilite',
       key: 'nutrilite',
       align: 'center',
+      render: (nutrilite) => (
+        <Popover
+        content={
+          <div>
+          {nutrilite.split(', ').map((item:any, index:any) => {
+            const [key, value] = item.split(' '); // Tách thành key và value
+            const numerickey = Math.floor(parseFloat(key));
+            return (
+              <p key={index}>
+                <strong>{value}:</strong> {numerickey}
+              </p>
+            );
+        })}
+        </div>
+        }
+        title={<span style={{ fontSize: '18px', fontWeight: 'bold' }}>Thông tin chi tiết</span>}
+        trigger='hover'
+        overlayStyle={{ width: 200 }}
+      >
+        <Button icon={<EllipsisOutlined />} />
+      </Popover>
+      )
     },
     {
       title: 'Hành động',

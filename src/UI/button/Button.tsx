@@ -10,3 +10,6 @@ interface ButtonProps extends AntdButtonProps {
 export const CommonButton: React.FC<ButtonProps> = ({label, className = '', children, ...props }) => {
   return <AntdButton {...props} className={`common-button ${className}`}>{label || children}</AntdButton>;
 };
+export const ApproveButton: React.FC<ButtonProps> = ({label, className = '', children, ...props }) => {
+  return <AntdButton {...props} className={`common-button ${className}`}>{label || children}</AntdButton>;
+};

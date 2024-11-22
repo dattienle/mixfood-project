@@ -32,3 +32,17 @@ export const getOrderById = async(id: number ) =>{
     throw error
   }
 }
+export const chooseShipper = async (orderId: number, idShipper: number) => {
+  const token = sessionStorage.getItem('token')
+  try {
+    const response = await api.post('/Order/update-order-status',null, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      params: { orderId, idShipper }
+    })
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

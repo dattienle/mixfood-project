@@ -5,12 +5,13 @@ import { SearchOutlined, EyeOutlined } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
 
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { getOrder } from '../../../api/orderAPI'
+import { chooseShipper, getOrder } from '../../../api/orderAPI'
 import { CartProduct, Order } from '../../../Models/order'
 import { CommonButton } from '../../../UI/button/Button'
 import OrderDetailPage from './modal/modalPreviewDetailOrder'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { getAccount, getAccountShipper } from '../../../api/accountApi'
+import { toast } from 'react-toastify'
 
 export default function OrderPage() {
   const [isPreviewDetailModalOpen, setIsPreviewDetailModalOpen] = useState(false)
@@ -36,6 +37,20 @@ export default function OrderPage() {
   const handleStatusChange = (value: string) => {
     setSelectedStatus(value)
   }
+  const addShipper = useMutation(  ({ orderId, shipperId }: { orderId: number; shipperId: number }) => chooseShipper(orderId, shipperId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('categories')
+      toast.success('Cập nhật trạng thái thành công!')
+      refetchProducts()
+    },
+    onError: (error) => {
+      console.log('loi')
+    }
+  })
+  const handleChooseShipper = (shipperId: number, orderId: number) => {
+    console.log('Updating shipper for orderId:', orderId, 'with shipperId:', shipperId);
+    addShipper.mutate({orderId, shipperId} ); // Gọi API chooseShipper
+  }
   const {
     data: accountsResponse,
     isLoading,
@@ -43,7 +58,7 @@ export default function OrderPage() {
     isError
   } = useQuery('accounts', getAccountShipper, { refetchOnMount: true })
   const shipper = accountsResponse?.data
-  const filteredOrders = orders.filter(order => {
+  const filteredOrders = orders.filter((order) => {
     const matchesStatus = selectedStatus ? order.status === selectedStatus : true
     const matchesSearchText = order.customerName.toLowerCase().includes(searchText.toLowerCase())
     return matchesStatus && matchesSearchText
@@ -118,6 +133,13 @@ export default function OrderPage() {
       sortDirections: ['ascend', 'descend']
     },
     {
+      title: 'Ngày Đặt Hàng',
+      dataIndex: 'orderDate',
+      key: 'orderDate',
+      align: 'center',
+      render: (orderDate: string) => new Date(orderDate).toLocaleDateString() // Chuyển đổi định dạng ngày
+    },
+    {
       title: 'Chi Tiết',
       key: 'status',
       align: 'center',
@@ -150,15 +172,19 @@ export default function OrderPage() {
             statusTag = 'Đã Chuẩn Bị Xong'
             color = 'gold' // Or your preferred color
             break
-          case 'Đã Giao Shipper':
-            statusTag = 'Đã Giao Shipper'
+          case 'Tìm Shipper':
+            statusTag = 'Tìm Shipper'
+            color = 'pink' // Or your preferred color
+            break
+          case 'Giao Shipper':
+            statusTag = 'Giao Shipper'
             color = 'orange' // Or your preferred color
             break
           case 'Hoàn Thành':
             statusTag = 'Hoàn Thành'
             color = 'green' // Or your preferred color
             break
-          //No need for a default case, as it is handled initially
+        
         }
 
         return <Tag color={color}>{statusTag}</Tag>
@@ -168,23 +194,22 @@ export default function OrderPage() {
       title: 'Shipper',
       key: 'shipper',
       align: 'center',
-      render: (_, record) => (
-        record.status === 'Đã Xác Nhận' ? ( // Kiểm tra trạng thái
+      render: (_, record) =>
+        record.status === 'Đã Chuẩn Bị Xong' ? ( // Kiểm tra trạng thái
           <Select
-            placeholder="Chọn Shipper"
-            // onChange={(value) => setSelectedShipper(value)}
+            placeholder='Chọn Shipper'
+            onChange={(value) => handleChooseShipper(value, record.id)}
             style={{ width: 150 }}
             allowClear
           >
-            {shipper?.map((s:any) => (
+            {shipper?.map((s: any) => (
               <Select.Option key={s.id} value={s.id}>
                 {s.name}
               </Select.Option>
             ))}
           </Select>
         ) : null // Không hiển thị nếu không phải trạng thái "Đã Xác Nhận"
-      )
-    },
+    }
   ]
   const handleSearch = (value: string) => {
     setSearchText(value)
@@ -193,12 +218,14 @@ export default function OrderPage() {
   return (
     <div style={{ background: 'white', padding: '20px' }}>
       <h1>Quản lý đơn hàng</h1>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16 
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 16
+        }}
+      >
         {/* Phần tìm kiếm bên trái */}
         <Space>
           <Input
@@ -211,22 +238,23 @@ export default function OrderPage() {
 
         {/* Phần lọc trạng thái bên phải */}
         <Select
-          placeholder="Lọc theo trạng thái"
+          placeholder='Lọc theo trạng thái'
           onChange={handleStatusChange}
-          style={{ 
+          style={{
             width: 200,
-            borderRadius: '6px',
+            borderRadius: '6px'
           }}
           allowClear
-          dropdownStyle={{ 
-            borderRadius: '6px',
+          dropdownStyle={{
+            borderRadius: '6px'
           }}
-          className="status-filter-select"
+          className='status-filter-select'
         >
-          <Select.Option value="Đã Xác Nhận">Đã Xác Nhận</Select.Option>
-          <Select.Option value="Đã Chuẩn Bị Xong">Đã Chuẩn Bị Xong</Select.Option>
-          <Select.Option value="Đã Giao Shipper">Đã Giao Shipper</Select.Option>
-          <Select.Option value="Hoàn Thành">Hoàn Thành</Select.Option>
+          <Select.Option value='Đã Xác Nhận'>Đã Xác Nhận</Select.Option>
+          <Select.Option value='Đã Chuẩn Bị Xong'>Đã Chuẩn Bị Xong</Select.Option>
+          <Select.Option value='Giao Shipper'>Giao Shipper</Select.Option>
+          <Select.Option value='Tìm Shipper'>Tìm Shipper</Select.Option>
+          <Select.Option value='Hoàn Thành'>Hoàn Thành</Select.Option>
         </Select>
       </div>
       <Table columns={columns} dataSource={filteredOrders} />

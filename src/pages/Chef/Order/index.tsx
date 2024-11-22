@@ -1,22 +1,39 @@
 import { Button, Collapse, Dropdown, Input, Menu, Modal, Popover, Space, Switch, Tag, Tooltip } from 'antd'
 import React, { useState } from 'react'
-import { SearchOutlined, PlusOutlined, EllipsisOutlined, EyeOutlined } from '@ant-design/icons'
+import { SearchOutlined, CheckOutlined, EllipsisOutlined, CheckCircleTwoTone } from '@ant-design/icons'
 import Table, { ColumnType } from 'antd/es/table'
 
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { getOrderChef } from '../../../api/chefApi'
-import {  OrderChef } from '../../../Models/orderChef'
+import { getOrderChef, updateStatusChef } from '../../../api/chefApi'
+import { OrderChef } from '../../../Models/orderChef'
 
 import OrderDetailChefPage from './modal/orderChefDetail'
+import { toast } from 'react-toastify'
 
 export default function ProductPage() {
   const [searchText, setSearchText] = useState('')
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
   const queryClient = useQueryClient()
-  const [selectedCartProductsId, setSelectedCartProductsId] = useState<number>();
-  const { data: orderChefResponse } = useQuery('orderChef', getOrderChef)
+  const [selectedCartProductsId, setSelectedCartProductsId] = useState<number>()
+  const { data: orderChefResponse, refetch: refetchOrderChef } = useQuery('orderChef', getOrderChef, {
+    refetchOnMount: true
+  })
+  const data = orderChefResponse?.data
 
-console.log(orderChefResponse?.data)
+  const updateStatus = useMutation(updateStatusChef, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('categories')
+      toast.success('Cập nhật trạng thái thành công!')
+      refetchOrderChef()
+    },
+    onError: (error) => {
+      console.log('loi')
+    }
+  })
+  const handleStatusChange = (orderId: number) => {
+    console.log('Updating status for orderId:', orderId)
+    updateStatus.mutate(orderId)
+  }
   const columns: ColumnType<OrderChef>[] = [
     {
       title: 'Tên Khách Hàng',
@@ -61,14 +78,17 @@ console.log(orderChefResponse?.data)
 
     {
       title: 'Chi tiết',
-   
+
       key: 'detail',
       align: 'center',
       render: (_, record) => (
-        
-  
-          <Button onClick={() =>{ setSelectedCartProductsId(record.id); setVisible(true)}} icon={<EllipsisOutlined />} />
-       
+        <Button
+          onClick={() => {
+            setSelectedCartProductsId(record.id)
+            setVisible(true)
+          }}
+          icon={<EllipsisOutlined />}
+        />
       )
     },
     {
@@ -85,12 +105,16 @@ console.log(orderChefResponse?.data)
             statusTag = 'Đã Xác Nhận'
             color = 'blue' // Or your preferred color
             break
-          case 'Đã Chuẩn Bị Xong':
+          case '':
             statusTag = 'Đã Chuẩn Bị Xong'
             color = 'gold' // Or your preferred color
             break
-          case 'Đã Giao Shipper':
-            statusTag = 'Đã Giao Shipper'
+          case '':
+            statusTag = 'Tìm Shipper'
+            color = '#003CC' // Or your preferred color
+            break
+          case 'Giao Shipper':
+            statusTag = 'Giao Shipper'
             color = 'orange' // Or your preferred color
             break
           case 'Hoàn Thành':
@@ -101,14 +125,38 @@ console.log(orderChefResponse?.data)
 
         return <Tag color={color}>{statusTag}</Tag>
       }
+    },
+    {
+      title: 'Thay Đổi Trạng Thái',
+      key: 'changeStatus',
+      align: 'center',
+      render: (_, record) => (
+        <Button
+          onClick={() => handleStatusChange(record.id)}
+          type='default'
+          shape='round'
+          size='large'
+          icon={<CheckCircleTwoTone />}
+          style={{
+            backgroundColor: '#1abc9c',
+            color: 'white',
+            border: 'none',
+            padding: '10px 20px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
+        >
+          <CheckOutlined style={{ color: '#1abc9c' }} />
+          APPROVE
+        </Button>
+      )
     }
   ]
   const handleSearch = (value: string) => {
     setSearchText(value)
   }
-  const filteredData = orderChefResponse?.data || []
 
-
+  const filteredData = data?.filter((order: any) => order.status === 'Đã Xác Nhận') || []
 
   return (
     <div style={{ background: 'white', padding: '20px' }}>
@@ -122,12 +170,11 @@ console.log(orderChefResponse?.data)
         />
       </Space>
       <Table columns={columns} dataSource={filteredData} />
-    <OrderDetailChefPage
-     visible={visible}
-     onClose={() => setVisible(false)}
-     selectedOrderId={selectedCartProductsId || NaN}
-    />
-    
+      <OrderDetailChefPage
+        visible={visible}
+        onClose={() => setVisible(false)}
+        selectedOrderId={selectedCartProductsId || NaN}
+      />
     </div>
   )
 }

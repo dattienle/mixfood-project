@@ -65,7 +65,7 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
       toast.error('Vui lòng chọn nguyên liệu.')
       return
     }
-    if (!description || !vitamin || !healthValue || !nutrilite || !fileList) {
+    if (!description || !vitamin || !healthValue  || !fileList) {
       toast.error('Vui lòng điền đủ thông tin nguyên liệu.')
       return
     }
@@ -137,9 +137,7 @@ const ModalAddProduct: React.FC<ModalAddNutrition> = ({
         <Form.Item label='Health Value'>
           <Input value={healthValue} onChange={(e) => setHealthValue(e.target.value)} />
         </Form.Item>
-        <Form.Item label='Nutrilite'>
-          <Input value={nutrilite} onChange={(e) => setNutrilite(e.target.value)} />
-        </Form.Item>
+       
       </Form>
     </Modal>
   )
