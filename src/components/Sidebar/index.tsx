@@ -2,7 +2,19 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { AppstoreOutlined, PieChartOutlined,BookOutlined ,UserOutlined,GoldOutlined,AreaChartOutlined, ContainerOutlined, MailOutlined,CalendarOutlined  } from '@ant-design/icons'
+import {
+  AppstoreOutlined,
+  PieChartOutlined,
+  BookOutlined,
+  UserOutlined,
+  GoldOutlined,
+  AreaChartOutlined,
+  ContainerOutlined,
+  MailOutlined,
+  CalendarOutlined,
+  MoneyCollectOutlined,
+  BoxPlotOutlined
+} from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import './style.scss'
 import GetDataByToken from '../../auth/auth'
@@ -24,19 +36,18 @@ const Sidebar: React.FC = () => {
     '/manager/dashboard/thuc-don': '4',
     '/manager/dashboard/loai-nguyen-lieu': '5',
     '/manager/dashboard/tin-tuc': '14',
-
+    '/manager/dashboard/voucher': '15',
+    '/manager/dashboard/package': '16',
+    '/manager/dashboard/order': '17',
     '/admin/dashboard/doanh-thu': '6',
     '/nutritionist/dashboard/chat': '7',
-     '/nutritionist/dashboard/nguyen-lieu-chua-duyet': '8',
-     '/staff/dashboard/order': '9',
-     '/staff/dashboard/calendar': '10',
-     '/nutritionist/dashboard/thanh-phan-nguyen-lieu': '11',
-     '/admin/dashboard/tai-khoan-khach-hang': '12.1',
-     '/admin/dashboard/tai-khoan-nhan-vien': '12.2',
-
-
-
-     
+    '/nutritionist/dashboard/nguyen-lieu-da-duyet': '8.1',
+    '/nutritionist/dashboard/nguyen-lieu-chua-duyet': '8.2',
+    '/staff/dashboard/order': '9',
+    '/staff/dashboard/calendar': '10',
+    '/nutritionist/dashboard/thanh-phan-nguyen-lieu': '11',
+    '/admin/dashboard/tai-khoan-khach-hang': '12.1',
+    '/admin/dashboard/tai-khoan-nhan-vien': '12.2'
   }
 
   const [selectedKey, setSelectedKey] = React.useState<string>('1')
@@ -55,7 +66,8 @@ const Sidebar: React.FC = () => {
       '5': '/manager/dashboard/loai-nguyen-lieu',
       '6': '/admin/dashboard/doanh-thu',
       '7': '/nutritionist/dashboard/chat',
-      '8': '/nutritionist/dashboard/nguyen-lieu-chua-duyet',
+      '8.1': '/nutritionist/dashboard/nguyen-lieu-da-duyet',
+      '8.2': '/nutritionist/dashboard/nguyen-lieu-chua-duyet',
       '9': '/staff/dashboard/order',
       '10': '/staff/dashboard/calendar',
       '11': '/nutritionist/dashboard/thanh-phan-nguyen-lieu',
@@ -63,9 +75,11 @@ const Sidebar: React.FC = () => {
       '12.2': '/admin/dashboard/tai-khoan-nhan-vien',
       '13': '/chef/dashboard/order',
       '14': '/manager/dashboard/tin-tuc',
+      '15': '/manager/dashboard/voucher',
+      '16': '/manager/dashboard/package',
+      '17': '/manager/dashboard/order'
 
 
-      
     }
     console.log(keyToPathMap[key])
     console.log(pathToKeyMap[location.pathname])
@@ -96,8 +110,8 @@ const Sidebar: React.FC = () => {
     { key: '1', icon: <PieChartOutlined />, label: 'Danh Mục', onClick: () => handleMenuClick('1') },
     {
       key: '2',
+      label: 'Nguyên liệu ',
       icon: <GoldOutlined />,
-      label: 'Nguyên Liệu',
       children: [
         { key: '2.1', label: 'Đã phê duyệt ', onClick: () => handleMenuClick('2.1') },
         { key: '2.2', label: 'Chưa phê duyệt', onClick: () => handleMenuClick('2.2') }
@@ -113,8 +127,7 @@ const Sidebar: React.FC = () => {
       key: '3',
       icon: <ContainerOutlined />,
       label: 'Dinh Dưỡng',
-       onClick: () => handleMenuClick('3')
-
+      onClick: () => handleMenuClick('3')
     },
     {
       key: '4',
@@ -127,7 +140,26 @@ const Sidebar: React.FC = () => {
       label: 'Tin Tức',
       icon: <BookOutlined />,
       onClick: () => handleMenuClick('14')
-    }
+    },
+    {
+      key: '15',
+      label: 'Mã Giảm Giá',
+      icon: <MoneyCollectOutlined />,
+      onClick: () => handleMenuClick('15')
+    },
+    {
+      key: '16',
+      label: 'Gói',
+      icon: <  BoxPlotOutlined
+      />,
+      onClick: () => handleMenuClick('16')
+    },
+    {
+      key: '17',
+      label: 'Đơn hàng',
+      icon: <AppstoreOutlined />,
+      onClick: () => handleMenuClick('17')
+    },
   ]
   const adminItems: MenuItem[] = [
     {
@@ -145,7 +177,6 @@ const Sidebar: React.FC = () => {
         { key: '12.2', label: 'Nhân Viên', onClick: () => handleMenuClick('12.2') }
       ]
     }
-
   ]
   const nutritionistItems: MenuItem[] = [
     {
@@ -158,13 +189,16 @@ const Sidebar: React.FC = () => {
       key: '8',
       label: 'Nguyên liệu ',
       icon: <GoldOutlined />,
-      onClick: () => handleMenuClick('8') 
+      children: [
+        { key: '8.1', label: 'Đã phê duyệt ', onClick: () => handleMenuClick('8.1') },
+        { key: '8.2', label: 'Chưa phê duyệt', onClick: () => handleMenuClick('8.2') }
+      ]
     },
     {
       key: '11',
       label: 'Thành Phần Nguyên liệu ',
       icon: <ContainerOutlined />,
-      onClick: () => handleMenuClick('11') 
+      onClick: () => handleMenuClick('11')
     }
   ]
   const staffItems: MenuItem[] = [
@@ -180,8 +214,6 @@ const Sidebar: React.FC = () => {
       icon: <MailOutlined />,
       onClick: () => handleMenuClick('10')
     }
-   
-    
   ]
   const chefItems: MenuItem[] = [
     {
@@ -189,9 +221,7 @@ const Sidebar: React.FC = () => {
       label: 'Đơn hàng',
       icon: <AppstoreOutlined />,
       onClick: () => handleMenuClick('13')
-    },
-   
-   
+    }
   ]
   let displayedItems: MenuItem[] = []
   let defaultOpenKeys = '1'
@@ -203,10 +233,10 @@ const Sidebar: React.FC = () => {
   } else if (userRole === 'Nutritionist') {
     displayedItems = nutritionistItems
     defaultOpenKeys = '7'
-  }else if (userRole === 'Staff') {
+  } else if (userRole === 'Staff') {
     displayedItems = staffItems
     defaultOpenKeys = '9'
-  }else if (userRole === 'Chef') {
+  } else if (userRole === 'Chef') {
     displayedItems = chefItems
     defaultOpenKeys = '13'
   }

@@ -1,29 +1,45 @@
 import React, { useState } from 'react'
 import { Modal, Input, Button, InputNumber, Form } from 'antd'
 import Ingredient from '../../../Models/ingredientModel'
+import { getIngredientById, updateIngredientById } from '../../../api/ingredientApi'
+import { useQuery, useQueryClient } from 'react-query'
+import { toast } from 'react-toastify'
 // import Ingredient from '~/Models/ingredientModel'
 
 interface ModalAddCategoryProps {
   isOpen: boolean
-  ingredient: Ingredient
-  handleOk: (updatedIngredient: Ingredient) => void
+  ingredientId: number
+  handleOk: () => void
   handleCancel: () => void
 }
 
-const ModalAddCalo: React.FC<ModalAddCategoryProps> = ({ isOpen, ingredient, handleOk, handleCancel }) => {
-  const [calo, setCalo] = useState<number>(ingredient.calo ?? 0)
-  const handleCaloChange = (value: number | null) => {
-    if (value === null) {
-      setCalo(0)
-    } else {
-      setCalo(value)
+const ModalAddCalo: React.FC<ModalAddCategoryProps> = ({ isOpen, ingredientId, handleOk, handleCancel }) => {
+  const [calo, setCalo] = useState(0)
+  const {
+    isLoading: nutritionLoading,
+    error: nutritionError,
+    data: nutritionData
+  } = useQuery(['ingredientType', ingredientId], () => getIngredientById(ingredientId), {
+    enabled: isOpen && !!ingredientId,
+    onSuccess: (data: any) => {
+     
+      setCalo(data.data.calo)
+     
     }
-  }
+  })
+  const queryClient = useQueryClient()
+  const handleOkClick = async () => {
+    const formData = new FormData()
+    formData.append('Calo',String(calo))
 
-  const handleOkClick = () => {
-    const updatedCalo = calo ?? 0
-    const updatedIngredient = { ...ingredient, calo: updatedCalo }
-    handleOk(updatedIngredient)
+    try {
+      await updateIngredientById({ id: ingredientId, data: formData })
+      await queryClient.invalidateQueries('ingredient')
+      toast.success('Cập nhật calo thành công!')
+      handleOk()
+    } catch (error) {
+      toast.error('Cập nhật calo thất bại!')
+    }
   }
 
   return (
@@ -42,8 +58,8 @@ const ModalAddCalo: React.FC<ModalAddCategoryProps> = ({ isOpen, ingredient, han
         </Button>
       ]}
     >
-      <Form.Item label='Calo'>
-        <InputNumber style={{ width: '100%' }} value={calo} onChange={handleCaloChange} />
+      <Form.Item label='calo'>
+      <Input type='number' value={calo} onChange={(e) => setCalo(parseInt(e.target.value) || 0)} />{' '}
       </Form.Item>
     </Modal>
   )

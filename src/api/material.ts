@@ -11,26 +11,38 @@ export const getMaterial = async () => {
   return response.data
 }
 export const createMaterial = async (file: File) => {
-  const formData = new FormData();
-  formData.append('file', file);
+  const formData = new FormData()
+  formData.append('file', file)
 
   try {
     const response = await api.post('/Material', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data
   } catch (error) {
-    console.error('Error uploading file:', error);
-    throw error;
+    console.error('Error uploading file:', error)
+    throw error
+  }
+}
+export const createIngredientMaterial = async (data: FormData) => {
+  try {
+    const response = await api.post('/Material/MaterialManager', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data
+  } catch (error) {
+    throw error
   }
 }
 export const getMaterialExport = async () => {
   const response = await api.get('/Material/Export', {
-    responseType: 'arraybuffer',  // Thêm cấu hình này
+    responseType: 'arraybuffer',
     headers: {
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     }
   })

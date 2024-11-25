@@ -23,7 +23,7 @@ export default function CalendarForNutritionist() {
     refetchOnMount: true,
     refetchInterval: 6000
   })  
-console.log(calendarResponse?.data)
+
 
 const onSelectDate = (value: Dayjs) => {
   const formattedDate = value.format('YYYY-MM-DD');

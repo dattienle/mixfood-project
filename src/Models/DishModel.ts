@@ -1,6 +1,7 @@
 
 
 interface Dish {
+  id: number,
   name: string,
   price: number,
   imageUrl:   null| string ,

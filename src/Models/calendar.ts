@@ -26,7 +26,6 @@ package: Package;
 meetUrl: string
 }
 export interface EventType {
-  
   date: string;
   
  

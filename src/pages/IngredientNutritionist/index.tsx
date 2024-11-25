@@ -16,7 +16,7 @@ import ModalAddCalo from './modal/modalAdd'
 export default function IngredientForNutritionist() {
   const [searchText, setSearchText] = useState('')
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
+
   const { data: ingredientResponse, isLoading, isError, refetch } = useQuery('ingredient', getIngredients, { refetchOnMount: true })
   const queryClient = useQueryClient()
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
@@ -130,24 +130,9 @@ export default function IngredientForNutritionist() {
     setIsModalAddOpen(true)
   }
 
-  const handleAddOk = (updatedIngredient: Ingredient) => {
-    const formData = new FormData()
-    formData.append('calo', updatedIngredient.calo.toString())
-    // for (const pair of formData.entries()) {
-    //   console.log(pair[0]+ ', '+ pair[1]); 
-    // }
-    // console.log(formData.get('calo'));
-    updateIngredientById({ id: updatedIngredient.id, data: formData })
-      .then(() => {
-        queryClient.invalidateQueries('ingredient')
-        toast.success('Thêm calo thành công')
-        setIsModalAddOpen(false)
-        setSelectedIngredient(null)
-      })
-      .catch((error) => {
-        toast.error('Thêm calo thất bại')
-        console.error('Lỗi khi cập nhật nguyên liệu:', error)
-      })
+  const handleAddOk = async () => {
+    setIsModalAddOpen(false)
+    await refetch()
   }
 
   const handleClose = () => {
@@ -170,7 +155,7 @@ export default function IngredientForNutritionist() {
       {isModalAddOpen && selectedIngredient && (
         <ModalAddCalo
           isOpen={isModalAddOpen}
-          ingredient={selectedIngredient}
+          ingredientId={selectedIngredient.id || NaN}
           handleOk={handleAddOk}
           handleCancel={handleClose}
         />

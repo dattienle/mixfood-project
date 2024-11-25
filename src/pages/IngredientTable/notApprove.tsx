@@ -15,6 +15,7 @@ import { approvedIngredient, getIngredients } from '../../api/ingredientApi'
 import { CommonButton } from '../../UI/button/Button'
 import ModalUpdateIngredient from './modal/modalUpdateIngredient'
 import ModalAddIngredient from './modal/modalAddIngredient'
+import ModalAddNew from './modal/modalAddNew'
 // import ModalAddIngredient from '~/pages/IngredientTable/modal/modalAddIngredient'
 
 export default function IngredientNotApprovePage() {
@@ -23,6 +24,8 @@ export default function IngredientNotApprovePage() {
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
+  const [isModalAddNewOpen, setIsModalAddNewOpen] = useState(false)
+
   //ts
   const {data: ingredientResponse, refetch, isLoading, isError} = useQuery('ingredient',getIngredients,{
     refetchOnMount: true,
@@ -117,6 +120,7 @@ export default function IngredientNotApprovePage() {
   const handleAddOk = async () => {
    
     setIsModalAddOpen(false)
+    setIsModalAddNewOpen(false)
    await  refetch()
   }
   const handleUpdateOk = async() =>{
@@ -126,6 +130,8 @@ export default function IngredientNotApprovePage() {
   const handleClose = () => {
     setIsModalUpdateOpen(false)
    setIsModalAddOpen(false)
+   setIsModalAddNewOpen(false)
+
   }
 
   return <div style={{ background: 'white', padding: '20px' }}>
@@ -137,8 +143,11 @@ export default function IngredientNotApprovePage() {
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
         />
-        <CommonButton type='primary' icon={<PlusOutlined />} onClick={ () => { console.log('Button clicked');setIsModalAddOpen(true)}}>
+        <CommonButton type='primary' icon={<PlusOutlined />} onClick={ () => { setIsModalAddOpen(true)}}>
           Thêm Nguyên Liệu
+        </CommonButton>
+        <CommonButton type='primary' icon={<PlusOutlined />} onClick={ () => {setIsModalAddNewOpen(true)}}>
+          Đề Xuất Nguyên Liệu
         </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} />
@@ -154,6 +163,13 @@ export default function IngredientNotApprovePage() {
       {isModalAddOpen &&(
         <ModalAddIngredient
        isOpen= {isModalAddOpen}
+       handleOk={handleAddOk}
+       handleCancel={handleClose} 
+        />
+      )}
+       {isModalAddNewOpen &&(
+        <ModalAddNew
+       isOpen= {isModalAddNewOpen}
        handleOk={handleAddOk}
        handleCancel={handleClose} 
         />

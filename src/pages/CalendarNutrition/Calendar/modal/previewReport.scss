@@ -1,0 +1,21 @@
+.custom-modal {
+  background-color: #f0f8ff; /* Màu nền sáng */
+  border-radius: 8px; /* Bo góc */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Bóng đổ */
+}
+
+.custom-modal .ant-modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.custom-modal .ant-modal-title {
+  font-weight: bold; /* Chữ đậm cho tiêu đề */
+  font-size: 20px;
+
+}
+
+.custom-modal .ant-form-item-label > label {
+  font-weight: bold; /* Chữ đậm cho nhãn */
+  color: #333; /* Màu chữ nhãn */
+}

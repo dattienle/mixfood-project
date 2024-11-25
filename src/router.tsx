@@ -21,6 +21,10 @@ import AccountPage from './pages/Admin/Account'
 import StaffPage from './pages/Admin/Account/staff'
 import OrderChefPage from './pages/Chef/Order'
 import NewsPage from './pages/News'
+import IngredientApproveNutritionistPage from './pages/IngredientNutritionist/Approve'
+import VoucherPage from './pages/Voucher'
+import PackagePage from './pages/Package'
+import OrderManagerPage from './pages/OrderManager'
 // import App from '~/App'
 // import LoginPage from '~/auth/Login'
 // import { Authentication } from '~/auth/protectedRoute'
@@ -77,6 +81,18 @@ export const router = createBrowserRouter([
           {
             path: 'tin-tuc',
             element: <NewsPage />
+          },
+          {
+            path: 'voucher',
+            element: <VoucherPage />
+          },
+          {
+            path: 'package',
+            element: <PackagePage />
+          },
+          {
+            path: 'order',
+            element:<OrderManagerPage/>
           }
         ]
       },
@@ -115,6 +131,10 @@ export const router = createBrowserRouter([
           {
             path: 'chat',
             element: <CalendarForNutritionist />
+          },
+          {
+            path: 'nguyen-lieu-da-duyet',
+            element: <IngredientApproveNutritionistPage />
           },
           {
             path: 'nguyen-lieu-chua-duyet',

@@ -1,26 +1,24 @@
 import axios from 'axios'
 import { API_ENDPOINT } from '../constants/api'
-import Category from '../Models/categoryModel'
-// import { API_ENDPOINT } from '~/constants/api'
-// import Category from '~/Models/categoryModel'
+
 
 const api = axios.create({
   baseURL: API_ENDPOINT
 })
 
-export const getCategories = async () => {
-  const response = await api.get('/Category')
+export const getVoucher = async () => {
+  const response = await api.get('/Voucher')
   return response.data
 }
-export const deleteCategory = async (id: number) => {
-  const response = await api.delete(`/Category/${id}`)
+export const deleteVoucher = async (id: number) => {
+  const response = await api.delete(`/Voucher/${id}`)
   return response.data
 }
 
 
-export const createCategory = async (data: FormData) => {
+export const createVoucher = async (data: FormData) => {
   try {
-    const response = await api.post('/Category', data, {
+    const response = await api.post('/Voucher', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -30,17 +28,17 @@ export const createCategory = async (data: FormData) => {
     throw error;
   }
 }
-export const getCategoryById = async(id: number ) =>{
+export const getVoucherById = async(id: number ) =>{
   try {
-    const response = await api.get(`/Category/${id}`)
+    const response = await api.get(`/Voucher/${id}`)
     return response.data
   } catch (error) {
     throw error
   }
 }
-export const updateCategoryById = async( {id, data}: {id: number, data: FormData}) =>{
+export const updateVoucherById = async( {id, data}: {id: number, data: FormData}) =>{
   try {
-  const response = await api.put(`/Category/${id}`, data)
+  const response = await api.put(`/Voucher/${id}`, data)
     return response.data
   } catch (error: any) {
     if (error.response && error.response.status === 400) {
@@ -50,10 +48,10 @@ export const updateCategoryById = async( {id, data}: {id: number, data: FormData
     }
   }
 }
-export const updateStatusCategory = async ({ id, isDelete }: { id: number; isDelete: boolean }) => {
+export const updateStatusVoucher = async ({ id, isDelete }: { id: number; isDelete: boolean }) => {
   try {
     const response = await api.put(
-      `/Category/IsDelete/${id}`,
+      `/Voucher/IsDelete/${id}`,
       { isDelete },
       {
         headers: {

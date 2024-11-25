@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { approvedIngredient, getIngredients, updateStatusIngredient } from '../../api/ingredientApi'
 import Ingredient from '../../Models/ingredientModel'
 import ModalUpdateIngredient from './modal/modalUpdateIngredient'
-export default function IngredientApprovePage() {
+export default function IngredientApproveNutritionistPage() {
   const queryClient = useQueryClient()
   const [searchText, setSearchText] = useState('')
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
@@ -35,7 +35,20 @@ export default function IngredientApprovePage() {
       console.log('loi')
     }
   })
+  const approvedStatus = useMutation(approvedIngredient, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('ingredient')
+      toast.success('Duyệt nguyên liệu thành công!')
 
+      refetchIngredient()
+    },
+    onError: (error) => {
+      console.log('loi')
+    }
+  })
+  const handleApproved = (id: number, isApproved: boolean) => {
+    approvedStatus.mutate({ id, isApproved })
+  }
   const handleStatusChange = (id: number, isDelete: boolean) => {
     updateStatus.mutate({ id, isDelete })
   }
@@ -105,19 +118,34 @@ export default function IngredientApprovePage() {
       sorter: (a, b) => a.ingredientType.name.localeCompare(b.ingredientType.name),
       sortDirections: ['ascend', 'descend']
     },
-   
-    // {
-    //   title: 'Chỉnh sửa',
-    //   key: 'edit',
-    //   align: 'center',
-    //   render: (_, record) => (
-    //     <Space>
-    //       <Button type='link' >
-    //         <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedIngredient(record); }} />
-    //       </Button>
-    //     </Space>
-    //   )
-    // },
+    {
+      title: 'Phê Duyệt',
+      key: 'status',
+      align: 'center',
+      render: (_, record) => (
+        <Switch
+        style={{ backgroundColor: record.isApproved ? '#F8B602' : '' }}
+          checked={record.isApproved}
+          onChange={() => {
+            if (record.id) {
+              handleApproved(record.id, !record.isApproved)
+            }
+          }}
+        />
+      ),
+    },
+    {
+      title: 'Chỉnh sửa',
+      key: 'edit',
+      align: 'center',
+      render: (_, record) => (
+        <Space>
+          <Button type='link' >
+            <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedIngredient(record); }} />
+          </Button>
+        </Space>
+      )
+    },
     {
       title: 'Trạng thái',
       key: 'status',
@@ -155,7 +183,7 @@ export default function IngredientApprovePage() {
         />
       </Space>
       <Table columns={columns} dataSource={filteredData} />
-      {/* {isModalUpdateOpen &&(
+      {isModalUpdateOpen &&(
         <ModalUpdateIngredient
         isOpen={isModalUpdateOpen}
           handleOk={handleUpdateOk}
@@ -163,7 +191,7 @@ export default function IngredientApprovePage() {
           ingredientId={selectedIngredient?.id || NaN}
 
         />
-      )} */}
+      )}
     </div>
   )
 }
