@@ -154,11 +154,13 @@ export default function ProductPage() {
 
   const handleEditOk = async () => {
     setIsAddIngredientModalOpen(false)
-    setIsAddModalProduct(false)
-    // await refetchProducts()
     await refetchIngre()
   }
-
+const handleAddOk = async() =>{
+  setIsAddModalProduct(false)
+    await refetchProducts()
+// 
+}
   const handleClose = () => {
     setIsAddModalProduct(false)
     setIsAddIngredientModalOpen(false)
@@ -189,7 +191,7 @@ export default function ProductPage() {
       {isAddModalProduct && (
         <ModalAddProduct
           isOpen={isAddModalProduct}
-          handleOk={handleEditOk}
+          handleOk={handleAddOk}
           handleCancel={handleClose}
 
           // handleChange={handleChange}
