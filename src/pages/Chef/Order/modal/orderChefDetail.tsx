@@ -25,9 +25,6 @@ const {Panel} = Collapse
   const selectedOrder = selectedOrderResonse?.data
   console.log(selectedOrder?.cartProducts)
   const cartProducts = selectedOrder?.cartProducts
-  if (!selectedOrderId) {
-    return <div>Không có đơn hàng chi tiết</div>
-  }
 
   if (isLoading) {
     return <Spin tip='Đang tải chi tiết đơn hàng...' />

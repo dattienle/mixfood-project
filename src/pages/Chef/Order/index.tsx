@@ -146,7 +146,6 @@ export default function ProductPage() {
             cursor: 'pointer'
           }}
         >
-          <CheckOutlined style={{ color: '#1abc9c' }} />
           Xác Nhận
         </Button>
       )
