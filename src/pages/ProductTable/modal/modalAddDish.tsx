@@ -1,16 +1,7 @@
 import React, { useState } from 'react'
-import {
-  Modal,
-  Input,
-  Button,
-  Form,
-  InputNumber,
-
-  Select,
-  Spin
-} from 'antd'
+import { Modal, Input, Button, Form, InputNumber, Select, Spin } from 'antd'
 // import Category from '~/Models/categoryModel'
-import {useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 // import { getCategories } from '~/api/categoriesAPI'
 // import { createDish } from '~/api/dishAPI'
 import { toast } from 'react-toastify'
@@ -39,7 +30,6 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
   const [name, setName] = useState('')
   const [price, setPrice] = useState<number | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
-
 
   const { isLoading, error, data: categories } = useQuery('categories', getCategories)
 
@@ -82,7 +72,7 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
     }
     const formData = new FormData()
     formData.append('name', name)
-    formData.append('price',  (price ?? 0).toString())
+    formData.append('price', (price ?? 0).toString())
     formData.append('categoryId', selectedCategory.toString())
     formData.append('imageUrl', fileList)
     console.log(formData)
@@ -117,7 +107,7 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
         <Form.Item name='imageUrl' label='Image'>
           <input type='file' onChange={handleFileChange} />
         </Form.Item>
-        
+
         <Form.Item label='Giá'>
           <InputNumber placeholder='Nhập giá' value={price} onChange={(e) => setPrice(e)} />
         </Form.Item>
@@ -125,11 +115,13 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
         <Form.Item label='Chọn danh mục'>
           {categories ? (
             <Select placeholder='Chọn danh mục' onChange={handleChangeCategory} value={selectedCategory}>
-              {categories.data.items.map((category: Category) => (
-                <Select.Option key={category.id} value={category.id}>
-                  {category.name}
-                </Select.Option>
-              ))}
+              {categories.data.items
+                .filter((category: Category) => !category.isDeleted) // Lọc danh mục không bị xóa
+                .map((category: Category) => (
+                  <Select.Option key={category.id} value={category.id}>
+                    {category.name}
+                  </Select.Option>
+                ))}
             </Select>
           ) : (
             <div>Chưa có danh mục nào </div>

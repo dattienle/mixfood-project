@@ -9,7 +9,7 @@ import Category from '../../Models/categoryModel'
 import { CommonButton } from '../../UI/button/Button'
 import { getCategories, updateStatusCategory } from '../../api/categoriesAPI'
 import Voucher from '../../Models/voucher'
-import { getVoucher } from '../../api/voucherApi'
+import { getVoucher, updateStatusVoucher } from '../../api/voucherApi'
 import ModalAddVoucher from './modal/modalAdd'
 import ModalUpdateVoucher from './modal/modalUpdate'
 
@@ -29,7 +29,7 @@ export default function VoucherPage() {
   } = useQuery('voucher', getVoucher, { refetchOnMount: true })
   const voucher = voucherResponse?.data.items
   // updateStatus
-  const updateStatus = useMutation(updateStatusCategory, {
+  const updateStatus = useMutation(updateStatusVoucher, {
     onSuccess: () => {
       queryClient.invalidateQueries('categories')
       toast.success('Cập nhật trạng thái thành công!')

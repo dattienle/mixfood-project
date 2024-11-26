@@ -147,7 +147,7 @@ export default function ProductPage() {
           }}
         >
           <CheckOutlined style={{ color: '#1abc9c' }} />
-          APPROVE
+          Xác Nhận
         </Button>
       )
     }

@@ -134,18 +134,18 @@ export default function IngredientApproveNutritionistPage() {
         />
       ),
     },
-    {
-      title: 'Chỉnh sửa',
-      key: 'edit',
-      align: 'center',
-      render: (_, record) => (
-        <Space>
-          <Button type='link' >
-            <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedIngredient(record); }} />
-          </Button>
-        </Space>
-      )
-    },
+    // {
+    //   title: 'Chỉnh sửa',
+    //   key: 'edit',
+    //   align: 'center',
+    //   render: (_, record) => (
+    //     <Space>
+    //       <Button type='link' >
+    //         <EditOutlined style={{ color: '#F8B602', fontSize: '22px' }} onClick={() => { setIsModalUpdateOpen(true); setSelectedIngredient(record); }} />
+    //       </Button>
+    //     </Space>
+    //   )
+    // },
     {
       title: 'Trạng thái',
       key: 'status',
@@ -183,7 +183,7 @@ export default function IngredientApproveNutritionistPage() {
         />
       </Space>
       <Table columns={columns} dataSource={filteredData} />
-      {isModalUpdateOpen &&(
+      {/* {isModalUpdateOpen &&(
         <ModalUpdateIngredient
         isOpen={isModalUpdateOpen}
           handleOk={handleUpdateOk}
@@ -191,7 +191,7 @@ export default function IngredientApproveNutritionistPage() {
           ingredientId={selectedIngredient?.id || NaN}
 
         />
-      )}
+      )} */}
     </div>
   )
 }

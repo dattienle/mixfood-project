@@ -86,17 +86,22 @@ const ModalAddIngredient: React.FC<ModalAddIngredientProps> = ({ isOpen, handleO
         quantityMax: data.max
       }))
     }
-    console.log(requestData)
-    addIngredientMutation(requestData)
+
+    try {
+      addIngredientMutation(requestData)
+      handleOk
+    } catch (error) {
+      console.error('Error adding dish:', error)
+    }
   }
 
-  const approvedIngredients = ingredients 
-  ? ingredients.data.items.filter((ingredient: Ingredient) => ingredient.isApproved)
-  : [];
+  const approvedIngredients = ingredients
+    ? ingredients.data.items.filter((ingredient: Ingredient) => ingredient.isApproved)
+    : []
 
-const filteredIngredients = approvedIngredients.filter((ingredient: Ingredient) =>
-  selectedIngredientType ? ingredient.ingredientType.name === selectedIngredientType : true
-);
+  const filteredIngredients = approvedIngredients.filter((ingredient: Ingredient) =>
+    selectedIngredientType ? ingredient.ingredientType.name === selectedIngredientType : true
+  )
 
   return (
     <Modal
@@ -118,11 +123,13 @@ const filteredIngredients = approvedIngredients.filter((ingredient: Ingredient) 
       <Form layout='vertical'>
         <Form.Item label='Chọn loại nguyên liệu'>
           <Radio.Group onChange={(e) => setSelectedIngredientType(e.target.value)} value={selectedIngredientType}>
-            {ingredientType?.data.items.map((type: IngredientType) => (
-              <Radio.Button key={type.id} value={type.name}>
-                {type.name}
-              </Radio.Button>
-            ))}
+            {ingredientType?.data.items
+              .filter((type: IngredientType) => !type.isDeleted) // Thêm điều kiện lọc
+              .map((type: IngredientType) => (
+                <Radio.Button key={type.id} value={type.name}>
+                  {type.name}
+                </Radio.Button>
+              ))}
           </Radio.Group>
         </Form.Item>
         <Form.Item label='Chọn nguyên liệu'>

@@ -84,13 +84,13 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
   const handleUpdateIngredient = async () => {
     const formData = new FormData()
   
-    formData.append('price', String(price))
-    formData.append('quantity', String(quantity))
-    formData.append('urlInfo', urlInfo)
+    formData.append('Price', String(price))
+    formData.append('Quantity', String(quantity))
+    formData.append('UrlInfo', urlInfo)
     if (selectedIngredientType) formData.append('IngredientTypeId', selectedIngredientType.toString())
 
     if (fileList) {
-      formData.append('Images', fileList)
+      formData.append('ImageUrl', fileList)
     }
 
     await updateIngredientMutation({ id: ingredientId, data: formData })

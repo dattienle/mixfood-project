@@ -34,7 +34,9 @@ export default function ProductPage() {
       queryClient.invalidateQueries('productTemplate')
     }
   })
-  const { data: ingredientDetail } = useQuery('ingredientDetail', getPreviewDetails)
+  const { data: ingredientDetail, refetch: refetchIngre } = useQuery('ingredientDetail', getPreviewDetails, {
+    refetchOnMount: true
+  })
   const products = productResponse?.data.items || []
   const dishData = ingredientDetail?.data.items || []
   console.log(products)
@@ -97,7 +99,7 @@ export default function ProductPage() {
       key: 'edit',
       align: 'center',
       render: (_, record) => {
-        const hasTemplateStep = dishData?.some((detail: any) => detail.dishId === record.id);
+        const hasTemplateStep = dishData?.some((detail: any) => detail.dishId === record.id)
         return (
           <Dropdown
             overlay={
@@ -151,8 +153,10 @@ export default function ProductPage() {
     products?.filter((item: Ingredient) => item.name.toLowerCase().includes(searchText.toLowerCase())) || []
 
   const handleEditOk = async () => {
+    setIsAddIngredientModalOpen(false)
     setIsAddModalProduct(false)
-    await refetchProducts()
+    // await refetchProducts()
+    await refetchIngre()
   }
 
   const handleClose = () => {
