@@ -179,6 +179,7 @@ export default function OrderManagerPage() {
     },
     {
       title: 'Shipper',
+      dataIndex: 'shipper',
       key: 'shipper',
       align: 'center'
     }

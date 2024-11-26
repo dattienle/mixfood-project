@@ -19,6 +19,7 @@ export interface Order {
   customerName: string;
   address: string;
   phone: string;
+  shipper:string
   status: string;
   cartProducts: CartProduct[];
 }

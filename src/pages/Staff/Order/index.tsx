@@ -195,20 +195,24 @@ export default function OrderPage() {
       key: 'shipper',
       align: 'center',
       render: (_, record) =>
-        record.status === 'Đã Chuẩn Bị Xong' ? ( // Kiểm tra trạng thái
-          <Select
-            placeholder='Chọn Shipper'
-            onChange={(value) => handleChooseShipper(value, record.id)}
-            style={{ width: 150 }}
-            allowClear
-          >
-            {shipper?.map((s: any) => (
-              <Select.Option key={s.id} value={s.id}>
-                {s.name}
-              </Select.Option>
-            ))}
-          </Select>
-        ) : null // Không hiển thị nếu không phải trạng thái "Đã Xác Nhận"
+        record.shipper ? ( // Kiểm tra xem có shipper không
+          <span>{record.shipper}</span> // In ra tên shipper
+        ) : (
+          record.status === 'Đã Chuẩn Bị Xong' && ( // Kiểm tra trạng thái
+            <Select
+              placeholder='Chọn Shipper'
+              onChange={(value) => handleChooseShipper(value, record.id)}
+              style={{ width: 150 }}
+              allowClear
+            >
+              {shipper?.map((s: any) => (
+                <Select.Option key={s.id} value={s.id}>
+                  {s.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )
+        )
     }
   ]
   const handleSearch = (value: string) => {

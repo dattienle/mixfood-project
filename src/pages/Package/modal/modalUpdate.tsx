@@ -46,7 +46,7 @@ const ModalUpdatePackage: React.FC<ModalAddIngredientTypeProps> = ({ isOpen, han
     refetchOnMount: true
   })
   console.log("Subpackage", subPackages)
-  const subPackageData = subPackages?.data?.items
+  const subPackageData = subPackages?.data?.items || []
 
   const handleUpdatePackage = async () => {
     if (!title || !description || price <= 0 || subPackageId.length === 0) {
