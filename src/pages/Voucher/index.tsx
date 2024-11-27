@@ -79,7 +79,7 @@ export default function VoucherPage() {
       align: 'center'
     },
     {
-      title: 'Phần trăm giảm giá',
+      title: 'Số Tiền',
       dataIndex: 'discountPercentage',
       key: 'discountPercentage',
       align: 'center'
