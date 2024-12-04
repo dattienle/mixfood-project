@@ -186,7 +186,7 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
         </Form.Item>
         <div>
           {dishes.map((dish, index) => (
-            <Tag key={index} closable onClose={() => handleRemoveDish(index)}>
+            <Tag key={index} closable className="custom-tag"  onClose={() => handleRemoveDish(index)}>
               {dish.name} {/* Hiển thị tên món ăn */}
             </Tag>
           ))}

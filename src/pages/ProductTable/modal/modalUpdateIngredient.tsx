@@ -70,7 +70,7 @@ const ModalUpdateIngredient: React.FC<ModalAddIngredientProps> = ({ isOpen, hand
 console.log( requestData)
     try {
       // Gọi API cập nhật
-      await updateTemplateStepById({ id: dishId, data: requestData })
+      await updateTemplateStepById({ id: dishData.id, data: requestData })
       toast.success("Cập nhật nguyên liệu thành công")
       handleOk()
     } catch (error) {
