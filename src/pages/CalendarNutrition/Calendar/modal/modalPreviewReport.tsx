@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, Button, Form, Radio, Avatar, Typography } from 'antd'
+import { Modal, Button, Form, Radio, Avatar, Typography, Collapse } from 'antd'
 import './previewReport.scss'
 import { toast } from 'react-toastify'
 import { createReport, getReport, getReportById } from '../../../../api/reportApi'
@@ -19,12 +19,7 @@ interface ModalAddCategoryProps {
 
 const ModalPreviewReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentId, handleOk, handleCancel }) => {
   const [desciption, setDescription] = useState('')
-  const [selectedDishId, setSelectedDishId] = useState<number | null>(null)
-  const [selectedIngredientType, setSelectedIngredientType] = useState<string | null>('')
-  const [selectedIngredients, setSelectedIngredients] = useState<{ [key: string]: number[] }>({})
-  const [errorMessages, setErrorMessages] = useState<{ [key: string]: string | null }>({})
-  const [reportData, setReportData] = useState<any>(null)
-console.log(appointmentId)
+  
 
 const { data: reportResponse } = useQuery(['report', appointmentId], () => getReport(appointmentId!), {
   enabled: !!appointmentId, // Chỉ gọi khi currentAppointmentId có giá trị
@@ -36,9 +31,6 @@ console.log("reportResponse", reportResponse)
 useEffect(() => {
   if (reportResponse) {
     setDescription(reportResponse.data.description);
-    setSelectedDishId(reportResponse.data.dishConsultationReportResponse.dishId);
-    const firstIngredientType = reportResponse.data.dishConsultationReportResponse.ingredientType[0]?.name;
-      setSelectedIngredientType(firstIngredientType || null);
   }
 }, [reportResponse]);
 
@@ -52,6 +44,7 @@ useEffect(() => {
       onCancel={handleCancel}
       centered
       className="custom-modal"
+      style={{ maxHeight: '70vh', overflowY: 'auto' }} 
       footer={[
         <Button key='cancel' onClick={handleCancel}>
           Hủy
@@ -62,32 +55,32 @@ useEffect(() => {
       <Form.Item label='Mô Tả'>
           <Typography.Text>{desciption}</Typography.Text>
         </Form.Item>
-        <Form.Item label='Món ăn'>
-        <Typography.Text>{reportResponse ? reportResponse.data.dishConsultationReportResponse.name : 'Chưa có món ăn nào'}</Typography.Text>
-        </Form.Item>
-        <Form.Item label='Loại nguyên liệu'>
-          <Radio.Group  value={selectedIngredientType} onChange={(e) => setSelectedIngredientType(e.target.value)}>
-            {reportResponse?.data.dishConsultationReportResponse.ingredientType?.map((type: IngredientType) => (
-              <Radio.Button key={type.id} value={type.name}>
-                {type.name}
-              </Radio.Button>
-            ))}
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item label='Chọn nguyên liệu'>
-        <div>
-            {selectedIngredientType && reportResponse?.data.dishConsultationReportResponse.ingredientType
-              ?.find((type: IngredientType) => type.name === selectedIngredientType)
-              ?.ingredient.map((ingredient: Ingredient) => (
-                <Avatar
-                  key={ingredient.id}
-                  src={ingredient.imageUrl}
-                  size={64}
-                  style={{ marginRight: '8px', marginBottom: '8px' }}
-                />
-              ))}
-          </div>
-        </Form.Item>
+      
+         <Form.Item label='Món ăn'>
+        <Collapse>
+          {reportResponse ? reportResponse.data.dishConsultationReportResponse.map((dish: any) => (
+            <Collapse.Panel header={dish.name} key={dish.id}>
+              <div>
+                {dish.ingredientType.map((type: any) => (
+                  <div key={type.id}>
+                    <Typography.Text>{type.name}:</Typography.Text>
+                    <div>
+                      {type.ingredient.map((ingredient: Ingredient) => (
+                        <Avatar
+                          key={ingredient.id}
+                          src={ingredient.imageUrl}
+                          size={64}
+                          style={{ marginRight: '8px', marginBottom: '8px' }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Collapse.Panel>
+          )) : 'Chưa có món ăn nào'}
+        </Collapse>
+      </Form.Item>
       </Form>
     </Modal>
   )

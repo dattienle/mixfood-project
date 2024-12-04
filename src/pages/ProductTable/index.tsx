@@ -16,11 +16,13 @@ import ModalPreviewDetail from './modal/modalPreviewDetail'
 import ModalUpdateDish from './modal/modalUpdateDish'
 import { getPreviewDetails } from '../../api/templateSteps'
 import AddIngredientRequest from '../../Models/templateSteps'
+import ModalUpdateIngredient from './modal/modalUpdateIngredient'
 
 export default function ProductPage() {
   const [searchText, setSearchText] = useState('')
   const [isAddModalProduct, setIsAddModalProduct] = useState(false)
   const [isEditModalProductOpen, setIsEditModalProductOpen] = useState(false)
+  const [isUpdateIngredientModalProductOpen, setIsUpdateIngredientModalProductOpen] = useState(false)
   const [isAddIngredientModalOpen, setIsAddIngredientModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<ProductTemplate | null>(null)
   const [isPreviewDetailModalOpen, setIsPreviewDetailModalOpen] = useState(false)
@@ -39,7 +41,7 @@ export default function ProductPage() {
   })
   const products = productResponse?.data.items || []
   const dishData = ingredientDetail?.data.items || []
-  console.log(products)
+  
   const columns: ColumnType<ProductTemplate>[] = [
     {
       title: 'Hình ảnh',
@@ -122,7 +124,16 @@ export default function ProductPage() {
                     >
                       Thêm mới nguyên liệu
                     </Menu.Item>
-                  ) : null}
+                  ) : (
+                    <Menu.Item
+                      onClick={() => {
+                        setIsUpdateIngredientModalProductOpen(true)
+                        setSelectedProduct(record)
+                      }}
+                    >
+                      Chỉnh sửa nguyên liệu
+                    </Menu.Item>
+                  )}
                 </Menu>
               </Menu>
             }
@@ -156,16 +167,21 @@ export default function ProductPage() {
     setIsAddIngredientModalOpen(false)
     await refetchIngre()
   }
-const handleAddOk = async() =>{
-  setIsAddModalProduct(false)
+  const handleUpdateIngreOk = async() =>{
+    setIsUpdateIngredientModalProductOpen(false)
+    await refetchIngre()
+  }
+  const handleAddOk = async () => {
+    setIsAddModalProduct(false)
     await refetchProducts()
-// 
-}
+    //
+  }
   const handleClose = () => {
     setIsAddModalProduct(false)
     setIsAddIngredientModalOpen(false)
     setIsPreviewDetailModalOpen(false)
     setIsEditModalProductOpen(false)
+    setIsUpdateIngredientModalProductOpen(false)
   }
   // handleClose
   // handleChange
@@ -219,6 +235,14 @@ const handleAddOk = async() =>{
         <ModalUpdateDish
           isOpen={isEditModalProductOpen}
           handleOk={handleUpdateOk}
+          handleCancel={handleClose}
+          dishId={selectedProduct?.id || NaN}
+        />
+      )}
+      {isUpdateIngredientModalProductOpen && (
+        <ModalUpdateIngredient
+          isOpen={isUpdateIngredientModalProductOpen}
+          handleOk={handleUpdateIngreOk}
           handleCancel={handleClose}
           dishId={selectedProduct?.id || NaN}
         />

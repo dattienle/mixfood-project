@@ -6,24 +6,32 @@ const api = axios.create({
 })
 
 export const getDish = async () => {
-  const response = await api.get('/Dish')
-  return response.data
+  const token = sessionStorage.getItem('token')
+  try {
+    const response = await api.get('/Dish', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    return response.data
+  } catch (error) {
+    throw error
+  }
 }
-
 
 export const createDish = async (formData: FormData) => {
   try {
     const response = await api.post('/Dish', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data
   } catch (error) {
-    throw error;
+    throw error
   }
-};
-export const getDishById = async(id: number ) =>{
+}
+export const getDishById = async (id: number) => {
   try {
     const response = await api.get(`/Dish/${id}`)
     return response.data
@@ -31,13 +39,21 @@ export const getDishById = async(id: number ) =>{
     throw error
   }
 }
-export const updateDishById = async( {id, data}: {id: number, data: FormData}) =>{
+export const getDishNameById = async (id: number) => {
   try {
-  const response = await api.put(`/Dish/${id}`, data)
+    const response = await api.get(`/Dish/${id}`)
+    return response.data.data.name
+  } catch (error) {
+    throw error
+  }
+}
+export const updateDishById = async ({ id, data }: { id: number; data: FormData }) => {
+  try {
+    const response = await api.put(`/Dish/${id}`, data)
     return response.data
   } catch (error: any) {
     if (error.response && error.response.status === 400) {
-      console.error("Lỗi 400:", error.response.data); // In ra thông tin lỗi từ server
+      console.error('Lỗi 400:', error.response.data) // In ra thông tin lỗi từ server
       // Hiển thị thông báo lỗi cho người dùng
     } else {
       throw error

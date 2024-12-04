@@ -58,3 +58,22 @@
     background-color: #F8B602;
   }
 }
+.form-item {
+  margin-bottom: 16px; /* Khoảng cách giữa các phần tử */
+}
+
+.select-ingredient {
+  display: block; /* Đảm bảo phần chọn nguyên liệu xuống dòng */
+  margin-top: 8px; /* Khoảng cách giữa label và phần chọn nguyên liệu */
+}
+.ant-col{
+ 
+    text-align: start;
+    width: 100%;
+}
+.ant-form-item-label {
+  text-align: start !important; /* Hoặc 'left' nếu bạn muốn */
+}
+.custom-label{
+  font-weight: 700;
+}
