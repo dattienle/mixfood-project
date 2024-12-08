@@ -60,3 +60,19 @@ export const updateDishById = async ({ id, data }: { id: number; data: FormData 
     }
   }
 }
+export const updateStatusDish = async ({ id, isDelete }: { id: number; isDelete: boolean }) => {
+  try {
+    const response = await api.put(
+      `/Dish/IsDelete/${id}`,
+      { isDelete },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

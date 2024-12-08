@@ -6,7 +6,7 @@ import Table, { ColumnType } from 'antd/es/table'
 // import Ingredient from '~/Models/ingredientModel'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import './style.scss'
-import { getDish } from '../../api/dishAPI'
+import { getDish, updateDishById, updateStatusDish } from '../../api/dishAPI'
 import ProductTemplate from '../../Models/productTemplateModel'
 import Ingredient from '../../Models/ingredientModel'
 import { CommonButton } from '../../UI/button/Button'
@@ -17,6 +17,7 @@ import ModalUpdateDish from './modal/modalUpdateDish'
 import { getPreviewDetails } from '../../api/templateSteps'
 import AddIngredientRequest from '../../Models/templateSteps'
 import ModalUpdateIngredient from './modal/modalUpdateIngredient'
+import { toast } from 'react-toastify'
 
 export default function ProductPage() {
   const [searchText, setSearchText] = useState('')
@@ -41,7 +42,22 @@ export default function ProductPage() {
   })
   const products = productResponse?.data.items || []
   const dishData = ingredientDetail?.data.items || []
-  
+  // updateStatus
+  const updateStatus = useMutation(updateStatusDish, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('categories')
+      toast.success('Cập nhật trạng thái thành công!')
+
+      refetchProducts()
+    },
+    onError: (error) => {
+      console.log('loi')
+    }
+  })
+  // status || mutate
+  const handleStatusChange = (id: number, isDelete: boolean) => {
+    updateStatus.mutate({ id, isDelete })
+  }
   const columns: ColumnType<ProductTemplate>[] = [
     {
       title: 'Hình ảnh',
@@ -81,18 +97,17 @@ export default function ProductPage() {
     //   width: '20%'
     // },
     {
-      title: 'Trạng thái',
+      title: 'Nguyên liệu',
       key: 'status',
       align: 'center',
       render: (_, record) => (
         <EyeOutlined
           style={{ color: '#F8B602', fontSize: '25px' }}
-          checked={!record.isDeleted}
           onClick={() => {
             setIsPreviewDetailModalOpen(true)
             setSelectedProduct(record)
           }}
-          // onChange={(checked) => handleUpdateStatus(record.id, checked)}
+        
         />
       )
     },
@@ -152,7 +167,11 @@ export default function ProductPage() {
         <Switch
           style={{ backgroundColor: !record.isDeleted ? '' : '#F8B602' }}
           checked={record.isDeleted}
-          // onChange={(checked) => handleUpdateStatus(record.id, checked)}
+          onChange={() => {
+            if (record.id) {
+              handleStatusChange(record.id, !record.isDeleted)
+            }
+          }}
         />
       )
     }
@@ -167,7 +186,7 @@ export default function ProductPage() {
     setIsAddIngredientModalOpen(false)
     await refetchIngre()
   }
-  const handleUpdateIngreOk = async() =>{
+  const handleUpdateIngreOk = async () => {
     setIsUpdateIngredientModalProductOpen(false)
     await refetchIngre()
   }

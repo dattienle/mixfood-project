@@ -149,6 +149,7 @@ const ModalAddIngredient: React.FC<ModalAddIngredientProps> = ({ isOpen, handleO
               />
             ))}
           </div>
+          <span style={{ marginRight: '8px' }}>Min:</span>
           <InputNumber
             min={0}
             placeholder='Min'
@@ -156,6 +157,7 @@ const ModalAddIngredient: React.FC<ModalAddIngredientProps> = ({ isOpen, handleO
             onChange={(value) => handleMinMaxChange('min', value)}
             style={{ marginRight: '8px' }}
           />
+          <span style={{ marginRight: '8px' }}>Max:</span>
           <InputNumber
             min={0}
             placeholder='Max'
