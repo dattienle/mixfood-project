@@ -1,3 +1,5 @@
+import { tokens } from "../styles/theme";
+
 export const mockBarData =  [
   {
     country: 'AD',
@@ -105,3 +107,110 @@ export const mockBarData =  [
     donutColor: 'hsl(4, 70%, 50%)'
   }
 ]
+export const mockLineData = [
+  {
+    id: "japan",
+    color: tokens("dark").greenAccent[500],
+    data: [
+      {
+        x: "plane",
+        y: 101,
+      },
+      {
+        x: "helicopter",
+        y: 75,
+      },
+      {
+        x: "boat",
+        y: 36,
+      },
+      {
+        x: "train",
+        y: 216,
+      },
+      {
+        x: "subway",
+        y: 35,
+      },
+      {
+        x: "bus",
+        y: 236,
+      },
+      {
+        x: "car",
+        y: 88,
+      },
+      {
+        x: "moto",
+        y: 232,
+      },
+      {
+        x: "bicycle",
+        y: 281,
+      },
+      {
+        x: "horse",
+        y: 1,
+      },
+      {
+        x: "skateboard",
+        y: 35,
+      },
+      {
+        x: "others",
+        y: 14,
+      },
+    ],
+  },
+
+];
+export const mockTransactions = [
+  {
+    txId: "01e4dsa",
+    user: "johndoe",
+    date: "2021-09-01",
+    cost: "43.95",
+  },
+  {
+    txId: "0315dsaa",
+    user: "jackdower",
+    date: "2022-04-01",
+    cost: "133.45",
+  },
+  {
+    txId: "01e4dsa",
+    user: "aberdohnny",
+    date: "2021-09-01",
+    cost: "43.95",
+  },
+  {
+    txId: "51034szv",
+    user: "goodmanave",
+    date: "2022-11-05",
+    cost: "200.95",
+  },
+  {
+    txId: "0a123sb",
+    user: "stevebower",
+    date: "2022-11-02",
+    cost: "13.55",
+  },
+  {
+    txId: "01e4dsa",
+    user: "aberdohnny",
+    date: "2021-09-01",
+    cost: "43.95",
+  },
+  {
+    txId: "120s51a",
+    user: "wootzifer",
+    date: "2019-04-15",
+    cost: "24.20",
+  },
+  {
+    txId: "0315dsaa",
+    user: "jackdower",
+    date: "2022-04-01",
+    cost: "133.45",
+  },
+];

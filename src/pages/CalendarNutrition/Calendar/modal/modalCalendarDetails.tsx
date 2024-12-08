@@ -81,7 +81,7 @@ const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, sel
             key={index}
           >
             <p>
-              <strong>Mô tả:</strong> {event.description || 'N/A'}
+              <strong>Yêu Cầu Tư Vấn:</strong> {event.description || 'N/A'}
             </p>
             <p>
               <strong>Gói:</strong> {event.subPackage?.title || 'N/A'}

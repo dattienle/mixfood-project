@@ -146,7 +146,7 @@ export default function ProductPage() {
             cursor: 'pointer'
           }}
         >
-          Xác Nhận
+         Hoàn Thành
         </Button>
       )
     }

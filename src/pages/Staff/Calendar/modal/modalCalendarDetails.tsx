@@ -38,13 +38,13 @@ const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, sel
     },
     {
       onSuccess: () => {
-        toast.success('Meet URL updated successfully!')
+        toast.success('Upload Meet URL Thành Công')
         queryClient.invalidateQueries('calendarByTime')
         setMeetUrlInputVisible(null)
         setMeetUrlInputValue('')
       },
       onError: (error) => {
-        toast.error('Failed to update Meet URL.')
+        toast.error('Upload Meet URL Thất Bại')
         console.error('Error updating request:', error)
       }
     }
@@ -84,16 +84,16 @@ const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, sel
         {eventsForDate.map((event: any, index: any) => (
           <Panel header={`${event.timePeriod.startTime} - ${event.timePeriod.endTime}`} key={index}>
             <p>
-              <strong>Customer:</strong> {event.customerName || 'N/A'}
+              <strong>Khách Hàng:</strong> {event.customerName || 'N/A'}
             </p>
             <p>
-              <strong>Message:</strong> {event.description || 'N/A'}
+              <strong>Yêu Cầu Tư Vấn:</strong> {event.description || 'N/A'}
             </p>
             <p>
-              <strong>Package:</strong> {event.subPackage?.title || 'N/A'}
+              <strong>Gói:</strong> {event.subPackage?.title || 'N/A'}
             </p>
             <p>
-              <strong>Price:</strong> {event.subPackage?.price || 'N/A'}
+              <strong>Giá:</strong> {event.subPackage?.price || 'N/A'}
             </p>
             <p>
               <strong>Meet URL:</strong> {event.meetUrl || 'N/A'}
@@ -103,11 +103,11 @@ const ModalCalendarDetails: React.FC<ModalCalendarDetailProps> = ({ visible, sel
               <div>
                 <Input value={meetUrlInputValue} onChange={handleMeetUrlInputChange} />
                 <CommonButton onClick={() => handleSaveMeetUrl(event.id)} type='primary'>
-                  Save
+                  Lưu
                 </CommonButton>
               </div>
             ) : (
-              !event.meetUrl && <CommonButton onClick={() => handleAddMeetUrl(index)}>Add Meet URL</CommonButton>
+              !event.meetUrl && <CommonButton onClick={() => handleAddMeetUrl(index)}>Thêm Meet URL</CommonButton>
             )}
           </Panel>
         ))}

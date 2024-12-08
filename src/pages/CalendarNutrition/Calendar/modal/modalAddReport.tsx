@@ -48,21 +48,17 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
   const { data: ingredientDetail } = useQuery('ingredientDetail', getPreviewDetails)
   const dishData = ingredientDetail?.data.items.find((item: any) => item.dishId === selectedDishId)
   const ingredientType = dishData?.ingredientType
-  // =========== Lấy ra nguyên liệu để so sánh với nguyên liệu được chọn => id gửi vào api
+  // =========== Lấy ra nguyên liệu để so sánh với nguyên liệu được ch���n => id gửi vào api
   const { data: ingredientResponse } = useQuery('ingredient', getIngredients, {
     refetchOnMount: true
   })
 
   // check min max
   const handleSelectIngredient = (id: number) => {
-    const currentIngredientCount = selectedIngredients[selectedIngredientType || '']?.length || 0
-    const min = ingredientType?.find((type: IngredientType) => type.name === selectedIngredientType)?.min
-    const max = ingredientType?.find((type: IngredientType) => type.name === selectedIngredientType)?.max
-    const effectiveMax = min === 0 && max === 0 ? 1 : max
-
     const ingredient = ingredientResponse?.data.items.find((ing: Ingredient) => ing.id === id)
     const ingredientCalories = ingredient ? ingredient.calo : 0
     console.log(ingredientCalories)
+    
     if (selectedIngredients[selectedIngredientType || '']?.includes(id)) {
       // Nếu đã chọn, bỏ chọn
       setSelectedIngredients((prev) => ({
@@ -71,44 +67,13 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
       }))
       // Cập nhật lại tổng calo khi bỏ chọn
       setTotalCalories((prev) => prev - ingredientCalories)
-      // Kiểm tra lại số lượng sau khi bỏ chọn
-      const newCount = currentIngredientCount - 1 // Số lượng mới sau khi bỏ chọn
-      if (newCount < min) {
-        setErrorMessages((prev) => ({
-          ...prev,
-          [selectedIngredientType || '']:
-            `Bạn cần chọn tối thiểu ${min} nguyên liệu cho loại ${selectedIngredientType}.`
-        })) // Thông báo lỗi nếu chưa đủ min
-      } else {
-        setErrorMessages((prev) => ({ ...prev, [selectedIngredientType || '']: null })) // Xóa thông báo lỗi khi đủ
-      }
     } else {
-      // Nếu chưa chọn, kiểm tra số lượng
-      if (currentIngredientCount < effectiveMax) {
-        setSelectedIngredients((prev) => ({
-          ...prev,
-          [selectedIngredientType || '']: [...(prev[selectedIngredientType || ''] || []), id]
-        }))
-        setErrorMessages((prev) => ({ ...prev, [selectedIngredientType || '']: null })) // Xóa thông báo lỗi khi thêm thành công
-      }
-      // Kiểm tra số lượng hiện tại so với min
-      if (currentIngredientCount + 1 < min) {
-        setErrorMessages((prev) => ({
-          ...prev,
-          [selectedIngredientType || '']:
-            `Bạn cần chọn tối thiểu ${min} nguyên liệu cho loại ${selectedIngredientType}.`
-        })) // Thông báo lỗi nếu chưa đủ min
-      }
-
-      // Kiểm tra số lượng hiện tại so với max
-      if (currentIngredientCount >= effectiveMax) {
-        setErrorMessages((prev) => ({
-          ...prev,
-          [selectedIngredientType || '']:
-            `Bạn chỉ có thể chọn tối đa ${effectiveMax} nguyên liệu cho loại ${selectedIngredientType}.`
-        })) // Thông báo lỗi nếu vượt quá max
-        return
-      }
+      // Nếu chưa chọn, thêm vào danh sách
+      setSelectedIngredients((prev) => ({
+        ...prev,
+        [selectedIngredientType || '']: [...(prev[selectedIngredientType || ''] || []), id]
+      }))
+      // Cập nhật tổng calo khi thêm
       setTotalCalories((prev) => prev + ingredientCalories);
     }
   }
@@ -237,18 +202,10 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
                       />
                     </Tooltip>
                   ))}
-              {selectedIngredientType && (
-                <div>
-                  <div>
-                    Min: {ingredientType?.find((type: IngredientType) => type.name === selectedIngredientType)?.min} |
-                    Max: {ingredientType?.find((type: IngredientType) => type.name === selectedIngredientType)?.max}
-                  </div>
-                  {errorMessages[selectedIngredientType || ''] && (
-                    <div style={{ color: 'red' }}>{errorMessages[selectedIngredientType || '']}</div>
-                  )}
+          
                   <div style={{ marginTop: '10px' }}><strong>Tổng Calo:</strong> {totalCalories}</div>
-                </div>
-              )}
+   
+           
             </div>
           </Form.Item>
           <Button onClick={() => handleAddDish(selectedDishId!, Object.values(selectedIngredients).flat())}>

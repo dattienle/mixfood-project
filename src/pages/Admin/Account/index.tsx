@@ -96,24 +96,7 @@ export default function AccountPage() {
         </Popover>
       )
     },
-    {
-      title: 'Tdee',
-      dataIndex: 'tdee',
-      key: 'tdee',
-      align: 'center'
-    },
-    {
-      title: 'Mục Tiêu Calo',
-      dataIndex: 'targetCalo',
-      key: 'targetCalo',
-      align: 'center'
-    },
-    {
-      title: 'Calo 1 ngày',
-      dataIndex: 'caloriesConsumedToday',
-      key: 'caloriesConsumedToday',
-      align: 'center'
-    },
+    
     {
       title: 'Trạng thái',
       dataIndex: 'isDeleted',

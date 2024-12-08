@@ -41,24 +41,24 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
       if (!dataLoaded) {
         setCode(data.data.code)
         setDiscountPercentage(data.data.discountPercentage)
-        const date = new Date(data.data.expirationDate);
+        const date = new Date(data.data.expirationDate)
         setExpirationDate(date.toISOString().split('T')[0])
         setIsStepRequired(data.data.stepRequirement !== undefined)
         setStepRequirement(data.data.stepRequirement || 0)
       }
     }
   })
-console.log(nutritionData)
+  console.log(nutritionData)
   const handleUpdateIngredient = async () => {
     const formData = new FormData()
-    console.log(code, discountPercentage,expirationDate)
-    if(!code || !discountPercentage || !expirationDate){
+    console.log(code, discountPercentage, expirationDate)
+    if (!code || !discountPercentage || !expirationDate) {
       toast.error('Vui lòng điền đủ thông tin ')
       return
     }
     formData.append('Code', code)
     formData.append('DiscountPercentage', discountPercentage.toString())
-    const isoExpirationDate = new Date(expirationDate).toISOString();
+    const isoExpirationDate = new Date(expirationDate).toISOString()
     formData.append('ExpirationDate', isoExpirationDate)
     if (isStepRequired) {
       formData.append('StepRequirement', stepRequirement.toString())
@@ -90,22 +90,31 @@ console.log(nutritionData)
         </Button>
       ]}
     >
-       <Form layout='vertical'>
-      <Form.Item label='Mã'>
+      <Form layout='vertical'>
+        <Form.Item label='Mã'>
           <Input value={code} onChange={(e) => setCode(e.target.value)} />
         </Form.Item>
         <Form.Item label='Phần trăm giảm giá'>
-          <Input type='number' value={discountPercentage} onChange={(e) => setDiscountPercentage(Number(e.target.value))} />
+          <Input
+            type='number'
+            value={discountPercentage}
+            onChange={(e) => setDiscountPercentage(Number(e.target.value))}
+          />
         </Form.Item>
         <Form.Item label='Ngày hết hạn'>
           <Input type='date' value={expirationDate} onChange={(e) => setExpirationDate(e.target.value)} />
         </Form.Item>
         <Form.Item>
-          <Checkbox onChange={(e) => setIsStepRequired(e.target.checked)} checked={isStepRequired}>
-            Yêu cầu số bước chân
-          </Checkbox>
           {isStepRequired && (
-            <Input type='number' value={stepRequirement} onChange={(e) => setStepRequirement(Number(e.target.value))} />
+            <Form.Item label='Số bước chân'>
+              {' '}
+              // Thêm label cho input số bước chân
+              <Input
+                type='number'
+                value={stepRequirement}
+                onChange={(e) => setStepRequirement(Number(e.target.value))}
+              />
+            </Form.Item>
           )}
         </Form.Item>
       </Form>
