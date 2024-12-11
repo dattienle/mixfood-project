@@ -45,7 +45,7 @@ const LineChart: React.FC<LineChartProps> = ({ selectedYear, isDashboard = false
               {point.data.xFormatted}
             </div>
             <div>
-              <strong>$: </strong> {point.data.y.toLocaleString()}
+              <strong>VNĐ: </strong> {point.data.y.toLocaleString()}
             </div>
           </div>
         )}
