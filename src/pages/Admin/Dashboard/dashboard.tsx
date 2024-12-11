@@ -32,6 +32,10 @@ const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear())
   // console.log(dashboardResponse?.data || [])
   const revenueByDayFood = dashboardResponse?.data?.revenueByDayFood || 0
+  const revenueByYearFood = dashboardResponse?.data?.revenueByYearFood || 0
+  const revenueByYearSchedule = dashboardResponse?.data?.revenueByYearSchedule || 0
+
+
   const revenueByDaySchedule = dashboardResponse?.data?.revenueByDaySchedule || 0
   const topCustomer = dashboardResponse?.data?.topCustomers || []
 
@@ -107,7 +111,7 @@ const Dashboard = () => {
                 Doanh Thu Đặt Đồ Ăn
               </Typography>
               <Typography variant='h5' fontWeight='bold' color={colors.greenAccent[500]}>
-                $59,342.32
+              {revenueByYearFood.toLocaleString('vi-VN')} VNĐ
               </Typography>
             </Box>
           </Box>
@@ -182,7 +186,7 @@ const Dashboard = () => {
         Doanh Thu Đặt Lịch
       </Typography>
       <Typography variant='h5' fontWeight='bold' color={colors.greenAccent[500]}>
-        $59,342.32
+      {revenueByYearSchedule.toLocaleString('vi-VN')} VNĐ
       </Typography>
     </Box>
   </Box>

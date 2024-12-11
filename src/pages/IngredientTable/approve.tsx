@@ -12,11 +12,17 @@ import { toast } from 'react-toastify'
 import { approvedIngredient, getIngredients, updateStatusIngredient } from '../../api/ingredientApi'
 import Ingredient from '../../Models/ingredientModel'
 import ModalUpdateIngredient from './modal/modalUpdateIngredient'
+import { CommonButton } from '../../UI/button/Button'
+import ModalAddIngredient from './modal/modalAddIngredient'
+import ModalAddNew from './modal/modalAddNew'
 export default function IngredientApprovePage() {
   const queryClient = useQueryClient()
   const [searchText, setSearchText] = useState('')
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
   const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null)
+  const [isModalAddNewOpen, setIsModalAddNewOpen] = useState(false)
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+
   const {
     data: ingredientResponse,
     refetch: refetchIngredient,
@@ -45,9 +51,15 @@ export default function IngredientApprovePage() {
       }
   const handleClose = () => {
     setIsModalUpdateOpen(false)
-
+    setIsModalAddOpen(false)
+    setIsModalAddNewOpen(false)
   }
-
+  const handleAddOk = async () => {
+   
+    setIsModalAddOpen(false)
+    setIsModalAddNewOpen(false)
+   await  refetchIngredient()
+  }
   const columns: ColumnType<Ingredient>[] = [
     {
       title: 'ID',
@@ -88,7 +100,19 @@ export default function IngredientApprovePage() {
       title: 'Link',
       dataIndex: 'urlInfo',
       key: 'urlInfo',
-      align: 'center'
+      align: 'center',
+      render: (urlInfo: string) => (
+        urlInfo ? (
+          <a 
+            href={urlInfo.startsWith('http') ? urlInfo : `https://${urlInfo}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ color: '#1890ff' }}
+          >
+            Link
+          </a>
+        ) : null
+      )
     },
     {
       title: 'Hình ảnh',
@@ -153,6 +177,12 @@ export default function IngredientApprovePage() {
           style={{ width: 200 }}
           prefix={<SearchOutlined />}
         />
+          <CommonButton type='primary' icon={<PlusOutlined />} onClick={ () => { setIsModalAddOpen(true)}}>
+          Thêm Nguyên Liệu
+        </CommonButton>
+        <CommonButton type='primary' icon={<PlusOutlined />} onClick={ () => {setIsModalAddNewOpen(true)}}>
+          Đề Xuất Nguyên Liệu
+        </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredData} />
       {isModalUpdateOpen &&(
@@ -162,6 +192,20 @@ export default function IngredientApprovePage() {
           handleCancel={handleClose}
           ingredientId={selectedIngredient?.id || NaN}
 
+        />
+      )}
+            {isModalAddOpen &&(
+        <ModalAddIngredient
+       isOpen= {isModalAddOpen}
+       handleOk={handleAddOk}
+       handleCancel={handleClose} 
+        />
+      )}
+       {isModalAddNewOpen &&(
+        <ModalAddNew
+       isOpen= {isModalAddNewOpen}
+       handleOk={handleAddOk}
+       handleCancel={handleClose} 
         />
       )}
     </div>

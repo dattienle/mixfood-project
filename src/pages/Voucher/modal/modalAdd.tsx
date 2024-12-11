@@ -30,7 +30,7 @@ const ModalAddVoucher: React.FC<ModalAddCategoryProps> = ({ isOpen, handleOk, ha
     const isoExpirationDate = new Date(expirationDate).toISOString()
     formData.append('ExpirationDate', isoExpirationDate)
     if (isStepRequired) {
-      formData.append('StepRequirement', stepRequirement.toString()) // Thêm số bước chân vào formData nếu được chọn
+      formData.append('StepRequirement', stepRequirement.toString()) 
     }
     console.log(formData)
     try {
@@ -62,7 +62,7 @@ const ModalAddVoucher: React.FC<ModalAddCategoryProps> = ({ isOpen, handleOk, ha
         <Form.Item label='Mã'>
           <Input value={code} onChange={(e) => setCode(e.target.value)} />
         </Form.Item>
-        <Form.Item label='Phần trăm giảm giá'>
+        <Form.Item label='Số Tiền giảm giá'>
           <Input
             type='number'
             value={discountPercentage}

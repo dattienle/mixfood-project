@@ -83,19 +83,41 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
 
   const handleUpdateIngredient = async () => {
     const formData = new FormData()
-  
-    formData.append('Price', String(price))
-    formData.append('Quantity', String(quantity))
-    formData.append('UrlInfo', urlInfo)
-    if (selectedIngredientType) formData.append('IngredientTypeId', selectedIngredientType.toString())
 
-    if (fileList) {
-      formData.append('ImageUrl', fileList)
+
+    // Kiểm tra các giá trị bắt buộc
+    if (price < 0) {
+      toast.error('Giá không được âm!')
+      return
     }
 
-    await updateIngredientMutation({ id: ingredientId, data: formData })
-  }
+    if (quantity < 0) {
+      toast.error('Số lượng không được âm!')
+      return
+    }
 
+    if (!selectedIngredientType) {
+      toast.error('Vui lòng chọn loại nguyên liệu!')
+      return
+    }
+
+    try {
+      formData.append('Price', String(price))
+      formData.append('Quantity', String(quantity))
+      const cleanUrlInfo = urlInfo.replace(/^(https?:\/\/)/, '')
+      formData.append('UrlInfo', cleanUrlInfo)
+      formData.append('IngredientTypeId', selectedIngredientType.toString())
+
+      if (fileList) {
+        formData.append('ImageUrl', fileList)
+      }
+
+      await updateIngredientMutation({ id: ingredientId, data: formData })
+    } catch (error) {
+      console.error('Lỗi khi cập nhật:', error)
+      toast.error('Có lỗi xảy ra khi cập nhật nguyên liệu!')
+    }
+  }
   return (
     <Modal
       title='Cập nhật nguyên liệu'

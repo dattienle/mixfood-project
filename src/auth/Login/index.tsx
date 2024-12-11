@@ -110,9 +110,7 @@ const LoginPage: React.FC = () => {
               <Checkbox>Ghi nhớ đăng nhập</Checkbox>
             </Form.Item>
 
-            <a className='login-form-forgot' href=''>
-              Quên mật khẩu?
-            </a>
+           
           </Form.Item>
 
           <Form.Item className='form-item-button'>

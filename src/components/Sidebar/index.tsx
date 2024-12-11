@@ -10,10 +10,14 @@ import {
   GoldOutlined,
   AreaChartOutlined,
   ContainerOutlined,
-  MailOutlined,
+  ShoppingCartOutlined,
   CalendarOutlined,
   MoneyCollectOutlined,
-  BoxPlotOutlined
+  BoxPlotOutlined,
+  MessageOutlined,
+  TagsOutlined,
+  FileTextOutlined,
+  ShopOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import './style.scss'
@@ -30,8 +34,10 @@ const Sidebar: React.FC = () => {
 
   const pathToKeyMap: Record<string, string> = {
     '/manager/dashboard/danh-muc': '1',
-    '/manager/dashboard/nguyen-lieu-da-duyet': '2.1',
-    '/manager/dashboard/nguyen-lieu-chua-duyet': '2.2',
+    '/manager/dashboard/nguyen-lieu': '2',
+
+    // '/manager/dashboard/nguyen-lieu-da-duyet': '2.1',
+    // '/manager/dashboard/nguyen-lieu-chua-duyet': '2.2',
     '/manager/dashboard/dinh-duong-da-duyet': '3',
     '/manager/dashboard/thuc-don': '4',
     '/manager/dashboard/loai-nguyen-lieu': '5',
@@ -50,17 +56,49 @@ const Sidebar: React.FC = () => {
     '/admin/dashboard/tai-khoan-nhan-vien': '12.2'
   }
 
-  const [selectedKey, setSelectedKey] = React.useState<string>('1')
+  // const [selectedKey, setSelectedKey] = React.useState<string>('1')
 
-  React.useEffect(() => {
-    setSelectedKey(pathToKeyMap[location.pathname] || '1')
-  }, [location.pathname])
+  // React.useEffect(() => {
+  //   setSelectedKey(pathToKeyMap[location.pathname] || '1')
+  // }, [location.pathname])
+
+  const getDefaultKeyForRole = (role: string | null) => {
+    switch (role) {
+      case 'Manager':
+        return '1'
+      case 'Admin':
+        return '6'
+      case 'Nutritionist':
+        return '7'
+      case 'Staff':
+        return '9'
+      case 'Chef':
+        return '13'
+      default:
+        return '1'
+    }
+  }
+
+  // Khởi tạo selectedKey
+  const [selectedKey, setSelectedKey] = useState<string>(getDefaultKeyForRole(userRole))
+
+  // Cập nhật selectedKey khi pathname hoặc userRole thay đổi
+  useEffect(() => {
+    const currentKey = pathToKeyMap[location.pathname]
+    if (currentKey) {
+      setSelectedKey(currentKey)
+    } else {
+      setSelectedKey(getDefaultKeyForRole(userRole))
+    }
+  }, [location.pathname, userRole])
 
   const handleMenuClick = (key: string) => {
     const keyToPathMap: Record<string, string> = {
       '1': '/manager/dashboard/danh-muc',
-      '2.1': '/manager/dashboard/nguyen-lieu-da-duyet',
-      '2.2': '/manager/dashboard/nguyen-lieu-chua-duyet',
+      '2': '/manager/dashboard/nguyen-lieu',
+      
+      // '2.1': '/manager/dashboard/nguyen-lieu-da-duyet',
+      // '2.2': '/manager/dashboard/nguyen-lieu-chua-duyet',
       '3': '/manager/dashboard/dinh-duong-da-duyet',
       '4': '/manager/dashboard/thuc-don',
       '5': '/manager/dashboard/loai-nguyen-lieu',
@@ -107,20 +145,21 @@ const Sidebar: React.FC = () => {
     fetchUserRole()
   }, [token])
   const managerItems: MenuItem[] = [
-    { key: '1', icon: <PieChartOutlined />, label: 'Danh Mục', onClick: () => handleMenuClick('1') },
+    { key: '1', icon: <AppstoreOutlined />, label: 'Danh Mục', onClick: () => handleMenuClick('1') },
     {
       key: '2',
       label: 'Nguyên liệu ',
-      icon: <GoldOutlined />,
-      children: [
-        { key: '2.1', label: 'Đã phê duyệt ', onClick: () => handleMenuClick('2.1') },
-        { key: '2.2', label: 'Chưa phê duyệt', onClick: () => handleMenuClick('2.2') }
-      ]
+      icon: <ContainerOutlined />,
+      onClick: () => handleMenuClick('2'),
+      // children: [
+      //   { key: '2.1', label: 'Đã phê duyệt ', onClick: () => handleMenuClick('2.1') },
+      //   { key: '2.2', label: 'Chưa phê duyệt', onClick: () => handleMenuClick('2.2') }
+      // ]
     },
     {
       key: '5',
       label: 'Loại Nguyên Liệu',
-      icon: <MailOutlined />,
+      icon: <TagsOutlined />,
       onClick: () => handleMenuClick('5')
     },
     {
@@ -132,7 +171,7 @@ const Sidebar: React.FC = () => {
     {
       key: '4',
       label: 'Thực Đơn',
-      icon: <MailOutlined />,
+      icon: <FileTextOutlined />,
       onClick: () => handleMenuClick('4')
     },
     {
@@ -157,7 +196,7 @@ const Sidebar: React.FC = () => {
     {
       key: '17',
       label: 'Đơn hàng',
-      icon: <AppstoreOutlined />,
+      icon: <ShoppingCartOutlined />,
       onClick: () => handleMenuClick('17')
     },
   ]
@@ -181,19 +220,19 @@ const Sidebar: React.FC = () => {
   const nutritionistItems: MenuItem[] = [
     {
       key: '7',
-      label: 'Chat',
-      icon: <CalendarOutlined />,
+      label: 'Lịch Tư Vấn',
+      icon: <MessageOutlined />,
       onClick: () => handleMenuClick('7')
     },
-    {
-      key: '8',
-      label: 'Nguyên liệu ',
-      icon: <GoldOutlined />,
-      children: [
-        { key: '8.1', label: 'Đã phê duyệt ', onClick: () => handleMenuClick('8.1') },
-        { key: '8.2', label: 'Chưa phê duyệt', onClick: () => handleMenuClick('8.2') }
-      ]
-    },
+    // {
+    //   key: '8',
+    //   label: 'Nguyên liệu ',
+    //   icon: <GoldOutlined />,
+    //   children: [
+    //     { key: '8.1', label: 'Đã phê duyệt ', onClick: () => handleMenuClick('8.1') },
+    //     { key: '8.2', label: 'Chưa phê duyệt', onClick: () => handleMenuClick('8.2') }
+    //   ]
+    // },
     {
       key: '11',
       label: 'Thành Phần Nguyên liệu ',
@@ -205,13 +244,13 @@ const Sidebar: React.FC = () => {
     {
       key: '9',
       label: 'Đơn hàng',
-      icon: <AppstoreOutlined />,
+      icon: <ShoppingCartOutlined />,
       onClick: () => handleMenuClick('9')
     },
     {
       key: '10',
       label: 'Đặt lịch',
-      icon: <MailOutlined />,
+      icon: <CalendarOutlined />,
       onClick: () => handleMenuClick('10')
     }
   ]
@@ -219,7 +258,7 @@ const Sidebar: React.FC = () => {
     {
       key: '13',
       label: 'Đơn hàng',
-      icon: <AppstoreOutlined />,
+      icon: <ShoppingCartOutlined />,
       onClick: () => handleMenuClick('13')
     }
   ]

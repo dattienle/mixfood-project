@@ -94,7 +94,7 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
         <Form.Item label='Mã'>
           <Input value={code} onChange={(e) => setCode(e.target.value)} />
         </Form.Item>
-        <Form.Item label='Phần trăm giảm giá'>
+        <Form.Item label='Số tiền giảm giá'>
           <Input
             type='number'
             value={discountPercentage}
@@ -107,8 +107,6 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
         <Form.Item>
           {isStepRequired && (
             <Form.Item label='Số bước chân'>
-              {' '}
-              // Thêm label cho input số bước chân
               <Input
                 type='number'
                 value={stepRequirement}

@@ -54,13 +54,13 @@ export const router = createBrowserRouter([
             element: <CategoryPage />
           },
           {
-            path: 'nguyen-lieu-da-duyet',
+            path: 'nguyen-lieu',
             element: <IngredientApprovePage />
           },
-          {
-            path: 'nguyen-lieu-chua-duyet',
-            element: <IngredientNotApprovePage />
-          },
+          // {
+          //   path: 'nguyen-lieu-chua-duyet',
+          //   element: <IngredientNotApprovePage />
+          // },
           {
             path: 'danh-muc',
             element: <CategoryPage />
@@ -152,7 +152,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <CalendarForStaff />
+            element: <OrderPage />
           },
           {
             path: 'calendar',
