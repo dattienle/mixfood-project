@@ -11,6 +11,7 @@ import IngredientType from '../../../../Models/ingredientTypeModel'
 import Ingredient from '../../../../Models/ingredientModel'
 import { PlusOutlined } from '@ant-design/icons'
 import './chat.scss'
+import { getAppointment } from '../../../../api/calendarApi'
 interface ModalAddCategoryProps {
   visible: boolean
   handleOk: (appointmentId: number) => void
@@ -38,9 +39,9 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
   const handleChangeDish = (value: number) => {
     setSelectedDishId(value)
     setSelectedIngredientType('Món chính')
-    setSelectedIngredients({}); // Đặt lại nguyên liệu đã chọn
-  setTotalCalories(0); // Đặt lại tổng calo
-  setErrorMessages({})
+    setSelectedIngredients({}) // Đặt lại nguyên liệu đã chọn
+    setTotalCalories(0) // Đặt lại tổng calo
+    setErrorMessages({})
     console.log('dishId', value)
   }
   // ----------------------------
@@ -58,7 +59,7 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
     const ingredient = ingredientResponse?.data.items.find((ing: Ingredient) => ing.id === id)
     const ingredientCalories = ingredient ? ingredient.calo : 0
     console.log(ingredientCalories)
-    
+
     if (selectedIngredients[selectedIngredientType || '']?.includes(id)) {
       // Nếu đã chọn, bỏ chọn
       setSelectedIngredients((prev) => ({
@@ -74,10 +75,17 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
         [selectedIngredientType || '']: [...(prev[selectedIngredientType || ''] || []), id]
       }))
       // Cập nhật tổng calo khi thêm
-      setTotalCalories((prev) => prev + ingredientCalories);
+      setTotalCalories((prev) => prev + ingredientCalories)
     }
   }
-
+  const { data: appointmentResponse } = useQuery('appointment', getAppointment, {
+    refetchOnMount: true,
+    refetchInterval: 60000
+  })
+  console.log(appointmentId)
+  console.log(appointmentResponse)
+  const currentAppointment = appointmentResponse?.data?.find((item: any) => item.id === appointmentId)
+  console.log(currentAppointment)
   const handleChangeIngredientType = (value: string) => {
     setSelectedIngredientType(value)
     setErrorMessages((prev) => ({ ...prev, [value]: null })) // Xóa thông báo lỗi khi chuyển loại nguyên liệu
@@ -109,9 +117,6 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
     setVisibleModal(true)
   }
   const handleAddDish = async (dishId: number, ingredientIds: number[]) => {
-    console.log(dishId)
-    console.log(ingredientIds)
-
     if (dishId) {
       const dishName = await getDishNameById(dishId)
 
@@ -149,9 +154,45 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
             style={{ width: '100%' }} // Điều chỉnh chiều rộng ở đây
           />
         </Form.Item>
+        <Form.Item label='Tình trạng sức khỏe'>
+          {currentAppointment ? (
+            <Input.TextArea
+              value={currentAppointment.disease || 'Khách hàng sức khỏe bình thường'}
+              rows={2}
+              disabled
+              style={{
+                backgroundColor: currentAppointment.disease ? '#fff2f0' : '#f6ffed',  // Màu nền
+                border: currentAppointment.disease ? '1px solid #ffccc7' : '1px solid #b7eb8f',  // Viền
+                fontWeight: 'bold',
+                color: currentAppointment.disease ? '#ff4d4f' : '#ff75c5',  // Đổi màu chữ sang hồng cho trường hợp khỏe mạnh
+                fontSize: '14px'
+              }}
+            />
+          ) : (
+            <Input.TextArea value='Đang tải dữ liệu...' disabled rows={2} />
+          )}
+        </Form.Item>
+
+        <Form.Item label='Dị ứng'>
+          {currentAppointment ? (
+            currentAppointment.allergy?.length > 0 ? (
+              <div>
+                {currentAppointment.allergy.map((allergyItem: any) => (
+                  <Tag key={allergyItem.id} color='red'>
+                    {allergyItem.name}
+                  </Tag>
+                ))}
+              </div>
+            ) : (
+              <div>Không có dị ứng</div>
+            )
+          ) : (
+            <div>Đang tải dữ liệu...</div>
+          )}
+        </Form.Item>
         <div>
           {dishes.map((dish, index) => (
-            <Tag key={index} closable className="custom-tag"  onClose={() => handleRemoveDish(index)}>
+            <Tag key={index} closable className='custom-tag' onClose={() => handleRemoveDish(index)}>
               {dish.name} {/* Hiển thị tên món ăn */}
             </Tag>
           ))}
@@ -160,7 +201,7 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
           Thêm món ăn
         </Button>
         <Modal title='Thêm món ăn' open={visibleModal} onCancel={() => setVisibleModal(false)} footer={null}>
-          <Form.Item label='Chọn món ăn' style={{ textAlign: 'start' , fontWeight: '700'}}>
+          <Form.Item label='Chọn món ăn' style={{ textAlign: 'start', fontWeight: '700' }}>
             {dishResponse ? (
               <Select placeholder='Chọn món ăn' onChange={handleChangeDish} value={selectedDishId}>
                 {dishResponse.data.items.map((dish: Dish) => (
@@ -173,7 +214,7 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
               <div>Chưa có danh mục nào </div>
             )}
           </Form.Item>
-          <Form.Item label={<span className="custom-label">Chọn loại nguyên liệu</span>} style={{ textAlign: 'start'}}>
+          <Form.Item label={<span className='custom-label'>Chọn loại nguyên liệu</span>} style={{ textAlign: 'start' }}>
             <Radio.Group onChange={(e) => handleChangeIngredientType(e.target.value)} value={selectedIngredientType}>
               {ingredientType?.map((type: IngredientType) => (
                 <Radio.Button key={type.id} value={type.name}>
@@ -182,7 +223,7 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
               ))}
             </Radio.Group>
           </Form.Item>
-          <Form.Item label={<span className="custom-label">Chọn nguyên liệu</span>} style={{ textAlign: 'start' }}>
+          <Form.Item label={<span className='custom-label'>Chọn nguyên liệu</span>} style={{ textAlign: 'start' }}>
             <div className='select-ingredient'>
               {selectedIngredientType &&
                 ingredientType
@@ -202,10 +243,10 @@ const ModalAddReport: React.FC<ModalAddCategoryProps> = ({ visible, appointmentI
                       />
                     </Tooltip>
                   ))}
-          
-                  <div style={{ marginTop: '10px' }}><strong>Tổng Calo:</strong> {totalCalories}</div>
-   
-           
+
+              <div style={{ marginTop: '10px' }}>
+                <strong>Tổng Calo:</strong> {totalCalories}
+              </div>
             </div>
           </Form.Item>
           <Button onClick={() => handleAddDish(selectedDishId!, Object.values(selectedIngredients).flat())}>

@@ -7,9 +7,9 @@ interface StatBoxProps {
   subtitle: string;
   icon: React.ReactNode;
   progress: string;
-  increase: string;
+  // increase: string;
 }
-const StatBox:  React.FC<StatBoxProps> = ({ title, subtitle, icon, progress, increase }) => {
+const StatBox:  React.FC<StatBoxProps> = ({ title, subtitle, icon, progress }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -34,13 +34,13 @@ const StatBox:  React.FC<StatBoxProps> = ({ title, subtitle, icon, progress, inc
         <Typography variant="h6" sx={{ color: colors.greenAccent[500] }}>
           {subtitle}
         </Typography>
-        <Typography
+        {/* <Typography
           variant="h6"
           fontStyle="italic"
           sx={{ color: colors.greenAccent[600] }}
         >
           {increase}
-        </Typography>
+        </Typography> */}
       </Box>
     </Box>
   );

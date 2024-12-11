@@ -34,6 +34,7 @@ const Dashboard = () => {
   const revenueByDayFood = dashboardResponse?.data?.revenueByDayFood || 0
   const revenueByYearFood = dashboardResponse?.data?.revenueByYearFood || 0
   const revenueByYearSchedule = dashboardResponse?.data?.revenueByYearSchedule || 0
+  const allCustomers = dashboardResponse?.data?.allCustomers || 0
 
 
   const revenueByDaySchedule = dashboardResponse?.data?.revenueByDaySchedule || 0
@@ -66,42 +67,42 @@ const Dashboard = () => {
       {/* GRID & CHARTS */}
       <Box display='grid' gridTemplateColumns='repeat(12, 1fr)' gridAutoRows='140px' gap='20px'>
         {/* ROW 1 */}
-        <Box gridColumn='span 3' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
+        <Box gridColumn='span 4' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
           <StatBox
             title={revenueByDayFood.toString()}
             subtitle='Doanh thu đặt đồ ăn'
             progress='0.75'
-            increase='+14%'
+            // increase='+14%'
             icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
           />
         </Box>
-        <Box gridColumn='span 3' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
+        <Box gridColumn='span 4' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
           <StatBox
             title={revenueByDaySchedule.toString()}
             subtitle='Doanh thu đặt lịch'
             progress='0.50'
-            increase='+21%'
+            // increase='+21%'
             icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
           />
         </Box>
-        <Box gridColumn='span 3' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
+        <Box gridColumn='span 4' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
           <StatBox
-            title='32,441'
+            title={allCustomers}
             subtitle='Số Lượng Khách Hàng'
             progress='0.30'
-            increase='+5%'
+            // increase='+5%'
             icon={<PersonAddIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
           />
         </Box>
-        <Box gridColumn='span 3' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
+        {/* <Box gridColumn='span 3' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
           <StatBox
             title='1,325,134'
             subtitle='Traffic Received'
             progress='0.80'
-            increase='+43%'
+            // increase='+43%'
             icon={<TrafficIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
           />
-        </Box>
+        </Box> */}
 
         {/* / ROW 2 */}
         <Box gridColumn='span 8' gridRow='span 2' bgcolor={'white'}>
