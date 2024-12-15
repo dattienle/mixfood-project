@@ -1,17 +1,19 @@
 import { useState } from 'react'
-import { Button, Table, Input, Space, Switch, Tooltip, Popover } from 'antd'
+import { Button, Table, Input, Space, Switch, Tooltip, Popover, Modal, Spin } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
-import { EllipsisOutlined } from '@ant-design/icons'
+import { EllipsisOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { CommonButton } from '../../../UI/button/Button'
 import { getAccount, updateStatusAccount } from '../../../api/accountApi'
 import { Account } from '../../../Models/accountModel'
 import ModalAddAccount from './modal/modalAdd'
+import CertificateModal from './modal/modalPreviewNutri'
 
 export default function StaffPage() {
   const [searchText, setSearchText] = useState('')
   const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+
   const queryClient = useQueryClient()
   const {
     data: accountsResponse,
@@ -20,8 +22,10 @@ export default function StaffPage() {
     isError
   } = useQuery('accounts', getAccount, { refetchOnMount: true })
   const accounts = accountsResponse?.data.items
-  const filteredAccounts = accounts?.filter((account: Account) => account.role.name !== 'Customer') || [] 
+  const filteredAccounts = accounts?.filter((account: Account) => account.role.name !== 'Customer') || []
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   // search
   const handleSearch = (value: string) => {
     setSearchText(value)
@@ -46,7 +50,18 @@ export default function StaffPage() {
     await refetchAccounts()
   }
   const handleClose = () => {
-    setIsModalAddOpen(false);
+    setIsModalAddOpen(false)
+  }
+  // 
+
+  const openModal = (id: number) => {
+    setSelectedId(id); // Lưu ID của tài khoản
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedId(null);
   };
   const columns: ColumnsType<Account> = [
     {
@@ -94,6 +109,23 @@ export default function StaffPage() {
       )
     },
     {
+      title: 'Xem chứng chỉ',
+      dataIndex: 'role',
+      key: 'role',
+      align: 'center',
+      render: (_, record) => {
+        console.log('record:', record)
+        return record.role?.name === 'Nutritionist' ? (
+          <Tooltip title='Xem chứng chỉ'>
+            <InfoCircleOutlined
+              style={{ fontSize: '18px', color: '#1890ff', cursor: 'pointer' }}
+              onClick={() => openModal(record.id)}
+            />
+          </Tooltip>
+        ) : null
+      }
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'isDeleted',
       key: 'status',
@@ -129,10 +161,17 @@ export default function StaffPage() {
       <h1>Quản Lý Tài Khoản</h1>
       <Space style={{ marginBottom: 16 }}>
         <Input placeholder='Tìm kiếm theo tên' onChange={(e) => handleSearch(e.target.value)} style={{ width: 200 }} />
-        <CommonButton  onClick={() => setIsModalAddOpen(true)} type='primary'>Thêm Tài Khoản</CommonButton>
+        <CommonButton onClick={() => setIsModalAddOpen(true)} type='primary'>
+          Thêm Tài Khoản
+        </CommonButton>
       </Space>
       <Table columns={columns} dataSource={filteredAccounts} rowKey={(record) => record.id} />
       {isModalAddOpen && <ModalAddAccount isOpen={isModalAddOpen} handleOk={handleAddOk} handleCancel={handleClose} />}
+      <CertificateModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        accountId={selectedId || NaN} // Truyền ID qua modal
+      />
     </div>
   )
 }

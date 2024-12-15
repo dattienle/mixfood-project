@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Input, Button, Form, Select } from 'antd'
+import { Modal, Input, Button, Form, Select, DatePicker } from 'antd'
 
 import { toast } from 'react-toastify'
 import { createAccount } from '../../../../api/accountApi'
@@ -15,13 +15,24 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
 
-  const [roleId, setRoleId] = useState<number | undefined>(undefined);
+  const [roleId, setRoleId] = useState<number | undefined>(undefined)
+  const [degreeName, setDegreeName] = useState('')
+  const [institution, setInstitution] = useState('')
+  const [fieldOfStudy, setFieldOfStudy] = useState('')
+  const [graduationDate, setGraduationDate] = useState<string>('')
+  const [fileList, setFileList] = useState<File | null>(null)
   const handlePhoneChange = (value: string) => {
     // Chỉ cho phép nhập số
     const numericValue = value.replace(/[^0-9]/g, '');
     setPhone(numericValue);
   };
-
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setFileList(event.target.files[0])
+    } else {
+      setFileList(null)
+    }
+  }
   const handleAddAccount = async () => {
 
     if(!email || !name || !password || !phone || !roleId){
@@ -32,16 +43,32 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
       toast.error("Số điện thoại phải có 10 số");
       return;
     }
-    const accountData = {
-      email,
-      password,
-      name,
-      phone,
-      roleId
+    if (roleId === 6) {
+      if (!degreeName || !institution || !fieldOfStudy || !graduationDate || !fileList) {
+        toast.error("Vui lòng nhập đầy đủ thông tin cho Nutritionist")
+        return
+      }
     }
-    console.log('Dữ liệu gửi đi:', accountData);
+
+    const formData = new FormData()
+    formData.append('Email', email)
+    formData.append('Password', password)
+    formData.append('Name', name)
+    formData.append('Phone', phone)
+    formData.append('RoleId', roleId.toString())
+
+    if (roleId === 6) {
+      formData.append('DegreeName', degreeName)
+      formData.append('Institution', institution)
+      formData.append('FieldOfStudy', fieldOfStudy)
+      formData.append('GraduationDate', graduationDate)
+      if (fileList) {
+        formData.append('ImageUrl', fileList)
+      }
+    }
+    // console.log('Dữ liệu gửi đi:', accountData);
     try {
-      await createAccount(accountData)
+      await createAccount(formData)
       toast.success('Thêm tài khoản thành công!')
       handleOk()
     } catch (error) {
@@ -64,6 +91,7 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
         Thêm
       </Button>
     ]}
+    style={{ maxHeight: '60vh', overflowY: 'auto' }}
   >
     <Form layout='vertical'>
       <Form.Item label='Email'>
@@ -89,6 +117,28 @@ const ModalAddAccount: React.FC<ModalAddAccountProps> = ({ isOpen, handleOk, han
             <Select.Option value={7}>Chef</Select.Option>
           </Select>
         </Form.Item>
+        {roleId === 6 && (
+          <>
+            <Form.Item label='Tên bằng cấp'>
+              <Input value={degreeName} onChange={(e) => setDegreeName(e.target.value)} />
+            </Form.Item>
+            <Form.Item label='Tên trường'>
+              <Input value={institution} onChange={(e) => setInstitution(e.target.value)} />
+            </Form.Item>
+            <Form.Item label='Chuyên ngành'>
+              <Input value={fieldOfStudy} onChange={(e) => setFieldOfStudy(e.target.value)} />
+            </Form.Item>
+            <Form.Item label='Ngày tốt nghiệp'>
+              <DatePicker 
+                onChange={(date) => setGraduationDate(date ? date.toISOString() : '')}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+            <Form.Item label='Hình ảnh bằng cấp'>
+              <input type='file' onChange={handleFileChange} />
+            </Form.Item>
+          </>
+        )}
     </Form>
   </Modal>
   )

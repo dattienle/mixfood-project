@@ -38,11 +38,11 @@ export const updateIngredientTypeById = async( {id, data}: {id: number, data: Fo
     }
   }
 }
-export const updateStatusIngredientType= async ({ id, isDeleted }: { id: number; isDeleted: boolean }) => {
+export const updateStatusIngredientType= async ({ id, isDelete }: { id: number; isDelete: boolean }) => {
   try {
     const response = await api.put(
-      `/IngredientType/${id}`,
-      { isDeleted },
+      `/IngredientType/isDelete/${id}`,
+      { isDelete },
       {
         headers: {
           'Content-Type': 'multipart/form-data'

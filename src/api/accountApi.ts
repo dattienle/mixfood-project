@@ -29,6 +29,14 @@ export const getAccountShipper = async () => {
     throw error
   }
 }
+export const getAccountById = async(id: number ) =>{
+  try {
+    const response = await api.get(`/Account/${id}`)
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
 export const updateStatusAccount = async ({ id, isDelete }: { id: number; isDelete: boolean }) => {
   try {
     const response = await api.put(
@@ -45,11 +53,11 @@ export const updateStatusAccount = async ({ id, isDelete }: { id: number; isDele
     throw error
   }
 }
-export const createAccount = async (data: object) => {
+export const createAccount = async (data: FormData) => {
   try {
     const response = await api.post('/Account', data, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data'
       },
     });
     return response.data;

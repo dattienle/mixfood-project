@@ -49,22 +49,79 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
     }
   })
   console.log(nutritionData)
+  // const handleUpdateIngredient = async () => {
+  //   const formData = new FormData()
+  //   // console.log(code, discountPercentage, expirationDate)
+  //   if (!code || !discountPercentage || !expirationDate) {
+  //     toast.error('Vui lòng điền đủ thông tin ')
+  //     return
+  //   }
+  //   formData.append('Code', code)
+  //   formData.append('DiscountPercentage', discountPercentage.toString())
+  //   const isoExpirationDate = new Date(expirationDate).toISOString().split('T')[0]
+  //   formData.append('ExpirationDate', isoExpirationDate)
+  //   if (isStepRequired) {
+  //     formData.append('StepRequirement', stepRequirement.toString())
+  //   }
+
+  //   for (const [key, value] of formData.entries()) {
+  //     console.log(key, value)
+  //   }
+  //   try {
+  //     await updateVoucherById({ id: voucherId, data: formData })
+  //     await queryClient.invalidateQueries('voucher')
+  //     toast.success('Chỉnh sửa mã giảm giá thành công!')
+  //     handleOk()
+  //   } catch (error) {
+  //     toast.error('Chỉnh sửa mã giảm giá thất bại!')
+  //   }
+  // }
   const handleUpdateIngredient = async () => {
     const formData = new FormData()
-    console.log(code, discountPercentage, expirationDate)
+    let hasChanges = false // Biến kiểm tra xem có thay đổi hay không
+
+    // Kiểm tra và thêm các trường đã thay đổi
     if (!code || !discountPercentage || !expirationDate) {
       toast.error('Vui lòng điền đủ thông tin ')
       return
     }
-    formData.append('Code', code)
-    formData.append('DiscountPercentage', discountPercentage.toString())
-    const isoExpirationDate = new Date(expirationDate).toISOString()
-    formData.append('ExpirationDate', isoExpirationDate)
-    if (isStepRequired) {
-      formData.append('StepRequirement', stepRequirement.toString())
+
+    // Nếu mã giảm giá thay đổi, thêm mã vào formData
+    if (code !== nutritionData?.data?.code) {
+      formData.append('Code', code)
+      hasChanges = true
     }
 
-    console.log(formData)
+    // Nếu tỷ lệ giảm giá thay đổi, thêm vào formData
+    if (discountPercentage !== nutritionData?.data?.discountPercentage) {
+      formData.append('DiscountPercentage', discountPercentage.toString())
+      hasChanges = true
+    }
+
+    // Nếu ngày hết hạn thay đổi, thêm vào formData
+    const isoExpirationDate = new Date(expirationDate).toISOString().split('T')[0]
+    if (isoExpirationDate !== new Date(nutritionData?.data?.expirationDate).toISOString().split('T')[0]) {
+      formData.append('ExpirationDate', isoExpirationDate)
+      hasChanges = true
+    }
+
+    // Nếu yêu cầu bước chân thay đổi, thêm vào formData
+    if (
+      isStepRequired !== (nutritionData?.data?.stepRequirement !== undefined) ||
+      stepRequirement !== nutritionData?.data?.stepRequirement
+    ) {
+      formData.append('StepRequirement', stepRequirement.toString())
+      hasChanges = true
+    }
+    // Nếu không có thay đổi nào thì không gửi yêu cầu cập nhật
+    if (!hasChanges) {
+      toast.warning('Không có thay đổi nào để cập nhật!')
+      return
+    }
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value)
+    }
+    // Gửi yêu cầu cập nhật dữ liệu
     try {
       await updateVoucherById({ id: voucherId, data: formData })
       await queryClient.invalidateQueries('voucher')
@@ -74,6 +131,7 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
       toast.error('Chỉnh sửa mã giảm giá thất bại!')
     }
   }
+
   return (
     <Modal
       title='Chỉnh sửa mã giảm giá'
@@ -104,17 +162,11 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
         <Form.Item label='Ngày hết hạn'>
           <Input type='date' value={expirationDate} onChange={(e) => setExpirationDate(e.target.value)} />
         </Form.Item>
-        <Form.Item>
-          {isStepRequired && (
-            <Form.Item label='Số bước chân'>
-              <Input
-                type='number'
-                value={stepRequirement}
-                onChange={(e) => setStepRequirement(Number(e.target.value))}
-              />
-            </Form.Item>
-          )}
-        </Form.Item>
+        {isStepRequired && stepRequirement !== 0 && (
+          <Form.Item label='Số bước chân'>
+            <Input type='number' value={stepRequirement} onChange={(e) => setStepRequirement(Number(e.target.value))} />
+          </Form.Item>
+        )}
       </Form>
     </Modal>
   )

@@ -40,7 +40,7 @@ export default function IngredientTypePage() {
   const categories = ingredientTypeResponse?.data.items
   // updateStatus
   const updateStatus = useMutation(updateStatusIngredientType, {
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries('ingredientType')
       toast.success('Cập nhật trạng thái thành công!');
       refetch()
@@ -55,8 +55,9 @@ export default function IngredientTypePage() {
   }
 
   // status || mutate
-  const handleStatusChange = (id: number, isDeleted: boolean) => {
-    updateStatus.mutate({ id, isDeleted })
+  const handleStatusChange = (id: number, isDelete: boolean) => {
+    updateStatus.mutate({ id, isDelete })
+    // refetch()
   }
 
   const handleAddOk = async () => {
