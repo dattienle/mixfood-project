@@ -24,19 +24,7 @@ import VoucherPage from './pages/Voucher'
 import PackagePage from './pages/Package'
 import OrderManagerPage from './pages/OrderManager'
 import Dashboard from './pages/Admin/Dashboard/dashboard'
-// import App from '~/App'
-// import LoginPage from '~/auth/Login'
-// import { Authentication } from '~/auth/protectedRoute'
-// import ErrorPage from '~/components/ErrorPage'
-// import CategoryPage from '~/pages/CategoryTable'
-// import ChatPage from '~/pages/Chat/chatPage'
-// import Dashboard from '~/pages/Dashboard'
-// import IngredientForNutritionist from '~/pages/IngredientNutritionist'
-// import IngredientApprovePage from '~/pages/IngredientTable/approve'
-// import IngredientNotApprovePage from '~/pages/IngredientTable/notApprove'
-// import IngredientTypePage from '~/pages/IngredientTypeTable'
-// import NutritionApprovePage from '~/pages/NutritionTable/approve'
-// import ProductPage from '~/pages/ProductTable'
+
 
 export const router = createBrowserRouter([
   {
@@ -57,10 +45,6 @@ export const router = createBrowserRouter([
             path: 'nguyen-lieu',
             element: <IngredientApprovePage />
           },
-          // {
-          //   path: 'nguyen-lieu-chua-duyet',
-          //   element: <IngredientNotApprovePage />
-          // },
           {
             path: 'danh-muc',
             element: <CategoryPage />

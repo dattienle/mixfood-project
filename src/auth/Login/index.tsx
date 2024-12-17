@@ -52,6 +52,15 @@ const LoginPage: React.FC = () => {
       }
       sessionStorage.setItem('token', response.token)
       const { role } = GetDataByToken(response.token)
+      // Kiểm tra role hợp lệ
+      const allowedRoles = ['Manager', 'Admin', 'Nutritionist', 'Staff', 'Chef']
+      if (!allowedRoles.includes(role)) {
+        toast.error('Bạn không được phép truy cập!')
+        sessionStorage.removeItem('token') // Xóa token nếu role không hợp lệ
+        setLoading(false)
+        navigate('/dang-nhap')
+        return
+      }
       toast.success('Đăng nhập thành công!')
 
       switch (role) {
@@ -64,14 +73,16 @@ const LoginPage: React.FC = () => {
         case 'Nutritionist':
           navigate('/nutritionist/dashboard')
           break
-          case 'Staff':
-            navigate('/staff/dashboard')
-            break
-            case 'Chef':
-              navigate('/chef/dashboard')
-              break
+        case 'Staff':
+          navigate('/staff/dashboard')
+          break
+        case 'Chef':
+          navigate('/chef/dashboard')
+          break
         default:
-          console.error('Unknown role:', role)
+          // console.error('Unknown role:', role)
+          toast.error('Bạn không được đăng nhập vào hệ thống!')
+
           navigate('/dang-nhap')
       }
     } catch (err: any) {
@@ -109,8 +120,6 @@ const LoginPage: React.FC = () => {
             <Form.Item name='remember' valuePropName='checked' noStyle>
               <Checkbox>Ghi nhớ đăng nhập</Checkbox>
             </Form.Item>
-
-           
           </Form.Item>
 
           <Form.Item className='form-item-button'>

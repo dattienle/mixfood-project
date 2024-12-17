@@ -6,6 +6,8 @@ export interface Account {
     id:number;
     name: string
   };
+  diseases: string;
+  
   detail: {
     id: number;
     name: string;

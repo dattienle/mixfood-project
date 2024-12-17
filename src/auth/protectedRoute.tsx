@@ -61,6 +61,7 @@ export const Authentication: React.FC = () => {
         }
       }
     }
+    checkRole()
   }, [token, location, navigate])
 
   return <Outlet />

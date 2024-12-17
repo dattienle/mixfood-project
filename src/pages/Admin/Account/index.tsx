@@ -67,6 +67,13 @@ export default function AccountPage() {
       align: 'center',
       render: (role: any) => role.name
     },
+    // {
+    //   title: 'Tình trạng sức khỏe',
+    //   dataIndex: 'diseases',
+    //   key: 'diseases',
+    //   align: 'center',
+    //   // render: (role: any) => role.name
+    // },
     {
       title: 'Chi tiết',
       dataIndex: 'detail',
