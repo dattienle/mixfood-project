@@ -3,11 +3,10 @@ import StatBox from './component/statBox'
 import Header from './component/header'
 import { tokens } from './styles/theme'
 import EmailIcon from '@mui/icons-material/Email'
-import PointOfSaleIcon from '@mui/icons-material/PointOfSale'
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import TrafficIcon from '@mui/icons-material/Traffic'
 import LineChart from './component/lineChart'
-import { mockTransactions } from './data/barChartData'
 import BarChart from './component/barChart'
 import { useQuery } from 'react-query'
 import { getDashboard } from '../../../api/dashboardApi'
@@ -69,20 +68,20 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <Box gridColumn='span 4' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
           <StatBox
-            title={revenueByDayFood.toString()}
-            subtitle='Doanh thu đặt đồ ăn'
+            title={revenueByDayFood.toLocaleString('vi-VN')} 
+            subtitle='Doanh thu đặt đồ ăn theo ngày'
             progress='0.75'
             // increase='+14%'
-            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
+            icon={<FastfoodIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
           />
         </Box>
         <Box gridColumn='span 4' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>
           <StatBox
-            title={revenueByDaySchedule.toString()}
-            subtitle='Doanh thu đặt lịch'
+            title={revenueByDaySchedule.toLocaleString('vi-VN')} 
+            subtitle='Doanh thu đặt lịch theo ngày'
             progress='0.50'
             // increase='+21%'
-            icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
+            icon={<EventAvailableIcon  sx={{ color: colors.greenAccent[600], fontSize: '26px' }} />}
           />
         </Box>
         <Box gridColumn='span 4' bgcolor={'white'} display='flex' alignItems='center' justifyContent='center'>

@@ -1,11 +1,11 @@
 import { syncBuiltinESMExports } from 'module'
-import { createBrowserRouter, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import { Authentication } from './auth/protectedRoute'
-import ErrorPage from './components/ErrorPage'
+import React from 'react'
+
 import App from './App'
 import CategoryPage from './pages/CategoryTable'
 import IngredientApprovePage from './pages/IngredientTable/approve'
-import IngredientNotApprovePage from './pages/IngredientTable/notApprove'
 import NutritionApprovePage from './pages/NutritionTable/approve'
 import IngredientTypePage from './pages/IngredientTypeTable'
 import ProductPage from './pages/ProductTable'
@@ -24,7 +24,7 @@ import VoucherPage from './pages/Voucher'
 import PackagePage from './pages/Package'
 import OrderManagerPage from './pages/OrderManager'
 import Dashboard from './pages/Admin/Dashboard/dashboard'
-
+import ErrorPage from './components/ErrorPage'
 
 export const router = createBrowserRouter([
   {
@@ -75,7 +75,7 @@ export const router = createBrowserRouter([
           },
           {
             path: 'order',
-            element:<OrderManagerPage/>
+            element: <OrderManagerPage />
           }
         ]
       },
@@ -144,9 +144,8 @@ export const router = createBrowserRouter([
           },
           {
             path: 'order',
-            element:<OrderPage/>
+            element: <OrderPage />
           }
-        
         ]
       },
       {
@@ -158,17 +157,19 @@ export const router = createBrowserRouter([
             index: true,
             element: <OrderChefPage />
           },
-  
+
           {
             path: 'order',
-            element:<OrderChefPage/>
+            element: <OrderChefPage />
           }
-        
         ]
       }
     ]
   },
-
+  {
+    path: '*',
+    element: <ErrorPage />
+  },
   {
     path: '/dang-nhap',
     element: <LoginPage />,

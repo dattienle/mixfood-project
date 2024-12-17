@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import React from "react";
 
 import { RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
