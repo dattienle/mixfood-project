@@ -21,7 +21,7 @@ export default function StaffPage() {
     refetch: refetchAccounts,
     isError
   } = useQuery('accounts', getAccount, { refetchOnMount: true })
-  const accounts = accountsResponse?.data.items
+  const accounts = accountsResponse?.data?.items
   const filteredAccounts = accounts?.filter((account: Account) => account.role.name !== 'Customer') || []
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,13 +92,13 @@ export default function StaffPage() {
         <Popover
           content={
             <div>
-              <div style={{ fontSize: '16px' }}>
-                <strong>Tên:</strong> {detail.name}
-              </div>
-              <div style={{ fontSize: '16px' }}>
-                <strong>Số điện thoại: </strong> {detail.phone}
-              </div>
+            <div style={{ fontSize: '16px' }}>
+              <strong>Tên:</strong> {detail?.name || 'Chưa có tên'}
             </div>
+            <div style={{ fontSize: '16px' }}>
+              <strong>Số điện thoại: </strong> {detail?.phone || 'Chưa có số điện thoại'}
+            </div>
+          </div>
           }
           title={<span style={{ fontSize: '18px', fontWeight: 'bold' }}>Thông tin chi tiết</span>}
           trigger='hover'
