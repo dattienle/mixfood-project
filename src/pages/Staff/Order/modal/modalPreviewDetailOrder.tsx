@@ -37,42 +37,63 @@ const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ visible, onClose, sel
 
   return (
     <Modal
-      title="Chi Tiết Đơn Hàng"
+      title='Chi Tiết Đơn Hàng'
       visible={visible}
       onCancel={onClose}
       footer={null}
       width={800}
-      
-      className="modal-order-detail"
+      className='modal-order-detail'
     >
       {selectedOrder ? (
-        <div className="order-content">
-          <div className="order-header">
+        <div className='order-content'>
+          <div className='order-header'>
             <h3>Thông Tin Đơn Hàng</h3>
-            <div className="order-info">
-              <p><strong>Mã đơn hàng:</strong> <span>{selectedOrder.id}</span></p>
-              <p><strong>Tên khách hàng:</strong> <span>{selectedOrder.customerName}</span></p>
-              <p><strong>Địa chỉ:</strong> <span>{selectedOrder.address}</span></p>
-              <p><strong>Số điện thoại:</strong> <span>{selectedOrder.phone}</span></p>
+            <div className='order-info'>
+              <p>
+                <strong>Mã đơn hàng:</strong> <span>{selectedOrder.id}</span>
+              </p>
+              <p>
+                <strong>Tên khách hàng:</strong> <span>{selectedOrder.customerName}</span>
+              </p>
+              <p>
+                <strong>Địa chỉ:</strong> <span>{selectedOrder.address}</span>
+              </p>
+              <p>
+                <strong>Số điện thoại:</strong> <span>{selectedOrder.phone}</span>
+              </p>
+            </div>
+            <div className='product-image'>
+              <p>
+                <strong>Hình ảnh từ shipper </strong>
+              </p>
+              <img
+                src={selectedOrder.image_Url}
+                alt={selectedOrder.image_Url}
+                style={{ maxWidth: '100px', maxHeight: '100px' }}
+              />
             </div>
           </div>
 
-          <div className="order-products">
+          <div className='order-products'>
             <h4>Sản Phẩm trong Đơn Hàng</h4>
-            <Collapse className="product-list">
+            <Collapse className='product-list'>
               {selectedOrder.cartProducts && selectedOrder.cartProducts.length > 0 ? (
                 selectedOrder.cartProducts.map((product: any, index: any) => (
-                  <Collapse.Panel header={product.dish.name} key={index} className="product-item">
-                    <div className="product-details">
-                      <p><strong>Giá:</strong> <span>{product.price.toLocaleString()} VND</span></p>
-                      <p><strong>Số lượng:</strong> <span>{product.quantity}</span></p>
-                      <div className="ingredients">
-                        <p><strong>Nguyên liệu:</strong></p>
+                  <Collapse.Panel header={product.dish.name} key={index} className='product-item'>
+                    <div className='product-details'>
+                      <p>
+                        <strong>Giá:</strong> <span>{product.price.toLocaleString()} VND</span>
+                      </p>
+                      <p>
+                        <strong>Số lượng:</strong> <span>{product.quantity}</span>
+                      </p>
+                      <div className='ingredients'>
+                        <p>
+                          <strong>Nguyên liệu:</strong>
+                        </p>
                         <ul>
                           {product.ingredient && Array.isArray(product.ingredient) ? (
-                            product.ingredient.map((ing: any, i: any) => (
-                              <li key={i}>{ing.name}</li>
-                            ))
+                            product.ingredient.map((ing: any, i: any) => <li key={i}>{ing.name}</li>)
                           ) : (
                             <li>Không có nguyên liệu</li>
                           )}
@@ -82,13 +103,13 @@ const OrderDetailPage: React.FC<OrderDetailPageProps> = ({ visible, onClose, sel
                   </Collapse.Panel>
                 ))
               ) : (
-                <p className="no-products">Không có sản phẩm nào trong đơn hàng</p>
+                <p className='no-products'>Không có sản phẩm nào trong đơn hàng</p>
               )}
             </Collapse>
           </div>
         </div>
       ) : (
-        <div className="no-order">Không tìm thấy chi tiết đơn hàng</div>
+        <div className='no-order'>Không tìm thấy chi tiết đơn hàng</div>
       )}
     </Modal>
   )

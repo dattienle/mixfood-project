@@ -45,17 +45,17 @@ const ModalUpdateIngredient: React.FC<ModalAddIngredientProps> = ({ isOpen, hand
           min: number
           max: number
         }
-      } = {};
+      } = {}
       dishData.ingredientType.forEach((type: any) => {
         updatedGroups[type.name] = {
           selectedIngredients: type.ingredient.map((ing: any) => ing.id),
           min: type.min,
-          max: type.max,
-        };
-      });
+          max: type.max
+        }
+      })
 
-      setIngredientGroups(updatedGroups);
-      setSelectedIngredientType(dishData.ingredientType[0]?.name || null);
+      setIngredientGroups(updatedGroups)
+      setSelectedIngredientType(dishData.ingredientType[0]?.name || null)
     }
   }, [dishData])
   const handleUpdateIngredients = async () => {
@@ -67,14 +67,14 @@ const ModalUpdateIngredient: React.FC<ModalAddIngredientProps> = ({ isOpen, hand
         quantityMax: data.max
       }))
     }
-console.log( requestData)
+    console.log(requestData)
     try {
       // Gọi API cập nhật
       await updateTemplateStepById({ id: dishData.id, data: requestData })
-      toast.success("Cập nhật nguyên liệu thành công")
+      toast.success('Cập nhật nguyên liệu thành công')
       handleOk()
     } catch (error) {
-      toast.error("Cập nhật nguyên liệu thất bại")
+      toast.error('Cập nhật nguyên liệu thất bại')
       console.error('Error updating dish:', error)
     }
   }
@@ -155,6 +155,7 @@ console.log( requestData)
               />
             ))}
           </div>
+          <span style={{ marginRight: '8px' }}>Min:</span>
           <InputNumber
             min={0}
             placeholder='Min'
@@ -162,6 +163,7 @@ console.log( requestData)
             onChange={(value) => handleMinMaxChange('min', value)}
             style={{ marginRight: '8px' }}
           />
+          <span style={{ marginRight: '8px' }}>Max:</span>
           <InputNumber
             min={0}
             placeholder='Max'

@@ -109,7 +109,7 @@ const ModalAddProduct: React.FC<ModalAddProductProps> = ({
         </Form.Item>
 
         <Form.Item label='Giá'>
-          <InputNumber placeholder='Nhập giá' value={price} onChange={(e) => setPrice(e)} />
+          <InputNumber placeholder='Nhập giá' min={0} value={price} onChange={(e) => setPrice(e)} />
         </Form.Item>
 
         <Form.Item label='Chọn danh mục'>

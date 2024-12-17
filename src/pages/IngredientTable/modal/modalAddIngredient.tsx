@@ -132,7 +132,7 @@ const ModalAddIngredient: React.FC<ModalAddIngredientProps> = ({
         </Form.Item>
 
         <Form.Item label='Giá'>
-          <Input type='number' value={price} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
+          <Input type='number' value={price} min={0} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
           {/* Use parseInt and handle NaN */}
         </Form.Item>
 
@@ -142,7 +142,7 @@ const ModalAddIngredient: React.FC<ModalAddIngredientProps> = ({
           <input type='file' onChange={handleFileChange} />
         </Form.Item>
         <Form.Item label='Số lượng'>
-          <Input type='number' value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 0)} />{' '}
+          <Input type='number' value={quantity} min={0} onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 0)} />{' '}
           {/* Use parseInt and handle NaN */}
         </Form.Item>
         <Form.Item label='URL thông tin'>

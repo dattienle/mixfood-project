@@ -67,6 +67,7 @@ const ModalAddVoucher: React.FC<ModalAddCategoryProps> = ({ isOpen, handleOk, ha
             type='number'
             value={discountPercentage}
             onChange={(e) => setDiscountPercentage(Number(e.target.value))}
+            min={0}
           />
         </Form.Item>
         <Form.Item label='Ngày hết hạn'>
@@ -81,6 +82,7 @@ const ModalAddVoucher: React.FC<ModalAddCategoryProps> = ({ isOpen, handleOk, ha
               type='number'
               placeholder='Nhập số bước chân yêu cầu'
               onChange={(e) => setStepRequirement(Number(e.target.value))}
+              min={0}
             />
           )}
         </Form.Item>

@@ -84,7 +84,6 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
   const handleUpdateIngredient = async () => {
     const formData = new FormData()
 
-
     // Kiểm tra các giá trị bắt buộc
     if (price < 0) {
       toast.error('Giá không được âm!')
@@ -139,7 +138,7 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
           <Typography.Text>{name}</Typography.Text>
         </Form.Item>
         <Form.Item label='Giá'>
-          <Input type='number' value={price} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
+          <Input type='number' value={price} min={0} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
           {/* Use parseInt and handle NaN */}
         </Form.Item>
 
@@ -150,7 +149,12 @@ const ModalUpdateIngredient: React.FC<ModalUpdateIngredientProps> = ({
           <input type='file' onChange={handleFileChange} />
         </Form.Item>
         <Form.Item label='Số lượng'>
-          <Input type='number' value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 0)} />{' '}
+          <Input
+            type='number'
+            value={quantity}
+            min={0}
+            onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 0)}
+          />{' '}
           {/* Use parseInt and handle NaN */}
         </Form.Item>
         <Form.Item label='URL thông tin'>

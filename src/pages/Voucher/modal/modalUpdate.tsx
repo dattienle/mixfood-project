@@ -49,33 +49,7 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
     }
   })
   console.log(nutritionData)
-  // const handleUpdateIngredient = async () => {
-  //   const formData = new FormData()
-  //   // console.log(code, discountPercentage, expirationDate)
-  //   if (!code || !discountPercentage || !expirationDate) {
-  //     toast.error('Vui lòng điền đủ thông tin ')
-  //     return
-  //   }
-  //   formData.append('Code', code)
-  //   formData.append('DiscountPercentage', discountPercentage.toString())
-  //   const isoExpirationDate = new Date(expirationDate).toISOString().split('T')[0]
-  //   formData.append('ExpirationDate', isoExpirationDate)
-  //   if (isStepRequired) {
-  //     formData.append('StepRequirement', stepRequirement.toString())
-  //   }
 
-  //   for (const [key, value] of formData.entries()) {
-  //     console.log(key, value)
-  //   }
-  //   try {
-  //     await updateVoucherById({ id: voucherId, data: formData })
-  //     await queryClient.invalidateQueries('voucher')
-  //     toast.success('Chỉnh sửa mã giảm giá thành công!')
-  //     handleOk()
-  //   } catch (error) {
-  //     toast.error('Chỉnh sửa mã giảm giá thất bại!')
-  //   }
-  // }
   const handleUpdateIngredient = async () => {
     const formData = new FormData()
     let hasChanges = false // Biến kiểm tra xem có thay đổi hay không
@@ -155,6 +129,7 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
         <Form.Item label='Số tiền giảm giá'>
           <Input
             type='number'
+            min={0}
             value={discountPercentage}
             onChange={(e) => setDiscountPercentage(Number(e.target.value))}
           />
@@ -164,7 +139,12 @@ const ModalUpdateVoucher: React.FC<ModalUpdateIngredientTypeProps> = ({
         </Form.Item>
         {isStepRequired && stepRequirement !== 0 && (
           <Form.Item label='Số bước chân'>
-            <Input type='number' value={stepRequirement} onChange={(e) => setStepRequirement(Number(e.target.value))} />
+            <Input
+              type='number'
+              min={0}
+              value={stepRequirement}
+              onChange={(e) => setStepRequirement(Number(e.target.value))}
+            />
           </Form.Item>
         )}
       </Form>

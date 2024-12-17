@@ -3,7 +3,7 @@ import { Modal, Input, Button, Form, Select, Checkbox } from 'antd'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { toast } from 'react-toastify'
 
-import {  getPackageById, getSubPackage, updatePackageById } from '../../../api/packageApi'
+import { getPackageById, getSubPackage, updatePackageById } from '../../../api/packageApi'
 import { SubPackage } from '../../../Models/packageModel'
 
 interface ModalAddIngredientTypeProps {
@@ -13,14 +13,13 @@ interface ModalAddIngredientTypeProps {
   packageId: number
 }
 
-const ModalUpdatePackage: React.FC<ModalAddIngredientTypeProps> = ({ isOpen, handleOk, handleCancel , packageId}) => {
+const ModalUpdatePackage: React.FC<ModalAddIngredientTypeProps> = ({ isOpen, handleOk, handleCancel, packageId }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState(0)
   const [subPackageId, setSubPackageId] = useState<number[]>([])
   const queryClient = useQueryClient()
   const [dataLoaded, setDataLoaded] = useState(false)
-
 
   useEffect(() => {
     if (!isOpen) setDataLoaded(false) // Reset cờ khi modal đóng
@@ -32,20 +31,20 @@ const ModalUpdatePackage: React.FC<ModalAddIngredientTypeProps> = ({ isOpen, han
   } = useQuery(['package', packageId], () => getPackageById(packageId), {
     enabled: isOpen && !!packageId,
     onSuccess: (data: any) => {
-      console.log("packageResponse", packageResponse)
+      console.log('packageResponse', packageResponse)
       if (!dataLoaded) {
-        setTitle(data.data.title);
-          setDescription(data.data.description);
-          setPrice(data.data.price);
-          const subPackageIds = data.data.subPackage.map((pkg: any) => pkg.id);
-          setSubPackageId(subPackageIds);
+        setTitle(data.data.title)
+        setDescription(data.data.description)
+        setPrice(data.data.price)
+        const subPackageIds = data.data.subPackage.map((pkg: any) => pkg.id)
+        setSubPackageId(subPackageIds)
       }
     }
   })
   const { data: subPackages = [], isLoading } = useQuery('subpackages', getSubPackage, {
     refetchOnMount: true
   })
-  console.log("Subpackage", subPackages)
+  console.log('Subpackage', subPackages)
   const subPackageData = subPackages?.data?.items || []
 
   const handleUpdatePackage = async () => {
@@ -96,7 +95,7 @@ const ModalUpdatePackage: React.FC<ModalAddIngredientTypeProps> = ({ isOpen, han
           <Input value={description} onChange={(e) => setDescription(e.target.value)} />
         </Form.Item>
         <Form.Item label='Giá'>
-          <Input type='number' value={price} onChange={(e) => setPrice(Number(e.target.value))} />
+          <Input type='number' min={0} value={price} onChange={(e) => setPrice(Number(e.target.value))} />
         </Form.Item>
         <Form.Item label='Chọn Subpackage'>
           <Checkbox.Group value={subPackageId} onChange={handleSubPackageChange}>

@@ -70,22 +70,81 @@ const ModalUpdateDish: React.FC<ModalUpdateDishProps> = ({ isOpen, handleOk, han
     }
   }
 
+  // const handleUpdateCategory = async () => {
+  //   const formData = new FormData()
+  //   let hasChanges = false
+
+  //   formData.append('Price', String(price))
+
+  //   if (selectedCategorytype) formData.append('CategoryId', selectedCategorytype.toString())
+
+  //   if (fileList) {
+  //     formData.append('ImageUrl', fileList)
+  //   } else {
+  //     formData.append('ImageUrl', imageUrl)
+  //   }
+  //   for (const [key, value] of formData.entries()) {
+  //     console.log(key, value)
+  //   }
+  //   await updateDishMutation({ id: dishId, data: formData })
+  // }
   const handleUpdateCategory = async () => {
     const formData = new FormData()
-    formData.append('Name', name)
-    formData.append('Price', String(price))
+    let hasChanges = false // Biến kiểm tra xem có thay đổi hay không
 
-    if (selectedCategorytype) formData.append('CategoryId', selectedCategorytype.toString())
+    // Kiểm tra và thêm các trường đã thay đổi
+    if (!name || !price || !selectedCategorytype) {
+      toast.error('Vui lòng điền đủ thông tin')
+      return
+    }
 
+    // Nếu tên món ăn thay đổi, thêm vào formData
+    if (name !== dishData?.data?.name) {
+      formData.append('Name', name)
+      hasChanges = true
+    }
+
+    // Nếu giá thay đổi, thêm vào formData
+    if (price !== dishData?.data?.price) {
+      formData.append('Price', price.toString())
+      hasChanges = true
+    }
+
+    // Nếu danh mục thay đổi, thêm vào formData
+    if (selectedCategorytype !== dishData?.data?.category.id) {
+      formData.append('CategoryId', selectedCategorytype.toString())
+      hasChanges = true
+    }
+
+    // Nếu hình ảnh thay đổi, thêm vào formData
     if (fileList) {
       formData.append('ImageUrl', fileList)
-    } else {
+      hasChanges = true
+    } else if (imageUrl !== dishData?.data?.imageUrl) {
       formData.append('ImageUrl', imageUrl)
+      hasChanges = true
     }
+
+    // Nếu không có thay đổi nào thì không gửi yêu cầu cập nhật
+    if (!hasChanges) {
+      toast.warning('Không có thay đổi nào để cập nhật!')
+      return
+    }
+
+    // In ra các trường đã thay đổi
     for (const [key, value] of formData.entries()) {
       console.log(key, value)
     }
-    await updateDishMutation({ id: dishId, data: formData })
+
+    // Gửi yêu cầu cập nhật dữ liệu
+    try {
+      await updateDishMutation({ id: dishId, data: formData })
+      await queryClient.invalidateQueries('dish') // invalidate queries liên quan đến món ăn
+      toast.success('Cập nhật món ăn thành công!')
+      handleOk()
+    } catch (error) {
+      toast.error('Cập nhật món ăn thất bại!')
+    }
   }
 
   return (
@@ -110,8 +169,7 @@ const ModalUpdateDish: React.FC<ModalUpdateDishProps> = ({ isOpen, handleOk, han
         </Form.Item>
 
         <Form.Item label='Giá'>
-          <Input type='number' value={price} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
-          {/* Use parseInt and handle NaN */}
+          <Input type='number' min={0} value={price} onChange={(e) => setPrice(parseInt(e.target.value, 10) || 0)} />{' '}
         </Form.Item>
 
         <Form.Item name='imageUrl' label='Image'>

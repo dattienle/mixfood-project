@@ -21,14 +21,18 @@ const ModalAddPackage: React.FC<ModalAddIngredientTypeProps> = ({ isOpen, handle
   const [subPackageId, setSubPackageId] = useState<number[]>([])
   const queryClient = useQueryClient()
 
-  const { data: subPackageResponse =[], isLoading, isError } = useQuery('subpackages', getSubPackage, {
+  const {
+    data: subPackageResponse = [],
+    isLoading,
+    isError
+  } = useQuery('subpackages', getSubPackage, {
     refetchOnMount: true
   })
   if (isError) {
-    toast.error('Lỗi khi lấy dữ liệu subpackage!');
+    toast.error('Lỗi khi lấy dữ liệu subpackage!')
   }
   console.log(subPackageResponse)
-  const subPackageData = subPackageResponse?.data?.items || [];
+  const subPackageData = subPackageResponse?.data?.items || []
 
   const handleAddPackage = async () => {
     if (!title || !description || price <= 0 || subPackageId.length === 0) {
@@ -78,7 +82,7 @@ const ModalAddPackage: React.FC<ModalAddIngredientTypeProps> = ({ isOpen, handle
           <Input value={description} onChange={(e) => setDescription(e.target.value)} />
         </Form.Item>
         <Form.Item label='Giá'>
-          <Input type='number' value={price} onChange={(e) => setPrice(Number(e.target.value))} />
+          <Input type='number' value={price} min={0} onChange={(e) => setPrice(Number(e.target.value))} />
         </Form.Item>
         <Form.Item label='Chọn Subpackage'>
           <Checkbox.Group value={subPackageId} onChange={handleSubPackageChange}>
